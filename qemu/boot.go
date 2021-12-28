@@ -6,18 +6,6 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// BootOrderProperty represents a property that can be used with the BootOrder
-// option.
-type BootOrderProperty struct {
-	*queso.Property
-}
-
-func newBootOrderProperty(key string, value interface{}) *BootOrderProperty {
-	return &BootOrderProperty{
-		Property: &queso.Property{key, value},
-	}
-}
-
 // BootOrder is used to specify options for the boot order of drives.
 func BootOrder(properties ...*BootOrderProperty) *queso.Option {
 	if len(properties) == 0 {
@@ -31,6 +19,18 @@ func BootOrder(properties ...*BootOrderProperty) *queso.Option {
 	}
 
 	return queso.NewOption("boot", "", props...)
+}
+
+// BootOrderProperty represents a property that can be used with the BootOrder
+// option.
+type BootOrderProperty struct {
+	*queso.Property
+}
+
+func newBootOrderProperty(key string, value interface{}) *BootOrderProperty {
+	return &BootOrderProperty{
+		Property: &queso.Property{key, value},
+	}
 }
 
 // WithOrder specifies boot order drives as a string of drive letters.

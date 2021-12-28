@@ -37,17 +37,6 @@ const (
 	AccelXen AccelType = "xen"
 )
 
-// AccelProperty represents a property that can be used with the Accel option.
-type AccelProperty struct {
-	*queso.Property
-}
-
-func newAccelProperty(key string, value interface{}) *AccelProperty {
-	return &AccelProperty{
-		Property: &queso.Property{key, value},
-	}
-}
-
 // Accel is used to enable an accelerator.
 func Accel(accelType AccelType, properties ...*AccelProperty) *queso.Option {
 	props := make([]*queso.Property, 0)
@@ -59,6 +48,17 @@ func Accel(accelType AccelType, properties ...*AccelProperty) *queso.Option {
 	return queso.NewOption("accel", string(accelType), props...)
 }
 
+// AccelProperty represents a property that can be used with the Accel option.
+type AccelProperty struct {
+	*queso.Property
+}
+
+func newAccelProperty(key string, value interface{}) *AccelProperty {
+	return &AccelProperty{
+		Property: &queso.Property{key, value},
+	}
+}
+
 // IsIGDPassThru controls whether Intel integrated graphics devices can be passed
 // through to the guest.
 //
@@ -67,28 +67,28 @@ func IsIGDPassThru(enabled bool) *AccelProperty {
 	return newAccelProperty("igd-passthru", enabled)
 }
 
-// KernelIRQChipFlag represents the option to use for the WithKernelIRQChip
+// KernelIRQChipMode represents the mode to use for the WithKernelIRQChip
 // property.
-type KernelIRQChipFlag string
+type KernelIRQChipMode string
 
 const (
 	// KernelIRQChipOn indicates that full acceleration of the interrupt controllers
 	// should be used.
-	KernelIRQChipOn KernelIRQChipFlag = "on"
+	KernelIRQChipOn KernelIRQChipMode = "on"
 
 	// KernelIRQChipOff disables full acceleration and should only be used for debugging
 	// purposes.
-	KernelIRQChipOff KernelIRQChipFlag = "off"
+	KernelIRQChipOff KernelIRQChipMode = "off"
 
 	// KernelIRQChipSplit reduces the kernel attack surface, at a performance cost
 	// for non-MSI interrupts.
-	KernelIRQChipSplit KernelIRQChipFlag = "split"
+	KernelIRQChipSplit KernelIRQChipMode = "split"
 )
 
 // WithKernelIRQChip controls KVM in-kernel IRQ chip support. The default is
-// KernelIRQChipOn. See KernelIRQChipFlag for more details.
-func WithKernelIRQChip(flag KernelIRQChipFlag) *AccelProperty {
-	return newAccelProperty("kernel-irqchip", flag)
+// KernelIRQChipOn. See KernelIRQChipMode for more details.
+func WithKernelIRQChip(mode KernelIRQChipMode) *AccelProperty {
+	return newAccelProperty("kernel-irqchip", mode)
 }
 
 // WithKVMShadowMemory defines the size of the KVM shadow MMU.
