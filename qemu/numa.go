@@ -93,7 +93,7 @@ type NUMAProperty struct {
 // NewNUMAProperty returns a new instance of an NUMAProperty.
 func NewNUMAProperty(key string, value interface{}) *NUMAProperty {
 	return &NUMAProperty{
-		Property: &queso.Property{key, value},
+		Property: queso.NewProperty(key, value),
 	}
 }
 
@@ -175,6 +175,6 @@ func WithWritePolicy(policy string) *NUMAProperty {
 }
 
 // WithWriteCacheLineSize is the write cache line size in bytes.
-func WithWriteCacheLineSize(size int) *NUMAProperty {
-	return NewNUMAProperty("line", size)
+func WithWriteCacheLineSize(bytes int) *NUMAProperty {
+	return NewNUMAProperty("line", bytes)
 }

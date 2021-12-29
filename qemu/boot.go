@@ -29,7 +29,7 @@ type BootOrderProperty struct {
 
 func newBootOrderProperty(key string, value interface{}) *BootOrderProperty {
 	return &BootOrderProperty{
-		Property: &queso.Property{key, value},
+		Property: queso.NewProperty(key, value),
 	}
 }
 

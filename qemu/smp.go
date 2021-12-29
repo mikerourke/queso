@@ -26,7 +26,7 @@ type SMPProperty struct {
 // NewSMPProperty returns a new instance of a SMPProperty.
 func NewSMPProperty(key string, value interface{}) *SMPProperty {
 	return &SMPProperty{
-		Property: &queso.Property{key, value},
+		Property: queso.NewProperty(key, value),
 	}
 }
 

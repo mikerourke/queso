@@ -48,7 +48,7 @@ type MemoryBackendProperty struct {
 // NewMemoryBackendProperty returns a new instance of an MemoryBackendProperty.
 func NewMemoryBackendProperty(key string, value interface{}) *MemoryBackendProperty {
 	return &MemoryBackendProperty{
-		Property: &queso.Property{key, value},
+		Property: queso.NewProperty(key, value),
 	}
 }
 
@@ -173,6 +173,6 @@ func IsHugeTLB(enabled bool) *MemoryBackendProperty {
 // multiple hugetlb page sizes (it must be a power of 2 value supported by the system).
 //
 // This property is only valid for the MemFD backend.
-func WithHugeTLBSize(size int) *MemoryBackendProperty {
-	return NewMemoryBackendProperty("hugetlbsize", size)
+func WithHugeTLBSize(bytes int) *MemoryBackendProperty {
+	return NewMemoryBackendProperty("hugetlbsize", bytes)
 }

@@ -55,7 +55,7 @@ type AccelProperty struct {
 
 func newAccelProperty(key string, value interface{}) *AccelProperty {
 	return &AccelProperty{
-		Property: &queso.Property{key, value},
+		Property: queso.NewProperty(key, value),
 	}
 }
 
@@ -106,8 +106,8 @@ func IsSplitWX(enabled bool) *AccelProperty {
 
 // WithTranslationBlockCacheSize controls the size (in MiB) of the TCG translation
 // block cache.
-func WithTranslationBlockCacheSize(size int) *AccelProperty {
-	return newAccelProperty("tb-size", size)
+func WithTranslationBlockCacheSize(megabytes int) *AccelProperty {
+	return newAccelProperty("tb-size", megabytes)
 }
 
 // ThreadFlag represents the type of TCG threads to use.
@@ -136,6 +136,6 @@ func WithThread(flag ThreadFlag) *AccelProperty {
 // which is the best. Set this value to 0 to disable the feature. By default, this
 // feature is disabled (value = 0). When enabled, KVM will instead record
 // dirty pages in a bitmap.
-func WithDirtyRingSize(size int) *AccelProperty {
-	return newAccelProperty("dirty-ring-size", size)
+func WithDirtyRingSize(bytes int) *AccelProperty {
+	return newAccelProperty("dirty-ring-size", bytes)
 }

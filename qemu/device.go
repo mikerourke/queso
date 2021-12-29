@@ -1,6 +1,10 @@
 package qemu
 
-import "github.com/mikerourke/queso"
+import (
+	"fmt"
+
+	"github.com/mikerourke/queso"
+)
 
 // NewDeviceOption returns a new Option instance for a device. The idField
 // parameter represents the field name for the identifier. This is required because
@@ -9,7 +13,7 @@ func NewDeviceOption(name string, idField string, id string, properties ...*Devi
 	props := make([]*queso.Property, 0)
 
 	if idField != "" && id != "" {
-		props = append(props, &queso.Property{idField, id})
+		props = append(props, queso.NewProperty(idField, id))
 	}
 
 	for _, property := range properties {
@@ -93,6 +97,26 @@ func DeviceIntelIOMMU(properties ...*DeviceProperty) *queso.Option {
 	return NewDeviceOption("intel-iommu", "", "", properties...)
 }
 
+// Virtio9PVariant represents the variant of Virtio9P to use for a new
+// DeviceVirtio9P.
+type Virtio9PVariant string
+
+const (
+	Virtio9PPCI    Virtio9PVariant = "pci"
+	Virtio9PCCW    Virtio9PVariant = "ccw"
+	Virtio9PDevice Virtio9PVariant = "device"
+)
+
+// DeviceVirtio9P adds a Virtio 9P file system. The deviceID parameter corresponds
+// to a filesystem device (see blockdev/fsdev.go). The mountTag specifies the
+// tag name to be used by the guest to mount this export point.
+func DeviceVirtio9P(variant Virtio9PVariant, deviceID string, mountTag string) *queso.Option {
+	name := fmt.Sprintf("virtio-9p-%s", variant)
+
+	return NewDeviceOption(name, "fsdev", deviceID,
+		NewDeviceProperty("mount_tag", mountTag))
+}
+
 // DeviceProperty represents a property that can be used with the device option.
 type DeviceProperty struct {
 	*queso.Property
@@ -101,7 +125,7 @@ type DeviceProperty struct {
 // NewDeviceProperty returns a new instance of a DeviceProperty.
 func NewDeviceProperty(key string, value interface{}) *DeviceProperty {
 	return &DeviceProperty{
-		Property: &queso.Property{key, value},
+		Property: queso.NewProperty(key, value),
 	}
 }
 
@@ -117,8 +141,8 @@ func WithSDRFile(filename string) *DeviceProperty {
 
 // WithFRUAreaSize specifies the size of a Field Replaceable Unit (FRU) area.
 // Default is 1024.
-func WithFRUAreaSize(size int) *DeviceProperty {
-	return NewDeviceProperty("fruareasize", size)
+func WithFRUAreaSize(bytes int) *DeviceProperty {
+	return NewDeviceProperty("fruareasize", bytes)
 }
 
 // WithFRUFile specifies a file containing raw Field Replaceable Unit (FRU)

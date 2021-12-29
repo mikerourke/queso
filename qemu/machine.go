@@ -25,7 +25,7 @@ type MachineProperty struct {
 // NewMachineProperty returns a new instance of a MachineProperty.
 func NewMachineProperty(key string, value interface{}) *MachineProperty {
 	return &MachineProperty{
-		Property: &queso.Property{key, value},
+		Property: queso.NewProperty(key, value),
 	}
 }
 
