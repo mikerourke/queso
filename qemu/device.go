@@ -62,7 +62,7 @@ func DeviceIPMIBMC(id string, properties ...*DeviceProperty) *queso.Option {
 // recommended that you use the WithReconnect chardev option to reconnect to the
 // simulator if the connection is lost. Note that if this is not used carefully, it
 // can be a security issue, as the interface has the ability to send resets, NMIs,
-// and power off the VM. It’s best if QEMU makes a connection to an external simulator
+// and power off the VM. It's best if QEMU makes a connection to an external simulator
 // running on a secure port on localhost, so neither the simulator nor QEMU is exposed
 // to any outside network.
 //

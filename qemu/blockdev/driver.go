@@ -93,13 +93,13 @@ func IsForceShare(enabled bool) *DriverProperty {
 }
 
 // IsCacheDirect specifies whether the host page cache can be avoided. If true,
-// this will attempt to do disk IO directly to the guest’s memory. QEMU may still
+// this will attempt to do disk IO directly to the guest's memory. QEMU may still
 // perform an internal copy of the data.
 func IsCacheDirect(enabled bool) *DriverProperty {
 	return NewDriverProperty("cache.direct", enabled)
 }
 
-// IsCacheNoFlush should be enabled if you don’t care about data integrity over host
+// IsCacheNoFlush should be enabled if you don't care about data integrity over host
 // failures. This option tells QEMU that it never needs to write any data to the disk
 // but can instead keep things in cache. If anything goes wrong, like your host
 // losing power, the disk storage getting disconnected accidentally, etc. your image

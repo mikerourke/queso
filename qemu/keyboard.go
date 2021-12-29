@@ -47,7 +47,7 @@ const (
 // KeyboardLayout specifies the keyboard layout language (for example "fr" for
 // French). This option is only needed where it is not easy to get raw PC
 // keycodes (e.g. on Macs, with some X11 servers or with a VNC or curses display).
-// You don’t normally need to use it on PC/Linux or PC/Windows hosts.
+// You don't normally need to use it on PC/Linux or PC/Windows hosts.
 func KeyboardLayout(language Language) *queso.Option {
 	return queso.NewOption("k", string(language))
 }
