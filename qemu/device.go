@@ -6,10 +6,22 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// NewDeviceOption returns a new Option instance for a device. The idField
+// Device is used to create a generic device in which arbitrary options can
+// be specified.
+func Device(name string, properties ...*DeviceProperty) *queso.Option {
+	props := make([]*queso.Property, 0)
+
+	for _, property := range properties {
+		props = append(props, property.Property)
+	}
+
+	return queso.NewOption("device", name, props...)
+}
+
+// newDeviceOption returns a new Option instance for a device. The idField
 // parameter represents the field name for the identifier. This is required because
 // some devices use `id=[ID]` while others use `bmc=[ID]`.
-func NewDeviceOption(name string, idField string, id string, properties ...*DeviceProperty) *queso.Option {
+func newDeviceOption(name string, idField string, id string, properties ...*DeviceProperty) *queso.Option {
 	props := make([]*queso.Property, 0)
 
 	if idField != "" && id != "" {
@@ -39,7 +51,7 @@ func DeviceDriver(name string, properties ...*DeviceProperty) *queso.Option {
 // to reset and power control the system. You need to connect this to an IPMI
 // interface to make it useful.
 func DeviceIPMIBMC(id string, properties ...*DeviceProperty) *queso.Option {
-	return NewDeviceOption("ipmi-bmc-sim", "id", id, properties...)
+	return newDeviceOption("ipmi-bmc-sim", "id", id, properties...)
 }
 
 // DeviceIPMIBMCExternal adds a connection to an external IPMI BMC simulator.
@@ -63,38 +75,38 @@ func DeviceIPMIBMCExternal(id string, chardev string, properties ...*DevicePrope
 		props = append(props, properties...)
 	}
 
-	return NewDeviceOption("ipmi-bmc-sim", "id", id, props...)
+	return newDeviceOption("ipmi-bmc-sim", "id", id, props...)
 }
 
 // DeviceISAIPMIKCS adds a KCS IPMI interface on the ISA bus. This also adds a
 // corresponding ACPI and SMBIOS entries, if appropriate. The bmc parameter
 // // represents the ID of a DeviceIPMIBMC or DeviceIPMIBMCExternal instance.
 func DeviceISAIPMIKCS(bmc string, properties ...*DeviceProperty) *queso.Option {
-	return NewDeviceOption("isa-ipmi-kcs", "bmc", bmc, properties...)
+	return newDeviceOption("isa-ipmi-kcs", "bmc", bmc, properties...)
 }
 
 // DeviceISAIPMIBT adds a BT IPMI interface on the ISA bus. The bmc parameter
 // represents the ID of a DeviceIPMIBMC or DeviceIPMIBMCExternal instance.
 func DeviceISAIPMIBT(bmc string, properties ...*DeviceProperty) *queso.Option {
-	return NewDeviceOption("isa-ipmi-bt", "bmc", bmc, properties...)
+	return newDeviceOption("isa-ipmi-bt", "bmc", bmc, properties...)
 }
 
 // DevicePCIIPMIKCS adds a KCS IPMI interface on the PCI bus. The bmc parameter
 // // represents the ID of a DeviceIPMIBMC or DeviceIPMIBMCExternal instance.
 func DevicePCIIPMIKCS(bmc string, properties ...*DeviceProperty) *queso.Option {
-	return NewDeviceOption("pci-ipmi-kcs", "bmc", bmc, properties...)
+	return newDeviceOption("pci-ipmi-kcs", "bmc", bmc, properties...)
 }
 
 // DevicePCIIPMIBT adds a BT IPMI interface on the PCI bus. The bmc parameter
 // // represents the ID of a DeviceIPMIBMC or DeviceIPMIBMCExternal instance.
 func DevicePCIIPMIBT(bmc string, properties ...*DeviceProperty) *queso.Option {
-	return NewDeviceOption("pci-ipmi-bc", "bmc", bmc, properties...)
+	return newDeviceOption("pci-ipmi-bc", "bmc", bmc, properties...)
 }
 
 // DeviceIntelIOMMU is used to enable Intel VT-d emulation within the guest.
 // This can only be used with Q35 Machine instances.
 func DeviceIntelIOMMU(properties ...*DeviceProperty) *queso.Option {
-	return NewDeviceOption("intel-iommu", "", "", properties...)
+	return newDeviceOption("intel-iommu", "", "", properties...)
 }
 
 // Virtio9PVariant represents the variant of Virtio9P to use for a new
@@ -113,7 +125,7 @@ const (
 func DeviceVirtio9P(variant Virtio9PVariant, deviceID string, mountTag string) *queso.Option {
 	name := fmt.Sprintf("virtio-9p-%s", variant)
 
-	return NewDeviceOption(name, "fsdev", deviceID,
+	return newDeviceOption(name, "fsdev", deviceID,
 		NewDeviceProperty("mount_tag", mountTag))
 }
 
