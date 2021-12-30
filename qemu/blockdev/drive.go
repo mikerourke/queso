@@ -17,10 +17,12 @@ func Drive(properties ...DriveProperty) *queso.Option {
 	return queso.NewOption("audiodev", "", props...)
 }
 
+// DriveProperty represents a property to use with the Drive option.
 type DriveProperty struct {
 	*queso.Property
 }
 
+// NewDriveProperty returns a new instance of DriveProperty.
 func NewDriveProperty(key string, value interface{}) *DriveProperty {
 	return &DriveProperty{
 		Property: queso.NewProperty(key, value),
@@ -30,14 +32,14 @@ func NewDriveProperty(key string, value interface{}) *DriveProperty {
 // WithFile defines which disk image to use with the drive. See
 // https://qemu.readthedocs.io/en/latest/system/images.html for more details.
 //
-// If the filename contains comma, you must double it. For example. to use file "my,file":
+// If the file contains commas, you must double it. For example. to use file "my,file":
 // 	WithFile("my,,file")
 //
 // Special files such as iSCSI devices can be specified using protocol specific URLs.
 // See https://www.qemu.org/docs/master/system/invocation.html#device-url-syntax for
 // more details.
-func WithFile(filename string) *DriveProperty {
-	return NewDriveProperty("file", filename)
+func WithFile(file string) *DriveProperty {
+	return NewDriveProperty("file", file)
 }
 
 // DriveInterface represents an interface that can be used with a drive and is

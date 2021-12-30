@@ -72,8 +72,8 @@ func IsMenu(enabled bool) *BootOrderProperty {
 // Limitation: The splash file could be a JPEG file or a BMP file in 24 BPP
 // format (true color). The resolution should be supported by the SVGA mode, so
 // the recommended is 320x240, 640x480, or 800x640.
-func WithSplashImage(filename string) *BootOrderProperty {
-	return newBootOrderProperty("splash", filename)
+func WithSplashImage(file string) *BootOrderProperty {
+	return newBootOrderProperty("splash", file)
 }
 
 // WithSplashTime specifies the amount of time to show the image specified with

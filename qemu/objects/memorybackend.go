@@ -6,9 +6,9 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// NewMemoryBackendOption returns an Option that represents a Memory Backend object
+// MemoryBackend returns an Option that represents a Memory Backend object
 // to pass to QEMU.
-func NewMemoryBackendOption(name string, id string, properties ...*MemoryBackendProperty) *queso.Option {
+func MemoryBackend(name string, id string, properties ...*MemoryBackendProperty) *queso.Option {
 	props := []*queso.Property{{"id", id}}
 
 	for _, property := range properties {
@@ -21,14 +21,14 @@ func NewMemoryBackendOption(name string, id string, properties ...*MemoryBackend
 // MemoryBackendFile represents a memory file backend object, which can be used to
 // back the guest RAM with huge pages.
 func MemoryBackendFile(id string, properties ...*MemoryBackendProperty) *queso.Option {
-	return NewMemoryBackendOption("memory-backend-file", id, properties...)
+	return MemoryBackend("memory-backend-file", id, properties...)
 }
 
 // MemoryBackendRAM represents a memory backend object, which can be used to back
 // the guest RAM. Memory backend objects offer more control than the WithMemory option
 // that is traditionally used to define guest RAM.
 func MemoryBackendRAM(id string, properties ...*MemoryBackendProperty) *queso.Option {
-	return NewMemoryBackendOption("memory-backend-ram", id, properties...)
+	return MemoryBackend("memory-backend-ram", id, properties...)
 }
 
 // MemoryBackendMemFD represents an anonymous memory file backend object, which
@@ -36,7 +36,7 @@ func MemoryBackendRAM(id string, properties ...*MemoryBackendProperty) *queso.Op
 // vhost-user). The memory is allocated with memfd and optional sealing.
 // This option can only be used on Linux.
 func MemoryBackendMemFD(id string, properties ...*MemoryBackendProperty) *queso.Option {
-	return NewMemoryBackendOption("memory-backend-memfd", id, properties...)
+	return MemoryBackend("memory-backend-memfd", id, properties...)
 }
 
 // MemoryBackendProperty represents a property that can be used with an audio device

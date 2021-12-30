@@ -148,15 +148,11 @@ func WithWebSocket(port int, host string) *VNCProperty {
 //
 // The password must be set separately using the `set_password` command in the QEMU Monitor.
 // The syntax to change your password is:
-//
 //	set_password <protocol> <password>
-//
 // Where <protocol> could be either "vnc" or "spice".
 //
 // If you would like to change <protocol> password expiration, you should use:
-//
 //	expire_password <protocol> <expiration-time>
-//
 // Where expiration time could be one of the following options: "now", "never", +seconds
 // or UNIX time of expiration, e.g. +60 to make password expire in 60 seconds, or 1335196800
 // to make password expire on "Mon Apr 23 12:00:00 EDT 2012" (UNIX time for this date and time).

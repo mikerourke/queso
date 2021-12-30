@@ -14,13 +14,13 @@ func RNGBuiltIn(id string) *queso.Option {
 // device on the host. The id parameter is a unique ID that will be used to
 // reference this entropy backend from the virtio-rng device.
 //
-// The filename parameter represents the file to get random values from. If empty,
+// The file parameter represents the file to get random values from. If empty,
 // uses `/dev/urandom`.
-func RNGRandom(id string, filename string) *queso.Option {
+func RNGRandom(id string, file string) *queso.Option {
 	props := []*queso.Property{{"id", id}}
 
-	if filename != "" {
-		props = append(props, queso.NewProperty("filename", filename))
+	if file != "" {
+		props = append(props, queso.NewProperty("filename", file))
 	}
 
 	return queso.NewOption("object", "rng-random", props...)
@@ -29,8 +29,10 @@ func RNGRandom(id string, filename string) *queso.Option {
 // RNGExternalDaemon creates a random number generator backend which obtains entropy
 // from an external daemon running on the host. The id parameter is a unique ID
 // that will be used to reference this entropy backend from the virtio-rng device.
-// The chardev parameter is the unique ID of a character device backend that
-// provides the connection to the RNG daemon.
-func RNGExternalDaemon(id string, chardev string) *queso.Option {
-	return queso.NewOption("object", "rng-egd", queso.NewProperty("chardev", chardev))
+// The characterDeviceID parameter is the unique ID of a character device backend
+// that provides the connection to the RNG daemon.
+func RNGExternalDaemon(id string, characterDeviceID string) *queso.Option {
+	return queso.NewOption("object", "rng-egd",
+		queso.NewProperty("id", id),
+		queso.NewProperty("chardev", characterDeviceID))
 }

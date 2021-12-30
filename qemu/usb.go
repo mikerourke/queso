@@ -16,7 +16,7 @@ type USBDeviceName string
 const (
 	// USBDeviceBraille represents a Braille device. This will use BrlAPI to display
 	// the braille output on a real or fake device (i.e. it also creates a corresponding
-	// braille chardev automatically beside the USB device).
+	// braille character device automatically beside the USB device).
 	USBDeviceBraille USBDeviceName = "braille"
 
 	// USBDeviceKeyboard represents a standard USB keyboard. It will override the

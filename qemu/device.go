@@ -59,7 +59,7 @@ func DeviceIPMIBMC(id string, properties ...*DeviceProperty) *queso.Option {
 // external entity that provides the IPMI services.
 //
 // A connection is made to an external BMC simulator. If you do this, it is strongly
-// recommended that you use the WithReconnect chardev option to reconnect to the
+// recommended that you use the chardev.WithReconnect option to reconnect to the
 // simulator if the connection is lost. Note that if this is not used carefully, it
 // can be a security issue, as the interface has the ability to send resets, NMIs,
 // and power off the VM. It's best if QEMU makes a connection to an external simulator
@@ -68,8 +68,12 @@ func DeviceIPMIBMC(id string, properties ...*DeviceProperty) *queso.Option {
 //
 // See the "lanserv/README.vm" file in the OpenIPMI library for more details on the
 // external interface.
-func DeviceIPMIBMCExternal(id string, chardev string, properties ...*DeviceProperty) *queso.Option {
-	props := []*DeviceProperty{NewDeviceProperty("chardev", chardev)}
+func DeviceIPMIBMCExternal(
+	id string,
+	characterDeviceID string,
+	properties ...*DeviceProperty,
+) *queso.Option {
+	props := []*DeviceProperty{NewDeviceProperty("chardev", characterDeviceID)}
 
 	if properties != nil {
 		props = append(props, properties...)
@@ -141,14 +145,15 @@ func NewDeviceProperty(key string, value interface{}) *DeviceProperty {
 	}
 }
 
-// WithSlaveAddr defines a slave address to use for the BMC. The default is 0x20.
-func WithSlaveAddr(addr int) *DeviceProperty {
+// WithSlaveAddress defines a slave address to use for the BMC. The default is
+// 0x20.
+func WithSlaveAddress(addr int) *DeviceProperty {
 	return NewDeviceProperty("slave_addr", addr)
 }
 
 // WithSDRFile specifies a file containing raw Sensor Data Records (SDR) data.
-func WithSDRFile(filename string) *DeviceProperty {
-	return NewDeviceProperty("sdrfile", filename)
+func WithSDRFile(file string) *DeviceProperty {
+	return NewDeviceProperty("sdrfile", file)
 }
 
 // WithFRUAreaSize specifies the size of a Field Replaceable Unit (FRU) area.
@@ -159,8 +164,8 @@ func WithFRUAreaSize(bytes int) *DeviceProperty {
 
 // WithFRUFile specifies a file containing raw Field Replaceable Unit (FRU)
 // inventory data.
-func WithFRUFile(filename string) *DeviceProperty {
-	return NewDeviceProperty("frudatafile", filename)
+func WithFRUFile(file string) *DeviceProperty {
+	return NewDeviceProperty("frudatafile", file)
 }
 
 // WithGUID specifies the value for the GUID for the BMC, in standard UUID format.

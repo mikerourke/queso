@@ -1,6 +1,7 @@
 package display
 
 import (
+	"net"
 	"strings"
 
 	"github.com/mikerourke/queso"
@@ -36,16 +37,16 @@ func WithTCPPort(port int) *SpiceProperty {
 
 // WithIPAddress set the IP address spice is listening on.
 // The default is any address.
-func WithIPAddress(addr string) *SpiceProperty {
-	return NewSpiceProperty("addr", addr)
+func WithIPAddress(addr net.IP) *SpiceProperty {
+	return NewSpiceProperty("addr", addr.String())
 }
 
 // IPVersion represents the IP version to use with the IsIPVersionUsed property.
 type IPVersion string
 
 const (
-	IPVersionV4   IPVersion = "ipv4"
-	IPVersionV6   IPVersion = "ipv6"
+	IPVersion4    IPVersion = "ipv4"
+	IPVersion6    IPVersion = "ipv6"
 	IPVersionUnix IPVersion = "unix"
 )
 

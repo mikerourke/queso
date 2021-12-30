@@ -16,8 +16,8 @@ func Driver(driver string, properties ...*DriverProperty) *queso.Option {
 }
 
 // DriverFile defines the protocol-level block driver for accessing regular files.
-func DriverFile(filename string, properties ...*DriverProperty) *queso.Option {
-	props := []*DriverProperty{NewDriverProperty("filename", filename)}
+func DriverFile(file string, properties ...*DriverProperty) *queso.Option {
+	props := []*DriverProperty{NewDriverProperty("filename", file)}
 
 	if properties != nil {
 		props = append(props, properties...)

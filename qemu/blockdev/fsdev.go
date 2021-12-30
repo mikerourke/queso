@@ -134,8 +134,8 @@ func IsMountReadOnly(enabled bool) *FileSystemDeviceProperty {
 
 // WithSocketFile enables proxy filesystem driver to use the specified socket filename
 // for communicating with virtfs-proxy-helper
-func WithSocketFile(filename string) *FileSystemDeviceProperty {
-	return NewFileSystemDeviceProperty("socket", filename)
+func WithSocketFile(file string) *FileSystemDeviceProperty {
+	return NewFileSystemDeviceProperty("socket", file)
 }
 
 // WithSocketDescriptor enables proxy filesystem driver to use the specified socket

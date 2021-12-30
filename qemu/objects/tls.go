@@ -2,8 +2,8 @@ package objects
 
 import "github.com/mikerourke/queso"
 
-// NewTLSOption returns an Option that represents a TLS object to pass to QEMU.
-func NewTLSOption(name string, id string, properties ...*TLSProperty) *queso.Option {
+// TLS returns an Option that represents a TLS object to pass to QEMU.
+func TLS(name string, id string, properties ...*TLSProperty) *queso.Option {
 	props := []*queso.Property{{"id", id}}
 
 	for _, property := range properties {
@@ -29,7 +29,7 @@ func newTLSCredentialsOption(
 		props = append(props, properties...)
 	}
 
-	return NewTLSOption(name, id, props...)
+	return TLS(name, id, props...)
 }
 
 // TLSCredentialsAnon creates a TLS anonymous credentials object, which can be used to provide
@@ -128,7 +128,7 @@ func TLSCredentialsX509(id string, endpoint string, dir string, properties ...*T
 // IANA_TLS_CIPHER objects. The firmware uses the IANA_TLS_CIPHER array for configuring
 // guest-side TLS.
 func TLSCipherSuites(id string, priority string) *queso.Option {
-	return NewTLSOption("tls-cipher-suites", id, NewTLSProperty("priority", priority))
+	return TLS("tls-cipher-suites", id, NewTLSProperty("priority", priority))
 }
 
 // TLSProperty represents a property that can be used with an audio device
