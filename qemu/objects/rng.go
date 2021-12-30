@@ -29,10 +29,10 @@ func RNGRandom(id string, file string) *queso.Option {
 // RNGExternalDaemon creates a random number generator backend which obtains entropy
 // from an external daemon running on the host. The id parameter is a unique ID
 // that will be used to reference this entropy backend from the virtio-rng device.
-// The characterDeviceID parameter is the unique ID of a character device backend
+// The chardev parameter is the unique ID of a character device backend
 // that provides the connection to the RNG daemon.
-func RNGExternalDaemon(id string, characterDeviceID string) *queso.Option {
+func RNGExternalDaemon(id string, chardev string) *queso.Option {
 	return queso.NewOption("object", "rng-egd",
 		queso.NewProperty("id", id),
-		queso.NewProperty("chardev", characterDeviceID))
+		queso.NewProperty("chardev", chardev))
 }

@@ -131,7 +131,7 @@ func PipeBackend(id string, path string) *queso.Option {
 	return Backend(BackendTypePipe, id, NewProperty("path", path))
 }
 
-// ConsoleBackend sends traffic from the guest to QEMU’s standard output.
+// ConsoleBackend sends traffic from the guest to QEMU's standard output.
 // The ConsoleBackend does not take any options.
 func ConsoleBackend(id string) *queso.Option {
 	return Backend(BackendTypeConsole, id)

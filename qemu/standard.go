@@ -49,9 +49,9 @@ func SetParameter(group string, id string, arg string, value string) *queso.Opti
 // created automatically and set properties on it, use DeviceDriver.
 func SetDriverProperty(driver string, name string, value string) *queso.Option {
 	props := []*queso.Property{
-		queso.NewProperty("driver", driver),
-		queso.NewProperty("property", name),
-		queso.NewProperty("value", value),
+		{"driver", driver},
+		{"property", name},
+		{"value", value},
 	}
 
 	return queso.NewOption("global", "", props...)

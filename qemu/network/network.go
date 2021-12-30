@@ -118,11 +118,11 @@ func VDEBackend(id string, properties ...*Property) *queso.Option {
 }
 
 // VHostUserBackend establishes a vhost-user network backend, backed by charDevID.
-// The characterDeviceID should be a unix domain socket backed one. The vhost-user
+// The chardev should be a unix domain socket backed one. The vhost-user
 // uses a specifically defined protocol to pass vhost ioctl replacement messages
 // to an application on the other end of the socket.
-func VHostUserBackend(characterDeviceID string, properties ...*Property) *queso.Option {
-	return newNetworkBackend(BackendTypeVHostUser, "chardev", characterDeviceID, properties...)
+func VHostUserBackend(chardev string, properties ...*Property) *queso.Option {
+	return newNetworkBackend(BackendTypeVHostUser, "chardev", chardev, properties...)
 }
 
 // VHostVDPABackend establishes a vhost-vdpa network device.
@@ -143,8 +143,8 @@ func VHostVDPABackend(vHostDeviceID string) *queso.Option {
 // empty string for the networkDeviceID parameter to use the emulated hub.
 func HubPort(id string, hubID string, networkDeviceID string) *queso.Option {
 	props := []*queso.Property{
-		queso.NewProperty("id", id),
-		queso.NewProperty("hubid", hubID),
+		{"id", id},
+		{"hubid", hubID},
 	}
 
 	if networkDeviceID != "" {

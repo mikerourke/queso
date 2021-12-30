@@ -70,10 +70,10 @@ func DeviceIPMIBMC(id string, properties ...*DeviceProperty) *queso.Option {
 // external interface.
 func DeviceIPMIBMCExternal(
 	id string,
-	characterDeviceID string,
+	chardev string,
 	properties ...*DeviceProperty,
 ) *queso.Option {
-	props := []*DeviceProperty{NewDeviceProperty("chardev", characterDeviceID)}
+	props := []*DeviceProperty{NewDeviceProperty("chardev", chardev)}
 
 	if properties != nil {
 		props = append(props, properties...)

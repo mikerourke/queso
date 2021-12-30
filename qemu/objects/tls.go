@@ -55,7 +55,7 @@ func TLSCredentialsAnon(id string, endpoint string, dir string, properties ...*T
 // which network backends will use to access the credentials. The endpoint is either
 // server or client depending on whether the QEMU network backend that uses the
 // credentials will be acting as a client or as a server. For clients only, username
-// is the username which will be sent to the server. If omitted it defaults to “qemu”.
+// is the username which will be sent to the server. If omitted it defaults to "qemu".
 //
 // The dir parameter tells QEMU where to find the keys file. It is called `dir/keys.psk`
 // and contains "username:key" pairs. This file can most easily be created using the
