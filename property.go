@@ -12,7 +12,7 @@ type Property struct {
 	Value interface{}
 }
 
-// NewProperty returns a new instance of a Property.
+// NewProperty returns a new instance of Property.
 func NewProperty(key string, value interface{}) *Property {
 	return &Property{
 		Key:   key,

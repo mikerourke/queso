@@ -12,7 +12,7 @@ type Option struct {
 	Properties []*Property
 }
 
-// NewOption returns a new instance of an Option.
+// NewOption returns a new instance of Option.
 func NewOption(flag string, name string, properties ...*Property) *Option {
 	return &Option{
 		Flag:       flag,
