@@ -6,8 +6,8 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// newFileSystemDevice defines a new filesystem device.
-func newFileSystemDevice(
+// FileSystemDevice defines a new filesystem device option.
+func FileSystemDevice(
 	deviceType string,
 	id string,
 	properties ...*FileSystemDeviceProperty,
@@ -43,12 +43,12 @@ const (
 	SecurityModelMappedFile SecurityModel = "mapped-file"
 )
 
-// FileSystemDeviceLocal defines a filesystem device for which accesses to the
+// LocalFileSystemDevice defines a filesystem device for which accesses to the
 // filesystem are done by QEMU. The exportPath parameter represents the export path
 // for the filesystem device. Files under this path will be available to the 9p
 // client on the guest. The securityModel parameter specifies the security model
 // to be used for the export path.
-func FileSystemDeviceLocal(
+func LocalFileSystemDevice(
 	id string,
 	exportPath string,
 	securityModel SecurityModel,
@@ -63,7 +63,7 @@ func FileSystemDeviceLocal(
 		props = append(props, properties...)
 	}
 
-	return newFileSystemDevice("local", id, props...)
+	return FileSystemDevice("local", id, props...)
 }
 
 // SocketType is used to specify the socket type for a proxy device.
@@ -78,11 +78,11 @@ const (
 	SocketTypeDescriptor SocketType = "sock_fd"
 )
 
-// FileSystemDeviceProxy defines a filesystem device for which accesses to the
+// ProxyFileSystemDevice defines a filesystem device for which accesses to the
 // filesystem are done by virtfs-proxy-helper. The socketType parameter specifies
 // whether a file path or file descriptor should be used. The socketFileOrDescriptor
 // parameter is the file path or fd to use (based on the socketType).
-func FileSystemDeviceProxy(
+func ProxyFileSystemDevice(
 	id string,
 	socketType SocketType,
 	socketFileOrDescriptor string,
@@ -96,14 +96,14 @@ func FileSystemDeviceProxy(
 		props = append(props, properties...)
 	}
 
-	return newFileSystemDevice("proxy", id, props...)
+	return FileSystemDevice("proxy", id, props...)
 }
 
-// FileSystemDeviceSynth defines a synthetic filesystem, which is only used by
+// SyntheticFileSystemDevice defines a synthetic filesystem, which is only used by
 // QTests. The readOnly parameter defaults to true (see IsMountReadOnly), but
 // can be overridden.
-func FileSystemDeviceSynth(id string, readOnly bool) *queso.Option {
-	return newFileSystemDevice("synth", id, IsMountReadOnly(readOnly))
+func SyntheticFileSystemDevice(id string, readOnly bool) *queso.Option {
+	return FileSystemDevice("synth", id, IsMountReadOnly(readOnly))
 }
 
 // FileSystemDeviceProperty represents a property associated with a filesystem
@@ -112,7 +112,7 @@ type FileSystemDeviceProperty struct {
 	*queso.Property
 }
 
-// NewFileSystemDeviceProperty creates a new instance of a FileSystemDeviceProperty.
+// NewFileSystemDeviceProperty creates a new instance of FileSystemDeviceProperty.
 func NewFileSystemDeviceProperty(key string, value interface{}) *FileSystemDeviceProperty {
 	return &FileSystemDeviceProperty{
 		Property: queso.NewProperty(key, value),

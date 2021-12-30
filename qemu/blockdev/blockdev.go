@@ -1,39 +1,37 @@
-// Package blockdev is used to manage block devices.
+// Package blockdev is used to manage block devices. See
+// https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-1 for
+// more details.
 package blockdev
 
 import "github.com/mikerourke/queso"
 
-// DiskDriveName is the identifier for a drive to use when using the DiskDrive
-// option.
-type DiskDriveName string
-
 const (
 	// FloppyDiskDriveA represents the 0th index floppy disk drive in the guest.
-	FloppyDiskDriveA DiskDriveName = "fda"
+	FloppyDiskDriveA = "fda"
 
 	// FloppyDiskDriveB represents the 1st index floppy disk drive in the guest.
-	FloppyDiskDriveB DiskDriveName = "fdb"
+	FloppyDiskDriveB = "fdb"
 
 	// HardDiskDriveA represents the 0th index hard disk drive in the guest.
-	HardDiskDriveA DiskDriveName = "hda"
+	HardDiskDriveA = "hda"
 
 	// HardDiskDriveB represents the 1st index hard disk drive in the guest.
-	HardDiskDriveB DiskDriveName = "hdb"
+	HardDiskDriveB = "hdb"
 
 	// HardDiskDriveC represents the 2nd index hard disk drive in the guest.
-	HardDiskDriveC DiskDriveName = "hdc"
+	HardDiskDriveC = "hdc"
 
 	// HardDiskDriveD represents the 3rd index hard disk drive in the guest.
-	HardDiskDriveD DiskDriveName = "hdd"
+	HardDiskDriveD = "hdd"
 
 	// CDROM represents the CD-ROM image (cannot use this an HardDiskDriveC at the
 	// same time). You can use the host CD-ROM by using `/dev/cdrom` as filename.
-	CDROM DiskDriveName = "cdrom"
+	CDROM = "cdrom"
 )
 
 // DiskDrive uses the specified disk drive name to mount the specified file path.
-func DiskDrive(name DiskDriveName, file string) *queso.Option {
-	return queso.NewOption(string(name), file)
+func DiskDrive(name string, file string) *queso.Option {
+	return queso.NewOption(name, file)
 }
 
 // FlashMemory uses the specified file as on-board Flash memory image.

@@ -1,44 +1,37 @@
 package chardev
 
-import (
-	"net"
-
-	"github.com/mikerourke/queso"
-)
-
-// BackendType describes the type of the character device backend.
-type BackendType string
+import "github.com/mikerourke/queso"
 
 const (
-	BackendTypeNull       BackendType = "null"
-	BackendTypeBraille    BackendType = "braille"
-	BackendTypeConsole    BackendType = "console"
-	BackendTypeFile       BackendType = "file"
-	BackendTypeMSMouse    BackendType = "msmouse"
-	BackendTypeParallel   BackendType = "parallel"
-	BackendTypePipe       BackendType = "pipe"
-	BackendTypePTY        BackendType = "pty"
-	BackendTypeRingBuffer BackendType = "ringbuf"
-	BackendTypeSerial     BackendType = "serial"
-	BackendTypeSocket     BackendType = "socket"
-	BackendTypeSpicePort  BackendType = "spiceport"
-	BackendTypeSpiceVMC   BackendType = "spicevmc"
-	BackendTypeStdio      BackendType = "stdio"
-	BackendTypeTTY        BackendType = "tty"
-	BackendTypeUDP        BackendType = "udp"
-	BackendTypeVC         BackendType = "vc"
+	BackendTypeNull           = "null"
+	BackendTypeBraille        = "braille"
+	BackendTypeConsole        = "console"
+	BackendTypeFile           = "file"
+	BackendTypeMSMouse        = "msmouse"
+	BackendTypeParallel       = "parallel"
+	BackendTypePipe           = "pipe"
+	BackendTypePTY            = "pty"
+	BackendTypeRingBuffer     = "ringbuf"
+	BackendTypeSerial         = "serial"
+	BackendTypeSocket         = "socket"
+	BackendTypeSpicePort      = "spiceport"
+	BackendTypeSpiceVMC       = "spicevmc"
+	BackendTypeStdio          = "stdio"
+	BackendTypeTTY            = "tty"
+	BackendTypeUDP            = "udp"
+	BackendTypeVirtualConsole = "vc"
 )
 
 // Backend returns a character device of the specified backendType with the
 // specified id and properties.
-func Backend(backendType BackendType, id string, properties ...*Property) *queso.Option {
+func Backend(backendType string, id string, properties ...*Property) *queso.Option {
 	props := []*queso.Property{{"id", id}}
 
 	for _, property := range properties {
 		props = append(props, property.Property)
 	}
 
-	return queso.NewOption("chardev", string(backendType), props...)
+	return queso.NewOption("chardev", backendType, props...)
 }
 
 // NullBackend represents a void device. This device will not emit any data, and
@@ -47,65 +40,16 @@ func NullBackend(id string) *queso.Option {
 	return Backend(BackendTypeNull, id)
 }
 
-// TCPSocketBackend creates a SocketBackend for a two-way stream TCP socket. The
-// port parameter specifies the local port to be bound. For a connecting socket
-// specifies the port on the remote host to connect to. It can be given as either a
-// port number or a service name.
-func TCPSocketBackend(id string, port interface{}, properties ...*Property) *queso.Option {
-	props := []*Property{NewProperty("port", port)}
-
-	if properties != nil {
-		props = append(props, properties...)
-	}
-
-	return Backend(BackendTypeSocket, id, props...)
+// BrailleBackend connects to a local BrlAPI server. The BrailleBackend does not
+// take any options.
+func BrailleBackend(id string) *queso.Option {
+	return Backend(BackendTypeBraille, id)
 }
 
-// UnixSocketBackend creates a SocketBackend for a two-way stream unix socket.
-// The path parameter specifies the local path of the unix socket.
-func UnixSocketBackend(id string, path string, properties ...*Property) *queso.Option {
-	props := []*Property{NewProperty("path", path)}
-
-	if properties != nil {
-		props = append(props, properties...)
-	}
-
-	return Backend(BackendTypeSocket, id, props...)
-}
-
-// UDPBackend sends all traffic from the guest to a remote host over UDP.
-func UDPBackend(id string, port int, properties ...*Property) *queso.Option {
-	props := []*Property{NewProperty("port", port)}
-
-	if properties != nil {
-		props = append(props, properties...)
-	}
-
-	return Backend(BackendTypeUDP, id, props...)
-}
-
-// MSMouseBackend forwards QEMU's emulated msmouse events to the guest.
-// The MSMouseBackend does not take any options.
-func MSMouseBackend(id string) *queso.Option {
-	return Backend(BackendTypeMSMouse, id)
-}
-
-// TextConsoleBackend connects to a QEMU text console.
-func TextConsoleBackend(id string, properties ...*Property) *queso.Option {
-	return Backend(BackendTypeVC, id, properties...)
-}
-
-// RingBufferBackend creates a ring buffer with the specified fixed size.
-// If specified, the size parameter must be a power of two. If the size parameter
-// is an empty string, 64K is used.
-func RingBufferBackend(id string, size string) *queso.Option {
-	props := make([]*Property, 0)
-
-	if size != "" {
-		props = append(props, NewProperty("size", size))
-	}
-
-	return Backend(BackendTypeRingBuffer, id, props...)
+// ConsoleBackend sends traffic from the guest to QEMU's standard output.
+// The ConsoleBackend does not take any options.
+func ConsoleBackend(id string) *queso.Option {
+	return Backend(BackendTypeConsole, id)
 }
 
 // FileBackend logs all traffic received from the guest to a file.
@@ -114,6 +58,20 @@ func RingBufferBackend(id string, size string) *queso.Option {
 // be created if it does not already exist, and overwritten if it does.
 func FileBackend(id string, path string) *queso.Option {
 	return Backend(BackendTypeFile, id, NewProperty("path", path))
+}
+
+// MSMouseBackend forwards QEMU's emulated msmouse events to the guest.
+// The MSMouseBackend does not take any options.
+func MSMouseBackend(id string) *queso.Option {
+	return Backend(BackendTypeMSMouse, id)
+}
+
+// ParallelBackend connects to a local parallel port and is only available on Linux,
+// FreeBSD and DragonFlyBSD hosts.
+//
+// The path parameter specifies the path to the parallel port device.
+func ParallelBackend(id string, path string) *queso.Option {
+	return Backend(BackendTypeParallel, id, NewProperty("path", path))
 }
 
 // PipeBackend creates a two-way connection to the guest. The behaviour differs
@@ -131,10 +89,23 @@ func PipeBackend(id string, path string) *queso.Option {
 	return Backend(BackendTypePipe, id, NewProperty("path", path))
 }
 
-// ConsoleBackend sends traffic from the guest to QEMU's standard output.
-// The ConsoleBackend does not take any options.
-func ConsoleBackend(id string) *queso.Option {
-	return Backend(BackendTypeConsole, id)
+// PTYBackend creates a new pseudo-terminal on the host and connects to it.
+// The PTYBackend does not take any options and is not available on Windows hosts.
+func PTYBackend(id string) *queso.Option {
+	return Backend(BackendTypePTY, id)
+}
+
+// RingBufferBackend creates a ring buffer with the specified fixed size.
+// If specified, the size parameter must be a power of two. If the size parameter
+// is an empty string, 64K is used.
+func RingBufferBackend(id string, size string) *queso.Option {
+	props := make([]*Property, 0)
+
+	if size != "" {
+		props = append(props, NewProperty("size", size))
+	}
+
+	return Backend(BackendTypeRingBuffer, id, props...)
 }
 
 // SerialBackend sends traffic from the guest to a serial device on the host.
@@ -146,41 +117,14 @@ func SerialBackend(id string, path string) *queso.Option {
 	return Backend(BackendTypeSerial, id, NewProperty("path", path))
 }
 
-// PTYBackend creates a new pseudo-terminal on the host and connects to it.
-// The PTYBackend does not take any options and is not available on Windows hosts.
-func PTYBackend(id string) *queso.Option {
-	return Backend(BackendTypePTY, id)
-}
-
-// StdioBackend connects to standard input and standard output of the QEMU process.
-//
-// The signal parameter controls if signals are enabled on the terminal, that
-// includes exiting QEMU with the key sequence Control-c. This option is enabled
-// by default.
-func StdioBackend(id string, signal bool) *queso.Option {
-	return Backend(BackendTypeStdio, id, NewProperty("signal", signal))
-}
-
-// BrailleBackend connects to a local BrlAPI server. The BrailleBackend does not
-// take any options.
-func BrailleBackend(id string) *queso.Option {
-	return Backend(BackendTypeBraille, id)
-}
-
-// TTYBackend is only available on Linux, Sun, FreeBSD, NetBSD, OpenBSD and
-// DragonFlyBSD hosts. It is an alias for SerialBackend.
-//
-// The path parameter specifies the path to the tty.
-func TTYBackend(id string, path string) *queso.Option {
-	return Backend(BackendTypeTTY, id, NewProperty("path", path))
-}
-
-// ParallelBackend connects to a local parallel port and is only available on Linux,
-// FreeBSD and DragonFlyBSD hosts.
-//
-// The path parameter specifies the path to the parallel port device.
-func ParallelBackend(id string, path string) *queso.Option {
-	return Backend(BackendTypeParallel, id, NewProperty("path", path))
+// SpicePortBackend connects to a spice port, allowing a Spice client to handle the
+// traffic identified by a name (preferably a fqdn)., and is only available when
+// spice support is built in. The debugLevel parameter is the debug level. The name
+// parameter is the name of spice channel to connect to.
+func SpicePortBackend(id string, debugLevel string, name string) *queso.Option {
+	return Backend(BackendTypeSpicePort, id,
+		NewProperty("debug", debugLevel),
+		NewProperty("name", name))
 }
 
 // SpiceVMCBackend connects to a spice virtual machine channel, such as `vdiport`,
@@ -193,14 +137,63 @@ func SpiceVMCBackend(id string, debugLevel string, name string) *queso.Option {
 		NewProperty("name", name))
 }
 
-// SpicePortBackend connects to a spice port, allowing a Spice client to handle the
-// traffic identified by a name (preferably a fqdn)., and is only available when
-// spice support is built in. The debugLevel parameter is the debug level. The name
-// parameter is the name of spice channel to connect to.
-func SpicePortBackend(id string, debugLevel string, name string) *queso.Option {
-	return Backend(BackendTypeSpicePort, id,
-		NewProperty("debug", debugLevel),
-		NewProperty("name", name))
+// StdioBackend connects to standard input and standard output of the QEMU process.
+//
+// The signal parameter controls if signals are enabled on the terminal, that
+// includes exiting QEMU with the key sequence Control-c. This option is enabled
+// by default.
+func StdioBackend(id string, signal bool) *queso.Option {
+	return Backend(BackendTypeStdio, id, NewProperty("signal", signal))
+}
+
+// TCPSocketBackend creates a SocketBackend for a two-way stream TCP socket. The
+// port parameter specifies the local port to be bound. For a connecting socket
+// specifies the port on the remote host to connect to. It can be given as either a
+// port number or a service name.
+func TCPSocketBackend(id string, port interface{}, properties ...*Property) *queso.Option {
+	props := []*Property{NewProperty("port", port)}
+
+	if properties != nil {
+		props = append(props, properties...)
+	}
+
+	return Backend(BackendTypeSocket, id, props...)
+}
+
+// TTYBackend is only available on Linux, Sun, FreeBSD, NetBSD, OpenBSD and
+// DragonFlyBSD hosts. It is an alias for SerialBackend.
+//
+// The path parameter specifies the path to the tty.
+func TTYBackend(id string, path string) *queso.Option {
+	return Backend(BackendTypeTTY, id, NewProperty("path", path))
+}
+
+// UDPBackend sends all traffic from the guest to a remote host over UDP.
+func UDPBackend(id string, port int, properties ...*Property) *queso.Option {
+	props := []*Property{NewProperty("port", port)}
+
+	if properties != nil {
+		props = append(props, properties...)
+	}
+
+	return Backend(BackendTypeUDP, id, props...)
+}
+
+// UnixSocketBackend creates a SocketBackend for a two-way stream unix socket.
+// The path parameter specifies the local path of the unix socket.
+func UnixSocketBackend(id string, path string, properties ...*Property) *queso.Option {
+	props := []*Property{NewProperty("path", path)}
+
+	if properties != nil {
+		props = append(props, properties...)
+	}
+
+	return Backend(BackendTypeSocket, id, props...)
+}
+
+// VirtualConsoleBackend connects to a QEMU text console.
+func VirtualConsoleBackend(id string, properties ...*Property) *queso.Option {
+	return Backend(BackendTypeVirtualConsole, id, properties...)
 }
 
 // Property represents a property to associate with a character device Backend.
@@ -266,8 +259,8 @@ func WithTLSAuthZ(id string) *Property {
 
 // WithHost specifies the local address to be bound for a TCPSocketBackend or
 // a remote host to connect to for a UDPBackend.
-func WithHost(addr net.IP) *Property {
-	return NewProperty("host", addr.String())
+func WithHost(addr string) *Property {
+	return NewProperty("host", addr)
 }
 
 // WithToPort is only relevant to listening sockets on a TCPSocketBackend. If it
@@ -312,7 +305,7 @@ func IsTight(tight bool) *Property {
 
 // WithLocalAddress specifies the local address to bind to for a UDPBackend.
 // If not specified, it defaults to 0.0.0.0.
-func WithLocalAddress(addr net.IP) *Property {
+func WithLocalAddress(addr string) *Property {
 	return NewProperty("localaddr", addr)
 }
 
@@ -322,24 +315,24 @@ func WithLocalPort(port int) *Property {
 	return NewProperty("localport", port)
 }
 
-// WithConsoleWidth specifies the width in pixels for a TextConsoleBackend.
+// WithConsoleWidth specifies the width in pixels for a VirtualConsoleBackend.
 func WithConsoleWidth(pixels int) *Property {
 	return NewProperty("width", pixels)
 }
 
-// WithConsoleHeight specifies the height in pixels for a TextConsoleBackend.
+// WithConsoleHeight specifies the height in pixels for a VirtualConsoleBackend.
 func WithConsoleHeight(pixels int) *Property {
 	return NewProperty("height", pixels)
 }
 
 // WithConsoleRows specifies that the console be sized to fit a text console
-// with the given row count for a TextConsoleBackend.
+// with the given row count for a VirtualConsoleBackend.
 func WithConsoleRows(count int) *Property {
 	return NewProperty("rows", count)
 }
 
 // WithConsoleColumns specifies that the console be sized to fit a text console
-// with the given column count for a TextConsoleBackend.
+// with the given column count for a VirtualConsoleBackend.
 func WithConsoleColumns(count int) *Property {
 	return NewProperty("cols", count)
 }

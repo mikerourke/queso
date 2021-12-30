@@ -90,7 +90,7 @@ type NUMAProperty struct {
 	*queso.Property
 }
 
-// NewNUMAProperty returns a new instance of an NUMAProperty.
+// NewNUMAProperty returns a new instance of NUMAProperty.
 func NewNUMAProperty(key string, value interface{}) *NUMAProperty {
 	return &NUMAProperty{
 		Property: queso.NewProperty(key, value),

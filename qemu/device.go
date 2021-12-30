@@ -138,7 +138,7 @@ type DeviceProperty struct {
 	*queso.Property
 }
 
-// NewDeviceProperty returns a new instance of a DeviceProperty.
+// NewDeviceProperty returns a new instance of DeviceProperty.
 func NewDeviceProperty(key string, value interface{}) *DeviceProperty {
 	return &DeviceProperty{
 		Property: queso.NewProperty(key, value),

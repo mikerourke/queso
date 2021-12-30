@@ -2,10 +2,10 @@ package blockdev
 
 import "github.com/mikerourke/queso"
 
-// newFileSystemDevice defines a new virtual filesystem. This is actually just a
+// VirtualFileSystem defines a new virtual filesystem. This is actually just a
 // convenience shortcut for creating a file system device with the
 // Virtio9P(Virtio9PPCI, ...) option (see qemu/device.go).
-func newVirtualFileSystem(
+func VirtualFileSystem(
 	deviceType string,
 	mountTag string,
 	properties ...*FileSystemDeviceProperty,
@@ -19,12 +19,12 @@ func newVirtualFileSystem(
 	return queso.NewOption("virtfs", deviceType, props...)
 }
 
-// VirtualFileSystemLocal defines a virtual filesystem for which accesses to the
+// LocalVirtualFileSystem defines a virtual filesystem for which accesses to the
 // filesystem are done by QEMU. The exportPath parameter represents the export path
 // for the filesystem. Files under this path will be available to the 9p client on
 // the guest. The securityModel parameter specifies the security model to be used
 // for the export path.
-func VirtualFileSystemLocal(
+func LocalVirtualFileSystem(
 	mountTag string,
 	exportPath string,
 	securityModel SecurityModel,
@@ -39,14 +39,14 @@ func VirtualFileSystemLocal(
 		props = append(props, properties...)
 	}
 
-	return newVirtualFileSystem("local", mountTag, props...)
+	return VirtualFileSystem("local", mountTag, props...)
 }
 
-// VirtualFileSystemProxy defines a virtual filesystem for which accesses to the
+// ProxyVirtualFileSystem defines a virtual filesystem for which accesses to the
 // filesystem are done by virtfs-proxy-helper. The socketType parameter specifies
 // whether a file path or file descriptor should be used. The socketFileOrDescriptor
 // parameter is the file path or fd to use (based on the socketType).
-func VirtualFileSystemProxy(
+func ProxyVirtualFileSystem(
 	mountTag string,
 	socketType SocketType,
 	socketFileOrDescriptor string,
@@ -60,13 +60,13 @@ func VirtualFileSystemProxy(
 		props = append(props, properties...)
 	}
 
-	return newVirtualFileSystem("proxy", mountTag, props...)
+	return VirtualFileSystem("proxy", mountTag, props...)
 }
 
-// VirtualFileSystemSynth defines a synthetic filesystem, which is only used by
+// SyntheticVirtualFileSystem defines a synthetic filesystem, which is only used by
 // QTests.
-func VirtualFileSystemSynth(mountTag string) *queso.Option {
-	return newVirtualFileSystem("synth", mountTag)
+func SyntheticVirtualFileSystem(mountTag string) *queso.Option {
+	return VirtualFileSystem("synth", mountTag)
 }
 
 // MultiDevicesAction is used to specify how to deal with multiple devices. See
@@ -74,33 +74,34 @@ func VirtualFileSystemSynth(mountTag string) *queso.Option {
 type MultiDevicesAction string
 
 const (
-	MultiDevicesRemap  MultiDevicesAction = "remap"
-	MultiDevicesForbid MultiDevicesAction = "forbid"
-	MultiDevicesWarn   MultiDevicesAction = "warn"
+	MultiDevicesActionForbid MultiDevicesAction = "forbid"
+	MultiDevicesActionRemap  MultiDevicesAction = "remap"
+	MultiDevicesActionWarn   MultiDevicesAction = "warn"
 )
 
-// WithMultiDevicesAction specifies how to deal with multiple devices being shared with a
-// 9p export. Supported behaviours are either MultiDevicesRemap, MultiDevicesForbid, or
-// MultiDevicesWarn. The latter is the default behaviour on which virtfs 9p expects only
-// one device to be shared with the same export, and if more than one device is shared
-// and accessed via the same 9p export then only a warning message is logged (once) by QEMU
-// on host side.
+// WithMultiDevicesAction specifies how to deal with multiple devices being shared
+// with a 9p export. Supported behaviours are either MultiDevicesActionRemap,
+// MultiDevicesActionForbid, or MultiDevicesActionWarn. The latter is the default
+// behaviour on which virtfs 9p expects only one device to be shared with the same
+// export, and if more than one device is shared and accessed via the same 9p export
+// then only a warning message is logged (once) by QEMU on host side.
 //
-// In order to avoid file ID collisions on guest you should either create a separate virtfs
-// export for each device to be shared with guests (recommended way) or you might use
-// MultiDevicesRemap instead which allows you to share multiple devices with only one export
-// instead, which is achieved by remapping the original inode numbers from host to guest in
-// a way that would prevent such collisions. Remapping inodes in such use cases is required
-// because the original device IDs from host are never passed and exposed on guest. Instead, all
-// files of an export shared with virtfs always share the same device id on guest. So two files
-// with identical inode numbers but from actually different devices on host would otherwise
-// cause a file ID collision and hence potential misbehaviour on guest.
+// In order to avoid file ID collisions on guest you should either create a separate
+// virtfs export for each device to be shared with guests (recommended way) or you
+// might use MultiDevicesActionRemap instead which allows you to share multiple devices
+// with only one export instead, which is achieved by remapping the original inode
+// numbers from host to guest in a way that would prevent such collisions. Remapping
+// inodes in such use cases is required because the original device IDs from host
+// are never passed and exposed on guest. Instead, all files of an export shared
+// with virtfs always share the same device id on guest. So two files with identical
+// inode numbers but from actually different devices on host would otherwise cause
+// a file ID collision and hence potential misbehaviour on guest.
 //
-// MultiDevicesForbid on the other hand assumes like MultiDevicesWarn that only one device is
-// shared by the same export, however it will not only log a warning message but also deny
-// access to additional devices on guest. Note though that MultiDevicesForbid does currently
-// not block all possible file access operations (e.g. readdir() would still return entries
-// from other devices).
+// MultiDevicesActionForbid on the other hand assumes like MultiDevicesActionWarn
+// that only one device is shared by the same export, however it will not only log
+// a warning message but also deny access to additional devices on guest. Note
+// though that MultiDevicesActionForbid does currently not block all possible file
+// access operations (e.g. readdir() would still return entries from other devices).
 func WithMultiDevicesAction(action MultiDevicesAction) *FileSystemDeviceProperty {
 	return NewFileSystemDeviceProperty("multidevs", action)
 }

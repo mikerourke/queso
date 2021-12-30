@@ -172,7 +172,7 @@ type Action struct {
 	Action string
 }
 
-// NewAction returns an instance of Action.
+// NewAction returns a new instance of Action.
 func NewAction(event string, action string) *Action {
 	return &Action{
 		Event:  event,
@@ -274,7 +274,7 @@ type Argument struct {
 	Value string
 }
 
-// NewArgument returns an instance of Argument.
+// NewArgument returns a new instance of Argument.
 func NewArgument(name string, value string) *Argument {
 	return &Argument{
 		Name:  name,
@@ -373,7 +373,7 @@ type TraceProperty struct {
 	*queso.Property
 }
 
-// NewTraceProperty returns an instance of TraceProperty.
+// NewTraceProperty returns a new instance of TraceProperty.
 func NewTraceProperty(key string, value interface{}) *TraceProperty {
 	return &TraceProperty{
 		Property: queso.NewProperty(key, value),

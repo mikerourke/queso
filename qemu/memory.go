@@ -30,7 +30,7 @@ type MemoryProperty struct {
 	*queso.Property
 }
 
-// NewMemoryProperty returns a new instance of a MemoryProperty.
+// NewMemoryProperty returns a new instance of MemoryProperty.
 func NewMemoryProperty(key string, value interface{}) *MemoryProperty {
 	return &MemoryProperty{
 		Property: queso.NewProperty(key, value),

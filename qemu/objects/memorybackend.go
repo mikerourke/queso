@@ -45,7 +45,7 @@ type MemoryBackendProperty struct {
 	*queso.Property
 }
 
-// NewMemoryBackendProperty returns a new instance of an MemoryBackendProperty.
+// NewMemoryBackendProperty returns a new instance of MemoryBackendProperty.
 func NewMemoryBackendProperty(key string, value interface{}) *MemoryBackendProperty {
 	return &MemoryBackendProperty{
 		Property: queso.NewProperty(key, value),

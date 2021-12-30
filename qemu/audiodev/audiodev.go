@@ -1,3 +1,4 @@
+// Package audiodev is used to manage audio backend drivers.
 package audiodev
 
 import (
@@ -6,94 +7,106 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// Direction is used to qualify an audio device property.
+const (
+	BackendTypeNone        = "none"
+	BackendTypeALSA        = "alsa"
+	BackendTypeCoreAudio   = "coreaudio"
+	BackendTypeDirectSound = "dsound"
+	BackendTypeOSS         = "oss"
+	BackendTypePulseAudio  = "pa"
+	BackendTypeSDL         = "sdl"
+	BackendTypeSpice       = "spice"
+	BackendTypeWAV         = "wav"
+)
+
+// Direction is used to qualify an audio device property for a Backend.
 type Direction string
 
 const (
-	// Input indicates that the property should be applied to the audio device's
-	// input.
+	// Input indicates that the property should be applied to the audio device
+	// Backend's input.
 	Input Direction = "in"
 
-	// Output indicates that the property should be applied to the audio device's
-	// output.
+	// Output indicates that the property should be applied to the audio device
+	// Backend's output.
 	Output Direction = "out"
 )
 
-// Backend adds a new audio backend driver identified by name and id. There are
-// global and driver specific properties. Some values can be set differently for
-// input and output.
-func Backend(name string, id string, properties ...*Property) *queso.Option {
+// Backend adds a new audio backend driver identified by backendType and id.
+// There are global and driver specific properties. Some values can be set
+// differently for input and output.
+func Backend(backendType string, id string, properties ...*Property) *queso.Option {
 	props := []*queso.Property{{"id", id}}
 
 	for _, property := range properties {
 		props = append(props, property.Property)
 	}
 
-	return queso.NewOption("audiodev", name, props...)
+	return queso.NewOption("audiodev", backendType, props...)
 }
 
-// None creates a dummy backend that discards all outputs. This backend has no
-// backend specific properties.
-func None(id string, properties ...*Property) *queso.Option {
-	return Backend("none", id, properties...)
+// DummyBackend creates a dummy backend that discards all outputs. This backend
+// has no backend specific properties.
+func DummyBackend(id string, properties ...*Property) *queso.Option {
+	return Backend(BackendTypeNone, id, properties...)
 }
 
 // ALSABackend creates backend using the ALSABackend. This backend is only
 // available on Linux.
 func ALSABackend(id string, properties ...*Property) *queso.Option {
-	return Backend("alsa", id, properties...)
+	return Backend(BackendTypeALSA, id, properties...)
 }
 
 // CoreAudioBackend creates a backend using Apple's Core Audio. This backend is
 // only available on macOS and only supports playback.
 func CoreAudioBackend(id string, properties ...*Property) *queso.Option {
-	return Backend("coreaudio", id, properties...)
+	return Backend(BackendTypeCoreAudio, id, properties...)
 }
 
 // DirectSoundBackend creates a backend using Microsoft's DirectSoundBackend.
 // This backend is only available on Windows and only supports playback.
 func DirectSoundBackend(id string, properties ...*Property) *queso.Option {
-	return Backend("dsound", id, properties...)
+	return Backend(BackendTypeDirectSound, id, properties...)
 }
 
 // OSSBackend creates a backend using OSSBackend. This backend is available on
 // most Unix-like systems.
 func OSSBackend(id string, properties ...*Property) *queso.Option {
-	return Backend("oss", id, properties...)
+	return Backend(BackendTypeOSS, id, properties...)
 }
 
 // PulseAudioBackend creates a backend using PulseAudioBackend. This backend is
 // available on most systems.
 func PulseAudioBackend(id string, properties ...*Property) *queso.Option {
-	return Backend("pa", id, properties...)
+	return Backend(BackendTypePulseAudio, id, properties...)
 }
 
 // SDLBackend creates a backend using SDLBackend. This backend is available on
 // most systems, but you should use your platform's native backend if possible.
 func SDLBackend(id string, properties ...*Property) *queso.Option {
-	return Backend("sdl", id, properties...)
+	return Backend(BackendTypeSDL, id, properties...)
 }
 
 // SpiceBackend creates a backend that sends audio through SpiceBackend. This
 // backend requires SPICE and automatically selected in that case, so usually
 // you can ignore this option. This backend has no backend specific properties.
 func SpiceBackend(id string) *queso.Option {
-	return Backend("spice", id)
+	return Backend(BackendTypeSpice, id)
 }
 
 // WAVBackend creates a backend that writes audio to a WAVBackend file specified
 // by the path parameter. If path is an empty string, defaults to `qemu.wav`.
 func WAVBackend(id string, path string) *queso.Option {
-	return Backend("wav", id, NewProperty("path", path))
+	return Backend(BackendTypeWAV, id, NewProperty("path", path))
 }
 
-// Property represents a property that can be used with an audio device
+// Property represents a property that can be used with an audio device Backend
 // option.
 type Property struct {
 	*queso.Property
 }
 
-// NewProperty returns a new instance of an Property.
+// NewProperty returns a new instance of Property.
 func NewProperty(key string, value interface{}) *Property {
 	return &Property{
 		Property: queso.NewProperty(key, value),
@@ -116,7 +129,7 @@ func WithTimerPeriod(microseconds int) *Property {
 // that the selected backend must support multiple streams and the audio formats
 // used by the virtual cards, otherwise you'll get no sound. It's not
 // recommended disabling this option unless you want to use 5.1 or 7.1 audio, as
-// mixing engine only supports mono and stereo audio. This is enabled by default.
+// mixing engine only supports mono and stereo audio. This property is enabled by default.
 func IsMixingEngine(direction Direction, enabled bool) *Property {
 	return newDirectionProperty(direction, "mixing-engine", enabled)
 }
@@ -181,8 +194,8 @@ func WithVoices(direction Direction, count int) *Property {
 	return newDirectionProperty(direction, "voices", count)
 }
 
-// WithAudioBufferLength sets the size of the buffer in microseconds for any Backend.
-func WithAudioBufferLength(direction Direction, microseconds int) *Property {
+// WithBufferLength sets the size of the buffer in microseconds for any Backend.
+func WithBufferLength(direction Direction, microseconds int) *Property {
 	return newDirectionProperty(direction, "buffer-length", microseconds)
 }
 
@@ -204,7 +217,7 @@ func WithPeriodLength(direction Direction, microseconds int) *Property {
 }
 
 // IsTryPoll will attempt to use poll mode with the device if enabled for an
-// ALSABackend or OSSBackend. This is enabled by default.
+// ALSABackend or OSSBackend. This property is enabled by default.
 func IsTryPoll(direction Direction, enabled bool) *Property {
 	return newDirectionProperty(direction, "try-poll", enabled)
 }
@@ -215,51 +228,50 @@ func WithThreshold(direction Direction, microseconds int) *Property {
 	return newDirectionProperty(direction, "threshold", microseconds)
 }
 
-// WithAudioBufferCount sets the count of the buffers for an OSSBackend or
-// SDLBackend.
-func WithAudioBufferCount(direction Direction, count int) *Property {
+// WithBufferCount sets the count of the buffers for an OSSBackend or SDLBackend.
+func WithBufferCount(direction Direction, count int) *Property {
 	return newDirectionProperty(direction, "buffer-count", count)
 }
 
-// WithAudioLatency adds extra microseconds of latency to playback for a
-// DirectSoundBackend.
-func WithAudioLatency(microseconds int) *Property {
+// WithPlaybackLatency adds extra microseconds of latency to playback for
+// a DirectSoundBackend.
+func WithPlaybackLatency(microseconds int) *Property {
 	return NewProperty("latency", microseconds)
 }
 
-// IsTryMMAP specifies whether to try using memory mapped device access in an OSSBackend.
-// This is disabled by default.
+// IsTryMMAP specifies whether to try using memory mapped device access in an
+// OSSBackend. This property is disabled by default.
 func IsTryMMAP(enabled bool) *Property {
 	return NewProperty("try-mmap", enabled)
 }
 
 // IsExclusive specifies whether to open the device in exclusive mode (VMIX won't
-// work in this case) for an OSSBackend. This is disabled by default.
+// work in this case) for an OSSBackend. This property is disabled by default.
 func IsExclusive(enabled bool) *Property {
 	return NewProperty("exclusive", enabled)
 }
 
-// WithDSPPolicy sets the timing policy (between 0 and 10, where smaller number means
-// smaller latency but higher CPU usage) for an OSSBackend. Use -1 to use buffer
-// sizes specified by WithAudioBufferCount. This option is ignored if you do not
-// have OSSBackend 4. The default is 5.
+// WithDSPPolicy sets the timing policy (between 0 and 10, where smaller number
+// means smaller latency but higher CPU usage) for an OSSBackend. Use -1 to use
+// buffer sizes specified by WithBufferCount. This option is ignored if you do
+// not have OSSBackend 4. The default is 5.
 func WithDSPPolicy(policy int) *Property {
 	return NewProperty("dsp-policy", policy)
 }
 
-// WithPulseAudioServer sets the PulseAudioBackend server to connect to.
-func WithPulseAudioServer(server string) *Property {
+// WithServer sets the PulseAudioBackend server to connect to.
+func WithServer(server string) *Property {
 	return NewProperty("server", server)
 }
 
-// WithPulseAudioLatency is the desired latency in microseconds for the
+// WithServerLatency is the desired latency in microseconds for the
 // PulseAudioBackend server.
-func WithPulseAudioLatency(direction Direction, microseconds int) *Property {
+func WithServerLatency(direction Direction, microseconds int) *Property {
 	return newDirectionProperty(direction, "latency", microseconds)
 }
 
-// WithPulseAudioSink specifies the source/sink for recording/playback for the
+// WithSink specifies the source/sink for recording/playback for the
 // PulseAudioBackend server.
-func WithPulseAudioSink(direction Direction, name string) *Property {
+func WithSink(direction Direction, name string) *Property {
 	return newDirectionProperty(direction, "name", name)
 }

@@ -16,7 +16,7 @@ type VNCDisplayTo struct {
 	value int
 }
 
-// NewVNCDisplayTo returns an instance of VNCDisplayTo. With this option, QEMU will
+// NewVNCDisplayTo returns a new instance of VNCDisplayTo. With this option, QEMU will
 // try next available VNC displays, until the value parameter specified, if the originally
 // defined VNC display is not available, e.g. port 5900 + display is already used by
 // another application. By default, value is 0.
@@ -34,7 +34,7 @@ type VNCDisplayHost struct {
 	value int
 }
 
-// NewVNCDisplayHost returns an instance of VNCDisplayHost. With this option, TCP
+// NewVNCDisplayHost returns a new instance of VNCDisplayHost. With this option, TCP
 // connections will only be allowed from host on the displayOrPortNumber parameter
 // specified.
 //
@@ -55,7 +55,7 @@ type VNCDisplayUnix struct {
 	value string
 }
 
-// NewVNCDisplayUnix returns an instance of VNCDisplayUnix. With this option,
+// NewVNCDisplayUnix returns a new instance of VNCDisplayUnix. With this option,
 // connections will be allowed over UNIX domain sockets where the path parameter
 // is the location of a unix socket to listen for connections on.
 func NewVNCDisplayUnix(path string) VNCDisplayUnix {
@@ -72,7 +72,7 @@ type VNCDisplayNone struct {
 	value string
 }
 
-// NewVNCDisplayNone returns an instance of VNCDisplayNone. With this option,
+// NewVNCDisplayNone returns a new instance of VNCDisplayNone. With this option,
 // VNC is initialized but not started. The monitor change command can be used to
 // later start the VNC server.
 func NewVNCDisplayNone(value string) VNCDisplayNone {

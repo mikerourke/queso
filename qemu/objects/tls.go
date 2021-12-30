@@ -137,7 +137,7 @@ type TLSProperty struct {
 	*queso.Property
 }
 
-// NewTLSProperty returns a new instance of an TLSProperty.
+// NewTLSProperty returns a new instance of TLSProperty.
 func NewTLSProperty(key string, value interface{}) *TLSProperty {
 	return &TLSProperty{
 		Property: queso.NewProperty(key, value),

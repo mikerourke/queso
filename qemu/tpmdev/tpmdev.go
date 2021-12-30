@@ -45,7 +45,7 @@ type Property struct {
 	*queso.Property
 }
 
-// NewProperty returns an instance of Property.
+// NewProperty returns a new instance of Property.
 func NewProperty(key string, value interface{}) *Property {
 	return &Property{
 		Property: queso.NewProperty(key, value),
