@@ -39,7 +39,7 @@ const (
 
 	// SecurityModelMappedFile indicates that file attributes are stored in the hidden
 	// `.virtfs_metadata` directory. Directories exported by this security model
-	// cannot interact with other unix tools.
+	// cannot interact with other Unix tools.
 	SecurityModelMappedFile SecurityModel = "mapped-file"
 )
 

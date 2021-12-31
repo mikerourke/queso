@@ -11,7 +11,7 @@ const (
 	LanguageArabic            Language = "ar"
 	LanguageCzech             Language = "cz"
 	LanguageDanish            Language = "da"
-	LanguageGermanNoDeadKeys  Language = "de"
+	LanguageGerman            Language = "de"
 	LanguageGermanSwitzerland Language = "de-ch"
 	LanguageEnglishUK         Language = "en-gb"
 	LanguageEnglishUS         Language = "en-us"
@@ -19,7 +19,7 @@ const (
 	LanguageAmharic           Language = "et"
 	LanguageFinnish           Language = "fi"
 	LanguageFaroese           Language = "fo"
-	LanguageFrenchNoDeadKeys  Language = "fr"
+	LanguageFrench            Language = "fr"
 	LanguageFrenchDvorak      Language = "fr-be"
 	LanguageFrenchCanada      Language = "fr-ca"
 	LanguageFrenchSwitzerland Language = "fr-ch"
@@ -44,10 +44,11 @@ const (
 	LanguageSV                Language = "sv"
 )
 
-// KeyboardLayout specifies the keyboard layout language (for example "fr" for
-// French). This option is only needed where it is not easy to get raw PC
-// keycodes (e.g. on Macs, with some X11 servers or with a VNC or curses display).
-// You don't normally need to use it on PC/Linux or PC/Windows hosts.
+// KeyboardLayout specifies the keyboard layout language (for example
+// LanguageFrench for French). This option is only needed where it is
+// not easy to get raw PC keycodes (e.g. on Macs, with some X11 servers or with
+// a VNC or curses display). You don't normally need to use it on PC/Linux or
+// PC/Windows hosts.
 func KeyboardLayout(language Language) *queso.Option {
 	return queso.NewOption("k", string(language))
 }

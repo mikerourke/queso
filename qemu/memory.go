@@ -25,7 +25,7 @@ func Memory(size string, properties ...*MemoryProperty) *queso.Option {
 	return queso.NewOption("m", size, props...)
 }
 
-// MemoryProperty represents a property that can be used with the Memory option.
+// MemoryProperty represents a property that can be used with Memory.
 type MemoryProperty struct {
 	*queso.Property
 }

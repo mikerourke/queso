@@ -33,7 +33,8 @@ func NUMADistance(source string, destination string, distance string) *queso.Opt
 }
 
 // NUMACPU assigns CPU objects to a node using topology layout properties of CPU.
-// The set of properties is machine specific, and depends on Machine and SMP options.
+// The set of properties is machine specific, and depends on Machine and SMP
+// options.
 func NUMACPU(nodeID string, properties ...*NUMAProperty) *queso.Option {
 	props := []*NUMAProperty{NewNUMAProperty("node-id", nodeID)}
 
@@ -44,10 +45,11 @@ func NUMACPU(nodeID string, properties ...*NUMAProperty) *queso.Option {
 	return NewNUMAOption("cpu", props...)
 }
 
-// NUMAHMATLB sets System Locality Latency and Bandwidth Information between initiator
-// and target NUMA nodes in ACPI Heterogeneous Attribute Memory Table (HMAT). Initiator
-// NUMA node can create memory requests, usually it has one or more processors. Target
-// NUMA node contains addressable memory. See the QEMU documentation for more details.
+// NUMAHMATLB sets System Locality Latency and Bandwidth Information between
+// initiator and target NUMA nodes in ACPI Heterogeneous Attribute Memory Table
+// (HMAT). Initiator NUMA node can create memory requests, usually it has one or
+// more processors. Target NUMA node contains addressable memory. See the QEMU
+// documentation for more details.
 func NUMAHMATLB(
 	initiator int,
 	target int,

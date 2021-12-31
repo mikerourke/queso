@@ -8,8 +8,8 @@ func Kernel(bzImage string) *queso.Option {
 	return queso.NewOption("kernel", bzImage)
 }
 
-// Append uses the specified cmdLine as kernel command line.
-func Append(cmdLine string) *queso.Option {
+// AppendCommandLine uses the specified cmdLine as kernel command line.
+func AppendCommandLine(cmdLine string) *queso.Option {
 	return queso.NewOption("append", cmdLine)
 }
 
@@ -23,10 +23,4 @@ func InitRAMDisk(fileOrArgs string) *queso.Option {
 // and passes it to the kernel on boot.
 func DeviceTreeBinary(file string) *queso.Option {
 	return queso.NewOption("dtb", file)
-}
-
-// DataDirectoryPath sets the directory for the BIOS, VGA BIOS and keymaps to
-// the specified path.
-func DataDirectoryPath(path string) *queso.Option {
-	return queso.NewOption("L", path)
 }

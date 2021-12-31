@@ -18,7 +18,7 @@ func CryptoBuiltIn(id string, properties ...*CryptoProperty) *queso.Option {
 // CryptoVHostUser creates a vhost-user cryptodev backend, backed by a character
 // device with ID chardev. The id parameter is a unique ID that will be used to
 // reference this cryptodev backend from the virtio-crypto device. The chardev
-// should be a unix domain socket backed one. The vhost-user uses a specifically
+// should be a Unix domain socket backed one. The vhost-user uses a specifically
 // defined protocol to pass vhost ioctl replacement messages to an application
 // on the other end of the socket.
 func CryptoVHostUser(id string, chardev string, properties ...*CryptoProperty) *queso.Option {

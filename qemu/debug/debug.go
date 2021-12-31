@@ -141,15 +141,15 @@ func EnableKVM() *queso.Option {
 	return queso.NewOption("enable-kvm", "")
 }
 
-// UseXENGuestDomainID specifies XEN guest domain id (XEN only).
-func UseXENGuestDomainID(id string) *queso.Option {
+// UseXenGuestDomainID specifies Xen guest domain id (XEN only).
+func UseXenGuestDomainID(id string) *queso.Option {
 	return queso.NewOption("xen-domid", id)
 }
 
-// UseXENAttach attaches to existing xen domain. libxl will use this when starting
-// QEMU (XEN only). Restrict set of available xen operations to specified domain
-// id (XEN only).
-func UseXENAttach() *queso.Option {
+// UseXenAttach attaches to existing Xen domain. libxl will use this when starting
+// QEMU (Xen only). Restrict set of available Xen operations to specified domain
+// id (Xen only).
+func UseXenAttach() *queso.Option {
 	return queso.NewOption("xen-attach", "")
 }
 

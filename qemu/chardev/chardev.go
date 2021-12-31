@@ -179,8 +179,8 @@ func UDPBackend(id string, port int, properties ...*Property) *queso.Option {
 	return Backend(BackendTypeUDP, id, props...)
 }
 
-// UnixSocketBackend creates a SocketBackend for a two-way stream unix socket.
-// The path parameter specifies the local path of the unix socket.
+// UnixSocketBackend creates a SocketBackend for a two-way stream Unix socket.
+// The path parameter specifies the local path of the Unix socket.
 func UnixSocketBackend(id string, path string, properties ...*Property) *queso.Option {
 	props := []*Property{NewProperty("path", path)}
 

@@ -17,7 +17,7 @@ func Machine(name string, properties ...*MachineProperty) *queso.Option {
 	return queso.NewOption("machine", name, props...)
 }
 
-// MachineProperty represents a property that can be used with the Machine option.
+// MachineProperty represents a property that can be used with a Machine.
 type MachineProperty struct {
 	*queso.Property
 }
@@ -29,10 +29,10 @@ func NewMachineProperty(key string, value interface{}) *MachineProperty {
 	}
 }
 
-// WithAccel specifies one or more accelerators to use. If there is more than one
-// accelerator specified, the next one is used if the previous one fails to
-// initialize.
-func WithAccel(types ...AccelType) *MachineProperty {
+// WithAccel specifies one or more accelerators to use for a Machine. If there
+// is more than one accelerator specified, the next one is used if the previous
+// one fails to initialize.
+func WithAccel(types ...string) *MachineProperty {
 	nameStrings := make([]string, 0)
 	for _, at := range types {
 		nameStrings = append(nameStrings, string(at))
@@ -41,7 +41,8 @@ func WithAccel(types ...AccelType) *MachineProperty {
 	return NewMachineProperty("accel", strings.Join(nameStrings, ":"))
 }
 
-// VMWareIOPortFlag represents the flag to pass to the WithVMWareIOPort property.
+// VMWareIOPortFlag represents the flag to pass to the WithVMWareIOPort property
+// for a Machine.
 type VMWareIOPortFlag string
 
 const (
@@ -50,56 +51,61 @@ const (
 	VMWareIOPortAuto VMWareIOPortFlag = "auto"
 )
 
-// WithVMWareIOPort sets emulation of VMWare IO port, for vmmouse etc.
-// VMWareIOPortAuto says to select the value based on accel. For XEN accelerator,
+// WithVMWareIOPort sets emulation of VMWare IO port, for vmmouse etc. for a Machine.
+// VMWareIOPortAuto says to select the value based on accel. For Xen accelerator,
 // the default is VMWareIOPortOff otherwise the default is VMWareIOPortOn.
 func WithVMWareIOPort(port VMWareIOPortFlag) *MachineProperty {
 	return NewMachineProperty("vmport", port)
 }
 
-// IsDumpGuestCore specifies whether to include guest memory in a core dump.
+// IsDumpGuestCore specifies whether to include guest memory in a core dump for
+// a Machine.
 func IsDumpGuestCore(enabled bool) *MachineProperty {
 	return NewMachineProperty("dump-guest-core", enabled)
 }
 
-// IsMemoryMerge enables or disables memory merge support. This feature, when
-// supported by the host, de-duplicates identical memory pages among VMs
-// instances (enabled by default).
+// IsMemoryMerge enables or disables memory merge support for a Machine. This
+// feature, when supported by the host, de-duplicates identical memory pages
+// among VMs instances. This property is enabled by default.
 func IsMemoryMerge(enabled bool) *MachineProperty {
 	return NewMachineProperty("mem-merge", enabled)
 }
 
-// IsAESKeyWrap enables or disables AES key wrapping support on s390-ccw hosts.
-// This feature controls whether AES wrapping keys will be created to allow
-// execution of AES cryptographic functions (enabled by default).
+// IsAESKeyWrap enables or disables AES key wrapping support on s390-ccw hosts for
+// a Machine. This feature controls whether AES wrapping keys will be created to
+// allow execution of AES cryptographic functions. This property is enabled by
+// default.
 func IsAESKeyWrap(enabled bool) *MachineProperty {
 	return NewMachineProperty("aes-key-wrap", enabled)
 }
 
-// IsDEAKeyWrap enables or disables DEA key wrapping support on s390-ccw hosts.
-// This feature controls whether DEA wrapping keys will be created to allow
-// execution of DEA cryptographic functions (enabled by default).
+// IsDEAKeyWrap enables or disables DEA key wrapping support on s390-ccw hosts
+// for a Machine. This feature controls whether DEA wrapping keys will be created
+// to allow execution of DEA cryptographic functions. This property is enabled
+// by default.
 func IsDEAKeyWrap(enabled bool) *MachineProperty {
 	return NewMachineProperty("dea-key-wrap", enabled)
 }
 
-// IsNVDIMM enables or disables NVDIMM support (disabled by default).
+// IsNVDIMM enables or disables NVDIMM support for a Machine. This property is
+// disabled by default.
 func IsNVDIMM(enabled bool) *MachineProperty {
 	return NewMachineProperty("nvdimm", enabled)
 }
 
-// WithMemoryEncryption specifies the memory encryption object to use.
+// WithMemoryEncryption specifies the memory encryption object to use for a
+// Machine.
 func WithMemoryEncryption(id string) *MachineProperty {
 	return NewMachineProperty("memory-encryption", id)
 }
 
 // IsHMAT enables or disables ACPI Heterogeneous Memory Attribute Table (HMAT)
-// support (disabled by default).
+// support for a Machine. This property is disabled by default.
 func IsHMAT(enabled bool) *MachineProperty {
 	return NewMachineProperty("hmat", enabled)
 }
 
-// WithMemoryBackend allows use of a memory backend as main RAM.
+// WithMemoryBackend allows use of a memory backend as main RAM for a Machine.
 func WithMemoryBackend(id string) *MachineProperty {
 	return NewMachineProperty("memory-backend", id)
 }

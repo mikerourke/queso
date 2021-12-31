@@ -2,7 +2,6 @@ package network
 
 import (
 	"fmt"
-	"net"
 
 	"github.com/mikerourke/queso"
 )
@@ -95,13 +94,13 @@ func SocketBackend(id string, properties ...*Property) *queso.Option {
 // This transport allows a VM to communicate to another VM, router or firewall directly.
 func L2TPv3Backend(
 	id string,
-	sourceAddr net.IP,
-	destAddr net.IP,
+	sourceAddr string,
+	destAddr string,
 	properties ...*Property,
 ) *queso.Option {
 	props := []*Property{
-		NewProperty("src", sourceAddr.String()),
-		NewProperty("dst", destAddr.String()),
+		NewProperty("src", sourceAddr),
+		NewProperty("dst", destAddr),
 	}
 
 	if properties != nil {
@@ -118,7 +117,7 @@ func VDEBackend(id string, properties ...*Property) *queso.Option {
 }
 
 // VHostUserBackend establishes a vhost-user network backend, backed by charDevID.
-// The chardev should be a unix domain socket backed one. The vhost-user
+// The chardev should be a Unix domain socket backed one. The vhost-user
 // uses a specifically defined protocol to pass vhost ioctl replacement messages
 // to an application on the other end of the socket.
 func VHostUserBackend(chardev string, properties ...*Property) *queso.Option {
@@ -130,25 +129,25 @@ func VHostUserBackend(chardev string, properties ...*Property) *queso.Option {
 // vDPA device is a device that uses a data path which complies with the virtio
 // specifications with a vendor specific control path. vDPA devices can be both
 // physically located on the hardware or emulated by software.
-func VHostVDPABackend(vHostDeviceID string) *queso.Option {
+func VHostVDPABackend(vhostdev string) *queso.Option {
 	return queso.NewOption("netdev", "vhost-vdpa",
-		queso.NewProperty("vhostdev", vHostDeviceID))
+		queso.NewProperty("vhostdev", vhostdev))
 }
 
 // HubPort creates a hub port on the emulated hub with ID hubID.
 //
 // The hub port network device lets you connect a NIC to a QEMU emulated
 // hub instead of a single network device. Alternatively, you can also connect
-// the hub port to another network device with ID networkDeviceID. Specify an
-// empty string for the networkDeviceID parameter to use the emulated hub.
-func HubPort(id string, hubID string, networkDeviceID string) *queso.Option {
+// the hub port to another network device with ID netdev. Specify an
+// empty string for the netdev parameter to use the emulated hub.
+func HubPort(id string, hubID string, netdev string) *queso.Option {
 	props := []*queso.Property{
 		queso.NewProperty("id", id),
 		queso.NewProperty("hubid", hubID),
 	}
 
-	if networkDeviceID != "" {
-		props = append(props, queso.NewProperty("netdev", networkDeviceID))
+	if netdev != "" {
+		props = append(props, queso.NewProperty("netdev", netdev))
 	}
 
 	return queso.NewOption("netdev", "hubport", props...)
@@ -197,8 +196,8 @@ func IsIPv6(enabled bool) *Property {
 // WithIPv4Address sets the IPv4 network address the guest will see for a UserBackend.
 // The mask parameter represents the netmask. To use the default mask, specify -1.
 // The default is "10.0.2.0/24".
-func WithIPv4Address(addr net.IP, mask int) *Property {
-	value := addr.String()
+func WithIPv4Address(addr string, mask int) *Property {
+	value := addr
 
 	if mask != -1 {
 		value = fmt.Sprintf("%s/%d", value, mask)
@@ -209,8 +208,8 @@ func WithIPv4Address(addr net.IP, mask int) *Property {
 
 // WithIPv4Host specifies the guest-visible IPv4 address of the host for a UserBackend.
 // The default is the 2nd IP in the guest network, i.e. x.x.x.2.
-func WithIPv4Host(addr net.IP) *Property {
-	return NewProperty("host", addr.String())
+func WithIPv4Host(addr string) *Property {
+	return NewProperty("host", addr)
 }
 
 // WithIPv6Address sets the IPv6 network address the guest will see for a UserBackend.
@@ -218,8 +217,8 @@ func WithIPv4Host(addr net.IP) *Property {
 // The prefixSize is optional, and is given as the number of valid top-most
 // bits. To use the default, specify -1 for prefixSize. The default is
 // "fec0::/64".
-func WithIPv6Address(addr net.IP, prefixSize int) *Property {
-	value := addr.String()
+func WithIPv6Address(addr string, prefixSize int) *Property {
+	value := addr
 
 	if prefixSize != -1 {
 		value = fmt.Sprintf("%s/%d", value, prefixSize)
@@ -230,8 +229,8 @@ func WithIPv6Address(addr net.IP, prefixSize int) *Property {
 
 // WithIPv6Host specifies the guest-visible IPv6 address of the host for a UserBackend.
 // The default is the 2nd IPv6 in the guest network, i.e. xxxx::2.
-func WithIPv6Host(addr net.IP) *Property {
-	return NewProperty("ipv6-host", addr.String())
+func WithIPv6Host(addr string) *Property {
+	return NewProperty("ipv6-host", addr)
 }
 
 // IsRestricted specifies whether the guest will be isolated for a UserBackend,
@@ -251,22 +250,22 @@ func WithHostName(name string) *Property {
 // WithDHCPStart specifies the first of the 16 IPs the built-in DHCP server can
 // assign for a UserBackend. The default is the 15th to 31st IP in the guest
 // network, i.e. x.x.x.15 to x.x.x.31.
-func WithDHCPStart(addr net.IP) *Property {
-	return NewProperty("dhcpstart", addr.String())
+func WithDHCPStart(addr string) *Property {
+	return NewProperty("dhcpstart", addr)
 }
 
 // WithIPv4DNS specifies the guest-visible address of the IPv4 virtual nameserver
 // for a UserBackend. The address must be different from the host address. The
 // default is the 3rd IP in the guest network, i.e. x.x.x.3.
-func WithIPv4DNS(addr net.IP) *Property {
-	return NewProperty("dns", addr.String())
+func WithIPv4DNS(addr string) *Property {
+	return NewProperty("dns", addr)
 }
 
 // WithIPv6DNS specifies the guest-visible address of the IPv6 virtual nameserver
 // for a UserBackend. The address must be different from the host address. The
 // default is the 3rd IP in the guest network, i.e. xxxx::3.
-func WithIPv6DNS(addr net.IP) *Property {
-	return NewProperty("ipv6-dns", addr.String())
+func WithIPv6DNS(addr string) *Property {
+	return NewProperty("ipv6-dns", addr)
 }
 
 // WithDNSSearch provides an entry for the domain-search list sent by the built-in
@@ -326,8 +325,8 @@ func WithSMB(dir string) *Property {
 // WithSMBServerAddress sets the address of the SMB server for a UserBackend.
 // By default, the 4th IP in the guest network is used, i.e. x.x.x.4. This must
 // be used in conjunction with the WithSMB property.
-func WithSMBServerAddress(addr net.IP) *Property {
-	return NewProperty("smbserver", addr.String())
+func WithSMBServerAddress(addr string) *Property {
+	return NewProperty("smbserver", addr)
 }
 
 // WithForwardRule defines a forwarding rule to use for the network (either a
@@ -364,23 +363,17 @@ func WithHelper(helper string) *Property {
 	return NewProperty("helper", helper)
 }
 
-// WithListen specifies that QEMU wait for incoming connections on port for a
-// SocketBackend. The host parameter can be nil if not required.
-func WithListen(host net.IP, port int) *Property {
-	value := fmt.Sprintf(":%d", port)
-
-	if host != nil {
-		value = fmt.Sprintf("%s:%d", host.String(), port)
-	}
-
-	return NewProperty("listen", value)
+// WithListen specifies that QEMU wait for incoming connections on address for a
+// SocketBackend.
+func WithListen(addr string) *Property {
+	return NewProperty("listen", addr)
 }
 
 // WithConnect is used to connect to another QEMU instance using the WithListen
 // property for a SocketBackend. WithFileDescriptor("h") specifies an already
 // opened TCP socket.
-func WithConnect(host net.IP, port int) *Property {
-	return NewProperty("connect", fmt.Sprintf("%s:%d", host.String(), port))
+func WithConnect(addr string) *Property {
+	return NewProperty("connect", addr)
 }
 
 // WithMulticast configures a SocketBackend to share the guest's network traffic
@@ -396,14 +389,14 @@ func WithConnect(host net.IP, port int) *Property {
 // See http://user-mode-linux.sf.net for more details.
 //
 // 3. Use WithFileDescriptor("h") to specify an already opened UDP multicast socket.
-func WithMulticast(addr net.IP, port int) *Property {
-	return NewProperty("mcast", fmt.Sprintf("%s:%d", addr.String(), port))
+func WithMulticast(addr string) *Property {
+	return NewProperty("mcast", addr)
 }
 
 // WithLocalAddress specifies the host address to send packets on for a SocketBackend
 // using the WithMulticast property.
-func WithLocalAddress(addr net.IP) *Property {
-	return NewProperty("localaddr", addr.String())
+func WithLocalAddress(addr string) *Property {
+	return NewProperty("localaddr", addr)
 }
 
 // WithSourcePort represents the source UDP port for a L2TPv3Backend.

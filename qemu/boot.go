@@ -6,10 +6,40 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// BootOrder is used to specify options for the boot order of drives.
-func BootOrder(properties ...*BootOrderProperty) *queso.Option {
+// Boot is used to specify options for booting, such as the boot order of drives.
+//
+// Example 1
+//
+// Try to boot from network first, then from hard disk:
+//	qemu.New("qemu-system-x86_64").SetOptions(
+//		qemu.Boot(qemu.WithBootOrder("n", "c")))
+//
+// Invocation
+//	qemu-system-x86_64 -boot order=nc
+//
+// Example 2
+//
+// Boot from CD-ROM first, switch back to default order after reboot:
+//	qemu.New("qemu-system-x86_64").SetOptions(
+//		qemu.Boot(qemu.WithBootOnce("d")))
+//
+// Invocation
+//	qemu-system-x86_64 -boot once=d
+//
+// Example 3
+//
+// Boot with a splash picture for 5 seconds:
+//	qemu.New("qemu-system-x86_64").SetOptions(
+//		qemu.Boot(
+//			qemu.IsInteractive(true),
+//			qemu.WithSplashImage("/root/boot.bmp"),
+//			qemu.WithSplashTime(5000)))
+//
+// Invocation
+//	qemu-system-x86_64 -boot menu=on,splash=/root/boot.bmp,splash-time=5000
+func Boot(properties ...*BootProperty) *queso.Option {
 	if len(properties) == 0 {
-		panic("at least one property is specified for BootOrder")
+		panic("at least one property is specified for Boot")
 	}
 
 	props := make([]*queso.Property, 0)
@@ -21,19 +51,19 @@ func BootOrder(properties ...*BootOrderProperty) *queso.Option {
 	return queso.NewOption("boot", "", props...)
 }
 
-// BootOrderProperty represents a property that can be used with the BootOrder
-// option.
-type BootOrderProperty struct {
+// BootProperty represents a property that can be used with Boot.
+type BootProperty struct {
 	*queso.Property
 }
 
-func newBootOrderProperty(key string, value interface{}) *BootOrderProperty {
-	return &BootOrderProperty{
+// NewBootProperty returns a new instance of BootProperty.
+func NewBootProperty(key string, value interface{}) *BootProperty {
+	return &BootProperty{
 		Property: queso.NewProperty(key, value),
 	}
 }
 
-// WithOrder specifies boot order drives as a string of drive letters.
+// WithBootOrder specifies boot order drives as a string of drive letters for Boot.
 // Valid drive letters depend on the target architecture.
 // The x86 PC uses: a, b (floppy 1 and 2), c (first hard disk), d (first CD-ROM),
 // n-p (Etherboot from network adapter 1-4), hard disk boot is the default.
@@ -41,56 +71,57 @@ func newBootOrderProperty(key string, value interface{}) *BootOrderProperty {
 // This should not be used together with the WithBootIndex property of devices,
 // since the firmware implementations normally do not support both at the same
 // time.
-func WithOrder(drives ...string) *BootOrderProperty {
+func WithBootOrder(drives ...string) *BootProperty {
 	order := strings.Join(drives, "")
 
-	return newBootOrderProperty("order", order)
+	return NewBootProperty("order", order)
 }
 
-// WithOnce specifies boot order drives as a string of drive letters. It applies
-// the boot order only on the first startup. See WithOrder for more information.
+// WithBootOnce specifies Boot drives as a string of drive letters. It applies
+// the boot order only on the first startup. See WithBootOrder for more information.
 //
 // This should not be used together with the WithBootIndex property of devices,
 // since the firmware implementations normally do not support both at the same
 // time.
-func WithOnce(drives ...string) *BootOrderProperty {
+func WithBootOnce(drives ...string) *BootProperty {
 	order := strings.Join(drives, "")
 
-	return newBootOrderProperty("once", order)
+	return NewBootProperty("once", order)
 }
 
-// IsMenu specifies whether interactive boot menus/prompts should be enabled as
-// far as firmware/BIOS supports them. The default is non-interactive boot.
-func IsMenu(enabled bool) *BootOrderProperty {
-	return newBootOrderProperty("menu", enabled)
+// IsInteractive specifies whether interactive Boot menus/prompts should be
+// enabled as far as firmware/BIOS supports them with Boot. The default is
+// non-interactive boot.
+func IsInteractive(interactive bool) *BootProperty {
+	return NewBootProperty("menu", interactive)
 }
 
-// WithSplashImage specifies a splash picture that could be passed to BIOS, enabling
-// user to show it as logo, when used with IsMenu (if firmware/BIOS supports them).
-// Currently, Seabios for X86 system supports it.
+// WithSplashImage specifies a splash picture that could be passed to BIOS on Boot,
+// enabling user to show it as logo, when used with IsInteractive (if
+// firmware/BIOS supports them). Currently, Seabios for X86 system supports it.
 //
 // Limitation: The splash file could be a JPEG file or a BMP file in 24 BPP
 // format (true color). The resolution should be supported by the SVGA mode, so
 // the recommended is 320x240, 640x480, or 800x640.
-func WithSplashImage(file string) *BootOrderProperty {
-	return newBootOrderProperty("splash", file)
+func WithSplashImage(file string) *BootProperty {
+	return NewBootProperty("splash", file)
 }
 
 // WithSplashTime specifies the amount of time to show the image specified with
-// the WithSplashImage property (in milliseconds).
-func WithSplashTime(duration int) *BootOrderProperty {
-	return newBootOrderProperty("splash-time", duration)
+// the WithSplashImage property (in milliseconds) on Boot.
+func WithSplashTime(milliseconds int) *BootProperty {
+	return NewBootProperty("splash-time", milliseconds)
 }
 
 // WithRebootTimeout causes the guest to pause for the specified timeout (in
-// milliseconds) when boot failed, then reboot. If the timeout is -1, guest will
+// milliseconds) when Boot failed, then reboot. If the timeout is -1, guest will
 // not reboot and QEMU passes -1 to BIOS by default. Currently, Seabios for X86
 // system supports it.
-func WithRebootTimeout(timeout int) *BootOrderProperty {
-	return newBootOrderProperty("reboot-timeout", timeout)
+func WithRebootTimeout(milliseconds int) *BootProperty {
+	return NewBootProperty("reboot-timeout", milliseconds)
 }
 
-// IsStrict specifies that strict boot should be used.
-func IsStrict(enabled bool) *BootOrderProperty {
-	return newBootOrderProperty("strict", enabled)
+// IsStrictBoot specifies that strict Boot should be used.
+func IsStrictBoot(strict bool) *BootProperty {
+	return NewBootProperty("strict", strict)
 }

@@ -27,8 +27,9 @@ func CPU(model string) *queso.Option {
 
 // SGXEPC defines a SGX EPC section.
 // TODO: Verify this is correct.
-func SGXEPC(memoryDeviceID string, numaID string) *queso.Option {
-	flag := fmt.Sprintf("sgx-epc.0.memdev=@var{%s},sgx-epc.0.node=@var{%s}", memoryDeviceID, numaID)
+func SGXEPC(memID string, numaID string) *queso.Option {
+	flag := fmt.Sprintf("sgx-epc.0.memdev=@var{%s},sgx-epc.0.node=@var{%s}",
+		memID, numaID)
 
 	return queso.NewOption(flag, "")
 }
@@ -73,4 +74,10 @@ func SoundHardware(card ...string) *queso.Option {
 	}
 
 	return queso.NewOption("soundhw", name)
+}
+
+// DataDirectoryPath sets the directory for the BIOS, VGA BIOS and keymaps to
+// the specified path.
+func DataDirectoryPath(path string) *queso.Option {
+	return queso.NewOption("L", path)
 }

@@ -39,7 +39,7 @@ func AuthzSimple(id string, identity string) *queso.Option {
 // rule to match will have its policy value returned as the result. If no rules
 // match, then the default policy value is returned.
 //
-// The rules can either be an exact string match, or they can use the simple UNIX
+// The rules can either be an exact string match, or they can use the simple Unix
 // glob pattern matching to allow wildcards to be used.
 //
 // If the refresh parameter is set to true the file will be monitored and

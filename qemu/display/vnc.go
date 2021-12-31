@@ -56,8 +56,8 @@ type VNCDisplayUnix struct {
 }
 
 // NewVNCDisplayUnix returns a new instance of VNCDisplayUnix. With this option,
-// connections will be allowed over UNIX domain sockets where the path parameter
-// is the location of a unix socket to listen for connections on.
+// connections will be allowed over Unix domain sockets where the path parameter
+// is the location of a Unix socket to listen for connections on.
 func NewVNCDisplayUnix(path string) VNCDisplayUnix {
 	return VNCDisplayUnix{path}
 }
@@ -154,8 +154,8 @@ func WithWebSocket(port int, host string) *VNCProperty {
 // If you would like to change <protocol> password expiration, you should use:
 //	expire_password <protocol> <expiration-time>
 // Where expiration time could be one of the following options: "now", "never", +seconds
-// or UNIX time of expiration, e.g. +60 to make password expire in 60 seconds, or 1335196800
-// to make password expire on "Mon Apr 23 12:00:00 EDT 2012" (UNIX time for this date and time).
+// or Unix time of expiration, e.g. +60 to make password expire in 60 seconds, or 1335196800
+// to make password expire on "Mon Apr 23 12:00:00 EDT 2012" (Unix time for this date and time).
 //
 // You can also use keywords "now" or "never" for the expiration time to allow <protocol>
 // password to expire immediately or never expire.
