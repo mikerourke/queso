@@ -143,8 +143,8 @@ func VHostVDPABackend(vHostDeviceID string) *queso.Option {
 // empty string for the networkDeviceID parameter to use the emulated hub.
 func HubPort(id string, hubID string, networkDeviceID string) *queso.Option {
 	props := []*queso.Property{
-		{"id", id},
-		{"hubid", hubID},
+		queso.NewProperty("id", id),
+		queso.NewProperty("hubid", hubID),
 	}
 
 	if networkDeviceID != "" {

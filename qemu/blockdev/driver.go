@@ -20,7 +20,7 @@ import (
 //
 //	qemu-system-x86_64 -blockdev driver=file,node-name=disk,filename=disk.img
 func Driver(driver string, properties ...*DriverProperty) *queso.Option {
-	props := []*queso.Property{{"driver", driver}}
+	props := []*queso.Property{queso.NewProperty("driver", driver)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)

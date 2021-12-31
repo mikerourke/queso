@@ -12,7 +12,7 @@ func FileSystemDevice(
 	id string,
 	properties ...*FileSystemDeviceProperty,
 ) *queso.Option {
-	props := []*queso.Property{{"id", id}}
+	props := []*queso.Property{queso.NewProperty("id", id)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)

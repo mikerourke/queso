@@ -175,7 +175,7 @@ func WithVNCPasswordSecret(secret string) *VNCProperty {
 //
 // Setting TLS credentials will cause the VNC server socket to enable the VeNCrypt
 // auth mechanism. The credentials should have been previously created using
-// objects.TLSCredentials* (see objects/tls.go).
+// object.TLSCredentials* (see object/tls.go).
 func WithTLSCredentials(id string) *VNCProperty {
 	return NewVNCProperty("tls-creds", id)
 }

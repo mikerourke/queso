@@ -10,7 +10,7 @@ func VirtualFileSystem(
 	mountTag string,
 	properties ...*FileSystemDeviceProperty,
 ) *queso.Option {
-	props := []*queso.Property{{"mount_tag", mountTag}}
+	props := []*queso.Property{queso.NewProperty("mount_tag", mountTag)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)

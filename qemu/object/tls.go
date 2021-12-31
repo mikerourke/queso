@@ -1,10 +1,10 @@
-package objects
+package object
 
 import "github.com/mikerourke/queso"
 
-// TLS returns an Option that represents a TLS object to pass to QEMU.
+// TLS represents a generic TLS object.
 func TLS(name string, id string, properties ...*TLSProperty) *queso.Option {
-	props := []*queso.Property{{"id", id}}
+	props := []*queso.Property{queso.NewProperty("id", id)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)
@@ -13,7 +13,8 @@ func TLS(name string, id string, properties ...*TLSProperty) *queso.Option {
 	return queso.NewOption("object", name, props...)
 }
 
-func newTLSCredentialsOption(
+// TLSCredentials represents a generic TLSCredentials object.
+func TLSCredentials(
 	name string,
 	id string,
 	endpoint string,
@@ -47,7 +48,7 @@ func newTLSCredentialsOption(
 // that consumes random pool entropy, so it is recommended that a persistent set of
 // parameters be generated upfront and saved.
 func TLSCredentialsAnon(id string, endpoint string, dir string, properties ...*TLSProperty) *queso.Option {
-	return newTLSCredentialsOption("tls-creds-anon", id, endpoint, dir, properties...)
+	return TLSCredentials("tls-creds-anon", id, endpoint, dir, properties...)
 }
 
 // TLSCredentialsPSK creates a TLS Pre-Shared Keys (PSK) credentials object, which can be
@@ -67,7 +68,7 @@ func TLSCredentialsAnon(id string, endpoint string, dir string, properties ...*T
 // consumes random pool entropy, so it is recommended that a persistent set of parameters
 // be generated up front and saved.
 func TLSCredentialsPSK(id string, endpoint string, dir string, properties ...*TLSProperty) *queso.Option {
-	return newTLSCredentialsOption("tls-creds-psk", id, endpoint, dir, properties...)
+	return TLSCredentials("tls-creds-psk", id, endpoint, dir, properties...)
 }
 
 // TLSCredentialsX509 creates a TLS anonymous credentials object, which can be used to provide
@@ -106,7 +107,7 @@ func TLSCredentialsPSK(id string, endpoint string, dir string, properties ...*TL
 // for all other applications, they can do this through this parameter. Its format
 // is a gnutls priority string as described at https://gnutls.org/manual/html_node/Priority-Strings.html.
 func TLSCredentialsX509(id string, endpoint string, dir string, properties ...*TLSProperty) *queso.Option {
-	return newTLSCredentialsOption("tls-creds-x509", id, endpoint, dir, properties...)
+	return TLSCredentials("tls-creds-x509", id, endpoint, dir, properties...)
 }
 
 // TLSCipherSuites creates a TLS cipher suites object, which can be used to control

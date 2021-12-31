@@ -10,8 +10,8 @@ import "github.com/mikerourke/queso"
 // empty string to omit.
 func AddFileDescriptor(fd int, set int, opaque string) *queso.Option {
 	props := []*queso.Property{
-		{"fd", fd},
-		{"set", set},
+		queso.NewProperty("fd", fd),
+		queso.NewProperty("set", set),
 	}
 
 	if opaque != "" {

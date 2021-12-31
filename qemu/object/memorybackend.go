@@ -1,4 +1,4 @@
-package objects
+package object
 
 import (
 	"strings"
@@ -6,10 +6,9 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// MemoryBackend returns an Option that represents a Memory Backend object
-// to pass to QEMU.
+// MemoryBackend represents a general memory backend object to pass to QEMU.
 func MemoryBackend(name string, id string, properties ...*MemoryBackendProperty) *queso.Option {
-	props := []*queso.Property{{"id", id}}
+	props := []*queso.Property{queso.NewProperty("id", id)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)
@@ -52,7 +51,8 @@ func NewMemoryBackendProperty(key string, value interface{}) *MemoryBackendPrope
 	}
 }
 
-// WithMemorySize provides the size of the memory region, and accepts common suffixes, e.g. 500M.
+// WithMemorySize provides the size of the memory region, and accepts common
+// suffixes, e.g. 500M.
 func WithMemorySize(size string) *MemoryBackendProperty {
 	return NewMemoryBackendProperty("size", size)
 }

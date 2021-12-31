@@ -1,4 +1,4 @@
-package objects
+package object
 
 import "github.com/mikerourke/queso"
 
@@ -17,7 +17,7 @@ func RNGBuiltIn(id string) *queso.Option {
 // The file parameter represents the file to get random values from. If empty,
 // uses `/dev/urandom`.
 func RNGRandom(id string, file string) *queso.Option {
-	props := []*queso.Property{{"id", id}}
+	props := []*queso.Property{queso.NewProperty("id", id)}
 
 	if file != "" {
 		props = append(props, queso.NewProperty("filename", file))

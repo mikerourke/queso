@@ -320,8 +320,8 @@ func SemiHostingConfig(
 	arguments ...*Argument,
 ) *queso.Option {
 	props := []*queso.Property{
-		{"enabled", enabled},
-		{"target", target},
+		queso.NewProperty("enabled", enabled),
+		queso.NewProperty("target", target),
 	}
 
 	if chardev != "" {
@@ -404,7 +404,7 @@ func WithOutputFile(file string) *TraceProperty {
 // Plugin loads a plugin from the specified shared library file. Optional arguments
 // can be passed to the plugin.
 func Plugin(file string, arguments ...*Argument) *queso.Option {
-	props := []*queso.Property{{"file", file}}
+	props := []*queso.Property{queso.NewProperty("file", file)}
 
 	for _, argument := range arguments {
 		props = append(props, queso.NewProperty(argument.Name, argument.Value))
@@ -430,8 +430,8 @@ type ErrorMessageFormatOptions struct {
 
 func UseErrorMessageFormat(options ErrorMessageFormatOptions) *queso.Option {
 	props := []*queso.Property{
-		{"timestamp", options.TimeStamp},
-		{"guest-name", options.GuestName},
+		queso.NewProperty("timestamp", options.TimeStamp),
+		queso.NewProperty("guest-name", options.GuestName),
 	}
 
 	return queso.NewOption("msg", "", props...)

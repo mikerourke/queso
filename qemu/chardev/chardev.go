@@ -25,7 +25,7 @@ const (
 // Backend returns a character device of the specified backendType with the
 // specified id and properties.
 func Backend(backendType string, id string, properties ...*Property) *queso.Option {
-	props := []*queso.Property{{"id", id}}
+	props := []*queso.Property{queso.NewProperty("id", id)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)
@@ -243,7 +243,7 @@ func WithReconnect(seconds int) *Property {
 // WithTLSCredentials requests enablement of the TLS protocol for encryption, and
 // specifies the id of the TLS credentials to use for the handshake in a TCPSocketBackend
 // or UnixSocketBackend. The credentials must be previously created with the
-// objects.TLSCredentials* option (see objects/tls.go).
+// object.TLSCredentials* option (see object/tls.go).
 func WithTLSCredentials(id string) *Property {
 	return NewProperty("tls-creds", id)
 }

@@ -36,7 +36,7 @@ const (
 // There are global and driver specific properties. Some values can be set
 // differently for input and output.
 func Backend(backendType string, id string, properties ...*Property) *queso.Option {
-	props := []*queso.Property{{"id", id}}
+	props := []*queso.Property{queso.NewProperty("id", id)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)

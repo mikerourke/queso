@@ -20,7 +20,7 @@ import "github.com/mikerourke/queso"
 // menu to enable and activate the TPM. If the TPM is left disabled and/or deactivated
 // most TPM commands will fail.
 func PassThroughBackend(id string, properties ...*Property) *queso.Option {
-	props := []*queso.Property{{"id", id}}
+	props := []*queso.Property{queso.NewProperty("id", id)}
 
 	for _, property := range properties {
 		props = append(props, property.Property)
