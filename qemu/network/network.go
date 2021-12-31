@@ -1,3 +1,4 @@
+// Package network is used to define network devices for use with QEMU.
 package network
 
 import (

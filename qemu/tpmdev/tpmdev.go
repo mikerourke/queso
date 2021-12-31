@@ -1,3 +1,6 @@
+// Package tpmdev is used to create TPM devices for use with QEMU. See
+// https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-7 for
+// more details.
 package tpmdev
 
 import "github.com/mikerourke/queso"

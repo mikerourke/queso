@@ -1,3 +1,6 @@
+// Package chardev is used to define character devices for use with QEMU.
+// See https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-6
+// for more details.
 package chardev
 
 import "github.com/mikerourke/queso"

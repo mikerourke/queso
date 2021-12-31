@@ -1,3 +1,6 @@
+// Package display is used to define display options for use with QEMU.
+// See https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-3
+// for more details.
 package display
 
 import (

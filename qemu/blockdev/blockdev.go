@@ -1,4 +1,4 @@
-// Package blockdev is used to manage block devices. See
+// Package blockdev is used to manage block devices for use with QEMU. See
 // https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-1 for
 // more details.
 package blockdev
