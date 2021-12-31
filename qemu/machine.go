@@ -7,6 +7,23 @@ import (
 )
 
 // Machine selects the emulated machine by name.
+//
+// Example
+//
+//	qemu.New("qemu-system-x86_64").SetOptions(
+//		object.MemoryBackendFile("pc.ram",
+//			object.WithMemorySize("512M"),
+//			object.WithMemoryPath("/hugetlbfs"),
+//			object.IsPrealloc(true),
+//			object.IsShare(true)),
+//		qemu.Machine("", qemu.WithMemoryBackend("pc.ram")),
+//		qemu.Memory("512M"))
+//
+// Invocation
+//	qemu-system-x86_64 \
+//		-object memory-backend-file,id=pc.ram,size=512M,mem-path=/hugetlbfs,prealloc=on,share=on \
+//		-machine memory-backend=pc.ram \
+//		-m 512M
 func Machine(name string, properties ...*MachineProperty) *queso.Option {
 	props := make([]*queso.Property, 0)
 
