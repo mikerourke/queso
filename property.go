@@ -34,3 +34,27 @@ func (p *Property) Arg() string {
 
 	return fmt.Sprintf("%s=%s", p.Key, stringVal)
 }
+
+type PropertiesTable = map[string]string
+
+// ToPropertiesTable returns a map of the properties with key of property name
+// and value of property value.
+func ToPropertiesTable(properties []*Property) PropertiesTable {
+	table := make(map[string]string)
+
+	for _, property := range properties {
+		stringVal := fmt.Sprintf("%v", property.Value)
+
+		if reflect.TypeOf(property.Value).Kind() == reflect.Bool {
+			if reflect.ValueOf(property.Value).Bool() {
+				stringVal = "on"
+			} else {
+				stringVal = "off"
+			}
+		}
+
+		table[property.Key] = stringVal
+	}
+
+	return table
+}

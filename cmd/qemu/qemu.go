@@ -48,7 +48,7 @@ func main() {
 					9000,
 					445,
 				).WithHostIP("127.0.0.1"))),
-		device.Device("e1000",
+		device.Use("e1000",
 			device.NewProperty("netdev", "n")),
 
 		// USB Settings

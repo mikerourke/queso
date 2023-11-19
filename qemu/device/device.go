@@ -7,8 +7,8 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// Device adds a device driver with the specified name and properties.
-func Device(name string, properties ...*Property) *queso.Option {
+// Use adds a device driver with the specified name and properties.
+func Use(name string, properties ...*Property) *queso.Option {
 	props := make([]*queso.Property, 0)
 
 	for _, property := range properties {
@@ -29,7 +29,7 @@ func IPMIBMC(id string, properties ...*Property) *queso.Option {
 		props = append(props, properties...)
 	}
 
-	return Device("ipmi-bmc-sim", props...)
+	return Use("ipmi-bmc-sim", props...)
 }
 
 // IPMIBMCExternal adds a connection to an external IPMI BMC simulator.
@@ -60,7 +60,7 @@ func IPMIBMCExternal(
 		props = append(props, properties...)
 	}
 
-	return Device("ipmi-bmc-extern", props...)
+	return Use("ipmi-bmc-extern", props...)
 }
 
 // KCSIPMIOnISABus adds a KCS IPMI interface on the ISA bus. This also adds a
@@ -73,7 +73,7 @@ func KCSIPMIOnISABus(bmc string, properties ...*Property) *queso.Option {
 		props = append(props, properties...)
 	}
 
-	return Device("isa-ipmi-kcs", props...)
+	return Use("isa-ipmi-kcs", props...)
 }
 
 // BTIPMIOnISABus adds a BT IPMI interface on the ISA bus. The bmc parameter
@@ -85,7 +85,7 @@ func BTIPMIOnISABus(bmc string, properties ...*Property) *queso.Option {
 		props = append(props, properties...)
 	}
 
-	return Device("isa-ipmi-bt", props...)
+	return Use("isa-ipmi-bt", props...)
 }
 
 // KCSIPMIOnPCIBus adds a KCS IPMI interface on the PCI bus. The bmc parameter
@@ -97,7 +97,7 @@ func KCSIPMIOnPCIBus(bmc string, properties ...*Property) *queso.Option {
 		props = append(props, properties...)
 	}
 
-	return Device("pci-ipmi-kcs", props...)
+	return Use("pci-ipmi-kcs", props...)
 }
 
 // BTIPMIOnPCIBus adds a BT IPMI interface on the PCI bus. The bmc parameter
@@ -109,13 +109,13 @@ func BTIPMIOnPCIBus(bmc string, properties ...*Property) *queso.Option {
 		props = append(props, properties...)
 	}
 
-	return Device("pci-ipmi-bc", props...)
+	return Use("pci-ipmi-bc", props...)
 }
 
 // IntelIOMMU is used to enable Intel VT-d emulation within the guest.
 // This can only be used with Q35 Machine instances.
 func IntelIOMMU(properties ...*Property) *queso.Option {
-	return Device("intel-iommu", properties...)
+	return Use("intel-iommu", properties...)
 }
 
 // Virtio9PVariant represents the variant of Virtio9P to use for a new
@@ -139,7 +139,7 @@ func Virtio9P(variant Virtio9PVariant, fsdev string, mountTag string) *queso.Opt
 		NewProperty("mount_tag", mountTag),
 	}
 
-	return Device(name, props...)
+	return Use(name, props...)
 }
 
 // Property represents a property that can be used with the device option.
