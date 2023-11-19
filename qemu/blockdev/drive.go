@@ -1,11 +1,14 @@
 package blockdev
 
-import "github.com/mikerourke/queso"
+import (
+	"github.com/mikerourke/queso"
+	"github.com/mikerourke/queso/diskimage"
+)
 
 // Drive defines a new drive. This includes creating a block driver node (the
 // backend) as well as a guest device, and is mostly a shortcut for defining the
 // corresponding Driver and device options.
-func Drive(properties ...DriveProperty) *queso.Option {
+func Drive(properties ...*DriveProperty) *queso.Option {
 	props := make([]*queso.Property, 0)
 
 	for _, property := range properties {
@@ -31,13 +34,18 @@ func NewDriveProperty(key string, value interface{}) *DriveProperty {
 // https://qemu.readthedocs.io/en/latest/system/images.html for more details.
 //
 // If the file contains commas, you must double it. For example. to use file "my,file":
-// 	WithFile("my,,file")
+// 	WithDiskImageFile("my,,file")
 //
 // Special files such as iSCSI devices can be specified using protocol specific URLs.
 // See https://www.qemu.org/docs/master/system/invocation.html#device-url-syntax for
 // more details.
 func WithDiskImageFile(file string) *DriveProperty {
 	return NewDriveProperty("file", file)
+}
+
+// WithDiskImageFormat defines the format of the associated image file.
+func WithDiskImageFormat(format diskimage.FileFormat) *DriveProperty {
+	return NewDriveProperty("file", format)
 }
 
 // DriveInterface represents an interface that can be used with a Drive and is

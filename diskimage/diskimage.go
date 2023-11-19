@@ -2,6 +2,13 @@
 // https://qemu.readthedocs.io/en/latest/system/images.html for more details.
 package diskimage
 
+import (
+	"fmt"
+	"log"
+	"os"
+	"os/exec"
+)
+
 // FileFormat represents disk image file formats that can be mounted/edited with
 // QEMU.
 type FileFormat string
@@ -64,3 +71,45 @@ const (
 	// ReadOnlyFormatParallels represents the Parallels disk image format.
 	ReadOnlyFormatParallels ReadOnlyFormat = "parallels"
 )
+
+type CreateOptions struct {
+	Format    FileFormat
+	File      string
+	Size      string
+	Overwrite bool
+}
+
+// Create creates a new disk image using qemu-img.
+// TODO: Add better error handling.
+func Create(opts CreateOptions) error {
+	args := []string{"create", "-f", string(opts.Format), opts.File, opts.Size}
+
+	exists := true
+	if _, err := os.Stat(opts.File); os.IsNotExist(err) {
+		exists = false
+	}
+
+	if exists {
+		if !opts.Overwrite {
+			return fmt.Errorf("%s already exists", opts.File)
+		} else {
+			if err := os.Remove(opts.File); err != nil {
+				return fmt.Errorf("failed to overwrite: %s", err)
+			}
+		}
+	}
+
+	return runQEMUImg(args...)
+}
+
+func runQEMUImg(args ...string) error {
+	output, err := exec.Command("qemu-img", args...).CombinedOutput()
+
+	if err != nil {
+		return err
+	}
+
+	log.Printf("%s", output)
+
+	return nil
+}

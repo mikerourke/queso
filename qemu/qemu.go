@@ -1,7 +1,8 @@
 package qemu
 
 import (
-	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/mikerourke/queso"
 )
@@ -10,6 +11,7 @@ import (
 type QEMU struct {
 	exePath string
 	args    []string
+	cmd     *exec.Cmd
 }
 
 // New returns a new instance of QEMU. The path parameter represents the path
@@ -32,7 +34,23 @@ func (q *QEMU) SetOptions(options ...*queso.Option) {
 	q.args = args
 }
 
-// Start starts the QEMU executable.
-func (q *QEMU) Start() {
-	fmt.Println(q.args)
+// Args returns a slice of the args that will be passed to QEMU. This is
+// useful for debugging purposes.
+func (q *QEMU) Args() []string {
+	return q.args
+}
+
+// Cmd returns the exec.Cmd instance for QEMU.
+func (q *QEMU) Cmd() *exec.Cmd {
+	q.cmd = exec.Command(q.exePath, q.args...)
+
+	return q.cmd
+}
+
+// Run starts the QEMU executable.
+func (q *QEMU) Run() error {
+	q.cmd.Stdout = os.Stdout
+	q.cmd.Stderr = os.Stderr
+
+	return q.cmd.Run()
 }

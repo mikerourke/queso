@@ -12,7 +12,7 @@ func PreallocateMemory() *queso.Option {
 	return queso.NewOption("mem-prealloc", "")
 }
 
-// Memory sets guest startup RAM size to megs megabytes. Default is 128 MiB.
+// Memory sets guest startup RAM size to specified size in megabytes. Default is 128 MiB.
 // Optionally, a suffix of "M" or "G" can be used to signify a value in megabytes
 // or gigabytes respectively.
 func Memory(size string, properties ...*MemoryProperty) *queso.Option {

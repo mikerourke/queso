@@ -15,7 +15,7 @@ func SMP(properties ...*SMPProperty) *queso.Option {
 		props = append(props, property.Property)
 	}
 
-	return queso.NewOption("accel", "", props...)
+	return queso.NewOption("smp", "", props...)
 }
 
 // SMPProperty represents a property that can be used with the SMP option.
