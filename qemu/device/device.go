@@ -7,6 +7,26 @@ import (
 	"github.com/mikerourke/queso"
 )
 
+// Device represents a device used with QEMU (via the `-device` flag).
+type Device struct {
+	Type       string
+	Properties []*Property
+}
+
+// Option returns the option representation of the device.
+func (d *Device) Option() *queso.Option {
+	return Use(d.Type, d.Properties...)
+}
+
+// New returns a new Device instance that can be passed into the WithDevices
+// function.
+func New(deviceType string, properties ...*Property) *Device {
+	return &Device{
+		Type:       deviceType,
+		Properties: properties,
+	}
+}
+
 // Use adds a device driver with the specified name and properties.
 // There are a _lot_ of options for deviceType. See the QEMU documentation for
 // additional details.

@@ -37,9 +37,20 @@ func main() {
 	// }
 
 	q := qemu.New("qemu-system-x86_64")
+
+	ns := qemu.NewNUMASystem()
+	node1 := qemu.NewNUMANode(1).SetMemoryDevice("m0")
+	node2 := qemu.NewNUMANode(2)
+	dist := qemu.NewNUMADistance(node1, node2, "10")
+	cpu1 := qemu.NewNUMACPU(node1)
+	ns.Add(node1, node2, dist, cpu1)
+
+	q.
+		Use(ns.Nodes()...).
+		Use(qemu.NewSMP().SetCPUCount(2))
+
 	q.SetOptions(
-		qemu.Memory("3G"),
-		qemu.SMP(qemu.WithCPUCount(2)),
+		qemu.MemorySize("3G"),
 
 		// Network Settings
 		network.UserBackend("n",

@@ -6,29 +6,35 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// Boot is used to specify options for booting, such as the boot order of drives.
+// BootOptions are used to specify options for booting, such as the boot order
+// of drives.
 //
-// Example 1
+// # Example 1
 //
 // Try to boot from network first, then from hard disk:
-//	qemu.New("qemu-system-x86_64").SetOptions(
-//		qemu.Boot(qemu.WithBootOrder("n", "c")))
+//
+//	qemu.New("qemu-system-x86_64").Use(
+//		qemu.NewBootOptions().)
 //
 // Invocation
+//
 //	qemu-system-x86_64 -boot order=nc
 //
-// Example 2
+// # Example 2
 //
 // Boot from CD-ROM first, switch back to default order after reboot:
+//
 //	qemu.New("qemu-system-x86_64").SetOptions(
 //		qemu.Boot(qemu.WithBootOnce("d")))
 //
 // Invocation
+//
 //	qemu-system-x86_64 -boot once=d
 //
-// Example 3
+// # Example 3
 //
 // Boot with a splash picture for 5 seconds:
+//
 //	qemu.New("qemu-system-x86_64").SetOptions(
 //		qemu.Boot(
 //			qemu.IsInteractive(true),
@@ -36,7 +42,39 @@ import (
 //			qemu.WithSplashTime(5000)))
 //
 // Invocation
+//
 //	qemu-system-x86_64 -boot menu=on,splash=/root/boot.bmp,splash-time=5000
+type BootOptions struct {
+	properties []*queso.Property
+}
+
+func NewBootOptions() *BootOptions {
+	return &BootOptions{}
+}
+
+func (bo *BootOptions) Option() *queso.Option {
+	if len(bo.properties) == 0 {
+		panic("at least one property is specified for BootOptions")
+	}
+
+	return queso.NewOption("boot", "", bo.properties...)
+}
+
+// SetBootOrder specifies boot order drives as a string of drive letters for BootOptions.
+// Valid drive letters depend on the target architecture.
+// The x86 PC uses: a, b (floppy 1 and 2), c (first hard disk), d (first CD-ROM),
+// n-p (Etherboot from network adapter 1-4), hard disk boot is the default.
+//
+// This should not be used together with the WithBootIndex property of devices,
+// since the firmware implementations normally do not support both at the same
+// time.
+func (bo *BootOptions) SetBootOrder(drives ...string) *BootOptions {
+	order := strings.Join(drives, "")
+	bo.properties = append(bo.properties, queso.NewProperty("order", order))
+
+	return bo
+}
+
 func Boot(properties ...*BootProperty) *queso.Option {
 	if len(properties) == 0 {
 		panic("at least one property is specified for Boot")

@@ -4,61 +4,58 @@ import "github.com/mikerourke/queso"
 
 // SMP simulates a SMP system with the count of CPUs initially present on the
 // machine type board.
-func SMP(properties ...*SMPProperty) *queso.Option {
-	if len(properties) == 0 {
-		panic("either WithCPUCount or at least one of the topology parameters must be specified for SMP")
-	}
-
-	props := make([]*queso.Property, 0)
-
-	for _, property := range properties {
-		props = append(props, property.Property)
-	}
-
-	return queso.NewOption("smp", "", props...)
+type SMP struct {
+	properties []*queso.Property
 }
 
-// SMPProperty represents a property that can be used with the SMP option.
-type SMPProperty struct {
-	*queso.Property
+// NewSMP returns a new SMP instance that can be used with QEMU.
+func NewSMP() *SMP {
+	return &SMP{}
 }
 
-// NewSMPProperty returns a new instance of SMPProperty.
-func NewSMPProperty(key string, value interface{}) *SMPProperty {
-	return &SMPProperty{
-		Property: queso.NewProperty(key, value),
+func (s *SMP) option() *queso.Option {
+	if len(s.properties) == 0 {
+		panic("either SetCPUCount or at least one of the topology parameters must be specified for UseSMP")
 	}
+
+	return queso.NewOption("smp", "", s.properties...)
 }
 
-// WithCPUCount specifies the initial CPU count to use. If omitted, the maximum
+// SetCPUCount specifies the initial CPU count to use. If omitted, the maximum
 // number of CPUs will be used.
-func WithCPUCount(count int) *SMPProperty {
-	return NewSMPProperty("cpus", count)
+func (s *SMP) SetCPUCount(count int) *SMP {
+	s.properties = append(s.properties, queso.NewProperty("cpus", count))
+	return s
 }
 
-// WithMaxCPUs enables further CPUs to be added at runtime. If omitted, the maximum
+// SetMaxCPUs enables further CPUs to be added at runtime. If omitted, the maximum
 // number of CPUs will be calculated from the provided topology members and the
 // initial CPU count will match the maximum number.
-func WithMaxCPUs(count int) *SMPProperty {
-	return NewSMPProperty("maxcpus", count)
+func (s *SMP) SetMaxCPUs(count int) *SMP {
+	s.properties = append(s.properties, queso.NewProperty("maxcpus", count))
+	return s
 }
 
-// WithSockets specifies the count of sockets to use.
-func WithSockets(count int) *SMPProperty {
-	return NewSMPProperty("sockets", count)
+// SetSocketCount specifies the count of sockets to use.
+func (s *SMP) SetSocketCount(count int) *SMP {
+	s.properties = append(s.properties, queso.NewProperty("sockets", count))
+	return s
 }
 
-// WithDies specifies the count of dies per socket to use.
-func WithDies(count int) *SMPProperty {
-	return NewSMPProperty("dies", count)
+// SetDieCount specifies the count of dies per socket to use.
+func (s *SMP) SetDieCount(count int) *SMP {
+	s.properties = append(s.properties, queso.NewProperty("dies", count))
+	return s
 }
 
-// WithCores specifies the count of cores per die to use.
-func WithCores(count int) *SMPProperty {
-	return NewSMPProperty("cores", count)
+// SetCoreCount specifies the count of cores per die to use.
+func (s *SMP) SetCoreCount(count int) *SMP {
+	s.properties = append(s.properties, queso.NewProperty("cores", count))
+	return s
 }
 
-// WithThreads specifies the count of threads per core to use.
-func WithThreads(count int) *SMPProperty {
-	return NewSMPProperty("threads", count)
+// SetThreadCount specifies the count of threads per core to use.
+func (s *SMP) SetThreadCount(count int) *SMP {
+	s.properties = append(s.properties, queso.NewProperty("threads", count))
+	return s
 }

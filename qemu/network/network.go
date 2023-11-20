@@ -11,15 +11,16 @@ import (
 type BackendType string
 
 const (
-	BackendTypeNone      BackendType = "none"
-	BackendTypeBridge    BackendType = "bridge"
-	BackendTypeL2TPv3    BackendType = "l2tpv3"
-	BackendTypeNetMap    BackendType = "netmap"
-	BackendTypeSocket    BackendType = "socket"
-	BackendTypeTAP       BackendType = "tap"
-	BackendTypeUser      BackendType = "user"
-	BackendTypeVDE       BackendType = "vde"
-	BackendTypeVHostUser BackendType = "vhost-user"
+	BackendTypeNone        BackendType = "none"
+	BackendTypeBridge      BackendType = "bridge"
+	BackendTypeL2TPv3      BackendType = "l2tpv3"
+	BackendTypeNetMap      BackendType = "netmap"
+	BackendTypeSocket      BackendType = "socket"
+	BackendTypeTAP         BackendType = "tap"
+	BackendTypeUser        BackendType = "user"
+	BackendTypeVDE         BackendType = "vde"
+	BackendTypeVHostUser   BackendType = "vhost-user"
+	BackendTypeVMNetShared BackendType = "vmnet-shared"
 )
 
 // NIC is a shortcut for configuring both the on-board (default) guest NIC hardware
@@ -36,25 +37,16 @@ func NIC(backendType BackendType, properties ...*Property) *queso.Option {
 	return queso.NewOption("nic", string(backendType), props...)
 }
 
-// newNetworkBackend is a convenience method for creating a new network device
-// option to pass to QEMU.
-func newNetworkBackend(
-	backendType BackendType,
-	idField string,
-	id string,
-	properties ...*Property,
-) *queso.Option {
+// Backend returns a network backend with the specified type and arbitrary
+// properties.
+func Backend(backendType string, properties ...*Property) *queso.Option {
 	props := make([]*queso.Property, 0)
-
-	if id != "" {
-		props = append(props, queso.NewProperty(idField, id))
-	}
 
 	for _, property := range properties {
 		props = append(props, property.Property)
 	}
 
-	return queso.NewOption("netdev", string(backendType), props...)
+	return queso.NewOption("netdev", backendType, props...)
 }
 
 // UserBackend configures a user mode host network backend which requires no
@@ -133,6 +125,38 @@ func VHostUserBackend(chardev string, properties ...*Property) *queso.Option {
 func VHostVDPABackend(vhostdev string) *queso.Option {
 	return queso.NewOption("netdev", "vhost-vdpa",
 		queso.NewProperty("vhostdev", vhostdev))
+}
+
+// VMNetSharedBackend configures a VMNet shared backend.
+//
+// Allows traffic originating from the vmnet interface to reach the Internet through a
+// network address translator (NAT). The vmnet interface can communicate with the host
+// and with other shared mode interfaces on the same subnet. If no DHCP settings, subnet
+// mask and IPv6 prefix specified, the interface can communicate with any of other
+// interfaces in shared mode.
+func VMNetSharedBackend(id string) *queso.Option {
+	return newNetworkBackend(BackendTypeVMNetShared, "id", id)
+}
+
+// newNetworkBackend is a convenience method for creating a new network device
+// option to pass to QEMU.
+func newNetworkBackend(
+	backendType BackendType,
+	idField string,
+	id string,
+	properties ...*Property,
+) *queso.Option {
+	props := make([]*queso.Property, 0)
+
+	if id != "" {
+		props = append(props, queso.NewProperty(idField, id))
+	}
+
+	for _, property := range properties {
+		props = append(props, property.Property)
+	}
+
+	return queso.NewOption("netdev", string(backendType), props...)
 }
 
 // HubPort creates a hub port on the emulated hub with ID hubID.
@@ -312,7 +336,9 @@ func WithBootFile(file string) *Property {
 // address can be set with the WithSMBServerAddress property.
 //
 // In the guest Windows OS, the line:
+//
 //	10.0.2.4 smbserver
+//
 // Must be added in the file `C:\WINDOWS\LMHOSTS` (for Windows 9x/ME) or
 // `C:\WINNT\SYSTEM32\DRIVERS\ETC\LMHOSTS` (Windows NT/2000).
 //
@@ -381,7 +407,7 @@ func WithConnect(addr string) *Property {
 // with another QEMU virtual machines using a UDP multicast socket, effectively
 // making a bus for every QEMU with same multicast address addr and port.
 //
-// Notes
+// # Notes
 //
 // 1. Several QEMU can be running on different hosts and share same bus (assuming
 // correct multicast setup for these hosts).

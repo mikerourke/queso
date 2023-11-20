@@ -34,38 +34,7 @@ const (
 	AccelXen = "xen"
 )
 
-// Accel is used to enable an accelerator.
-func Accel(accelType string, properties ...*AccelProperty) *queso.Option {
-	props := make([]*queso.Property, 0)
-
-	for _, property := range properties {
-		props = append(props, property.Property)
-	}
-
-	return queso.NewOption("accel", accelType, props...)
-}
-
-// AccelProperty represents a property that can be used with Accel.
-type AccelProperty struct {
-	*queso.Property
-}
-
-// NewAccelProperty returns a new instance of AccelProperty.
-func NewAccelProperty(key string, value interface{}) *AccelProperty {
-	return &AccelProperty{
-		Property: queso.NewProperty(key, value),
-	}
-}
-
-// IsIGDPassThru controls whether Intel integrated graphics devices can be passed
-// through to the guest for Accel.
-//
-// This property can only be used with the Xen accelerator.
-func IsIGDPassThru(enabled bool) *AccelProperty {
-	return NewAccelProperty("igd-passthru", enabled)
-}
-
-// KernelIRQChipMode represents the mode to use for the WithKernelIRQChip
+// KernelIRQChipMode represents the mode to use for the SetKernelIRQChip
 // property for Accel.
 type KernelIRQChipMode string
 
@@ -83,31 +52,6 @@ const (
 	KernelIRQChipSplit KernelIRQChipMode = "split"
 )
 
-// WithKernelIRQChip controls KVM in-kernel IRQ chip support for Accel. The
-// default is KernelIRQChipOn. See KernelIRQChipMode for more details.
-func WithKernelIRQChip(mode KernelIRQChipMode) *AccelProperty {
-	return NewAccelProperty("kernel-irqchip", mode)
-}
-
-// WithKVMShadowMemory defines the size of the KVM shadow MMU.
-func WithKVMShadowMemory(size int) *AccelProperty {
-	return NewAccelProperty("kvm-shadow-mem", size)
-}
-
-// IsSplitWX controls the use of split w^x mapping for the TCG code generation
-// buffer for Accel. Some operating systems require this to be enabled, and in
-// such a case this will default on. On other operating systems, this will default
-// off, but one may enable this for testing or debugging.
-func IsSplitWX(enabled bool) *AccelProperty {
-	return NewAccelProperty("split-wx", enabled)
-}
-
-// WithTranslationBlockCacheSize controls the size (in MiB) of the TCG
-// translation block cache for Accel.
-func WithTranslationBlockCacheSize(megabytes int) *AccelProperty {
-	return NewAccelProperty("tb-size", megabytes)
-}
-
 // ThreadFlag represents the type of TCG threads to use for Accel.
 type ThreadFlag string
 
@@ -119,22 +63,82 @@ const (
 	ThreadMulti ThreadFlag = "multi"
 )
 
-// WithThread controls number of TCG threads for Accel. When the TCG is
-// multi-threaded, there will be one thread per vCPU therefore taking advantage
+func AccelType(accelType string) *queso.Option {
+	return queso.NewOption("accel", accelType)
+}
+
+type Accel struct {
+	Usable
+	Type       string
+	properties []*queso.Property
+}
+
+func NewAccel(accelType string) *Accel {
+	return &Accel{
+		Type: accelType,
+	}
+}
+
+func (a *Accel) option() *queso.Option {
+	return queso.NewOption("accel", "", a.properties...)
+}
+
+// ToggleIGDPassThru controls whether Intel integrated graphics devices can be passed
+// through to the guest for Accel.
+//
+// This property can only be used with the Xen accelerator.
+func (a *Accel) ToggleIGDPassThru(enabled bool) *Accel {
+	a.properties = append(a.properties, queso.NewProperty("igd-passthru", enabled))
+	return a
+}
+
+// SetKernelIRQChip controls KVM in-kernel IRQ chip support for Accel. The
+// default is KernelIRQChipOn. See KernelIRQChipMode for more details.
+func (a *Accel) SetKernelIRQChip(mode KernelIRQChipMode) *Accel {
+	a.properties = append(a.properties, queso.NewProperty("kernel-irqchip", mode))
+	return a
+}
+
+// SetKVMShadowMemory defines the size of the KVM shadow MMU.
+func (a *Accel) SetKVMShadowMemory(size int) *Accel {
+	a.properties = append(a.properties, queso.NewProperty("kvm-shadow-mem", size))
+	return a
+}
+
+// ToggleSplitWX controls the use of split w^x mapping for the TCG code generation
+// buffer for Accel. Some operating systems require this to be enabled, and in
+// such a case this will default on. On other operating systems, this will default
+// off, but one may enable this for testing or debugging.
+func (a *Accel) ToggleSplitWX(enabled bool) *Accel {
+	a.properties = append(a.properties, queso.NewProperty("split-wx", enabled))
+	return a
+}
+
+// SetTranslationBlockCacheSize controls the size (in MiB) of the TCG
+// translation block cache for Accel.
+func (a *Accel) SetTranslationBlockCacheSize(megabytes int) *Accel {
+	a.properties = append(a.properties, queso.NewProperty("tb-size", megabytes))
+	return a
+}
+
+// SetThreadFlag controls number of TCG threads for Accel. When the TCG is
+// multithreaded, there will be one thread per vCPU therefore taking advantage
 // of additional host cores. The default is to enable multi-threading where both
 // the back-end and front-ends support it and no incompatible TCG features have
 // been enabled (e.g. icount/replay).
-func WithThread(flag ThreadFlag) *AccelProperty {
-	return NewAccelProperty("thread", flag)
+func (a *Accel) SetThreadFlag(flag ThreadFlag) *Accel {
+	a.properties = append(a.properties, queso.NewProperty("thread", flag))
+	return a
 }
 
-// WithDirtyRingSize controls the size of the per-vCPU dirty page ring buffer
+// SetDirtyRingSize controls the size of the per-vCPU dirty page ring buffer
 // (number of entries for each vCPU) for Accel. It should be a value that is power
 // of two, and it should be 1024 or bigger (but still less than the maximum value
 // that the kernel supports). 4096 could be a good initial value if you have no
 // idea which is the best. Set this value to 0 to disable the feature. By default,
 // this feature is disabled (value = 0). When enabled, KVM will instead record
 // dirty pages in a bitmap.
-func WithDirtyRingSize(bytes int) *AccelProperty {
-	return NewAccelProperty("dirty-ring-size", bytes)
+func (a *Accel) SetDirtyRingSize(bytes int) *Accel {
+	a.properties = append(a.properties, queso.NewProperty("dirty-ring-size", bytes))
+	return a
 }

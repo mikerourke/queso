@@ -93,6 +93,11 @@ func EmulateVGACard(card VGACard) *queso.Option {
 	return queso.NewOption("vga", string(card))
 }
 
+// WithNoVGA is a shortcut for using `-vga` with the "none" option.
+func WithNoVGA() *queso.Option {
+	return queso.NewOption("vga", string(VGACardNone))
+}
+
 // FullScreen starts in full screen.
 func FullScreen() *queso.Option {
 	return queso.NewOption("full-screen", "")

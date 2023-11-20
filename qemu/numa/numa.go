@@ -8,8 +8,8 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// Use defines a NUMA object.
-func Use(name string, properties ...*Property) *queso.Option {
+// NUMA defines a NUMA object.
+func NUMA(name string, properties ...*Property) *queso.Option {
 	props := make([]*queso.Property, 0)
 
 	for _, property := range properties {
@@ -42,12 +42,12 @@ func Use(name string, properties ...*Property) *queso.Option {
 //		-numa node,nodeid=0 -numa node,nodeid=1 \
 //		-numa cpu,node-id=0,socket-id=0 -numa cpu,node-id=1,socket-id=1
 func Node(properties ...*Property) *queso.Option {
-	return Use("node", properties...)
+	return NUMA("node", properties...)
 }
 
 // Distance sets the NUMA distance from a source node to a destination node.
 func Distance(source string, destination string, distance string) *queso.Option {
-	return Use("dist",
+	return NUMA("dist",
 		NewProperty("src", source),
 		NewProperty("dest", destination),
 		NewProperty("val", distance))
@@ -63,7 +63,7 @@ func CPU(nodeID int, properties ...*Property) *queso.Option {
 		props = append(props, properties...)
 	}
 
-	return Use("cpu", props...)
+	return NUMA("cpu", props...)
 }
 
 // HMATLB sets System Locality Latency and Bandwidth Information between
@@ -89,7 +89,7 @@ func HMATLB(
 		props = append(props, properties...)
 	}
 
-	return Use("hmat-lb", props...)
+	return NUMA("hmat-lb", props...)
 }
 
 // HMATCache sets the cache properties for the ACPI Heterogeneous Attribute
@@ -105,7 +105,7 @@ func HMATCache(nodeID int, size string, level int, properties ...*Property) *que
 		props = append(props, properties...)
 	}
 
-	return Use("hmat-cache", props...)
+	return NUMA("hmat-cache", props...)
 }
 
 // Property represents a property that can be used with a NUMA option.

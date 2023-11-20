@@ -20,11 +20,12 @@ type QEMU struct {
 func New(path string) *QEMU {
 	return &QEMU{
 		exePath: path,
+		args:    []string{},
 	}
 }
 
 // SetOptions sets the options to use for invoking QEMU.
-func (q *QEMU) SetOptions(options ...*queso.Option) {
+func (q *QEMU) SetOptions(options ...*queso.Option) *QEMU {
 	args := make([]string, 0)
 
 	for _, option := range options {
@@ -32,6 +33,21 @@ func (q *QEMU) SetOptions(options ...*queso.Option) {
 	}
 
 	q.args = args
+
+	return q
+}
+
+type Usable interface {
+	option() *queso.Option
+}
+
+func (q *QEMU) Use(usables ...Usable) *QEMU {
+	for _, usable := range usables {
+		usableArgs := usable.option().Args()
+		q.args = append(q.args, usableArgs...)
+	}
+
+	return q
 }
 
 // Args returns a slice of the args that will be passed to QEMU. This is

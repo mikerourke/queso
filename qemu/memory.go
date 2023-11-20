@@ -12,38 +12,42 @@ func PreallocateMemory() *queso.Option {
 	return queso.NewOption("mem-prealloc", "")
 }
 
+// MemorySize returns an option used to set the memory size with a string and
+// no other options.
+func MemorySize(size string) *queso.Option {
+	return queso.NewOption("m", size)
+}
+
 // Memory sets guest startup RAM size to specified size in megabytes. Default is 128 MiB.
 // Optionally, a suffix of "M" or "G" can be used to signify a value in megabytes
 // or gigabytes respectively.
-func Memory(size string, properties ...*MemoryProperty) *queso.Option {
-	props := make([]*queso.Property, 0)
-
-	for _, property := range properties {
-		props = append(props, property.Property)
-	}
-
-	return queso.NewOption("m", size, props...)
+type Memory struct {
+	Size       string
+	properties []*queso.Property
 }
 
-// MemoryProperty represents a property that can be used with Memory.
-type MemoryProperty struct {
-	*queso.Property
-}
-
-// NewMemoryProperty returns a new instance of MemoryProperty.
-func NewMemoryProperty(key string, value interface{}) *MemoryProperty {
-	return &MemoryProperty{
-		Property: queso.NewProperty(key, value),
+// NewMemory returns a new Memory instance (for setting memory properties in QEMU).
+func NewMemory(size string) *Memory {
+	return &Memory{
+		Size:       size,
+		properties: make([]*queso.Property, 0),
 	}
 }
 
-// WithMemorySlots specifies amount of hot-pluggable memory slots.
-func WithMemorySlots(count int) *MemoryProperty {
-	return NewMemoryProperty("slots", count)
+// Option returns the Memory settings as an Option for use in command line.
+func (m *Memory) option() *queso.Option {
+	return queso.NewOption("m", "", m.properties...)
 }
 
-// WithMemoryMaximum specifies maximum amount of memory. Note that the size
+// SetMemorySlots specifies amount of hot-pluggable memory slots.
+func (m *Memory) SetMemorySlots(count int) *Memory {
+	m.properties = append(m.properties, queso.NewProperty("slots", count))
+	return m
+}
+
+// SetMemoryMaximum specifies maximum amount of memory. Note that the size
 // must be aligned to the page size.
-func WithMemoryMaximum(size string) *MemoryProperty {
-	return NewMemoryProperty("maxmem", size)
+func (m *Memory) SetMemoryMaximum(size string) *Memory {
+	m.properties = append(m.properties, queso.NewProperty("maxmem", size))
+	return m
 }
