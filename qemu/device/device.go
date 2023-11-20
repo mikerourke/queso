@@ -8,14 +8,16 @@ import (
 )
 
 // Use adds a device driver with the specified name and properties.
-func Use(name string, properties ...*Property) *queso.Option {
+// There are a _lot_ of options for deviceType. See the QEMU documentation for
+// additional details.
+func Use(deviceType string, properties ...*Property) *queso.Option {
 	props := make([]*queso.Property, 0)
 
 	for _, property := range properties {
 		props = append(props, property.Property)
 	}
 
-	return queso.NewOption("device", name, props...)
+	return queso.NewOption("device", deviceType, props...)
 }
 
 // IPMIBMC adds an IPMI BMC. This is a simulation of a hardware management
@@ -152,6 +154,16 @@ func NewProperty(key string, value interface{}) *Property {
 	return &Property{
 		Property: queso.NewProperty(key, value),
 	}
+}
+
+// WithID defines the ID to use for the device.
+func WithID(id string) *Property {
+	return NewProperty("id", id)
+}
+
+// WithBus defines the bus name to use for the device.
+func WithBus(name string) *Property {
+	return NewProperty("bus", name)
 }
 
 // WithSlaveAddress defines a slave address to use for the BMC. The default is

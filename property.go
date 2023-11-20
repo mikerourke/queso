@@ -35,11 +35,9 @@ func (p *Property) Arg() string {
 	return fmt.Sprintf("%s=%s", p.Key, stringVal)
 }
 
-type PropertiesTable = map[string]string
-
-// ToPropertiesTable returns a map of the properties with key of property name
+// PropertiesTable returns a map of the properties with key of property name
 // and value of property value.
-func ToPropertiesTable(properties []*Property) PropertiesTable {
+func PropertiesTable(properties []*Property) map[string]string {
 	table := make(map[string]string)
 
 	for _, property := range properties {

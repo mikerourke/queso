@@ -44,3 +44,24 @@ func (opt *Option) Args() []string {
 
 	return args
 }
+
+// ArgsString returns a string argument that gets passed to QEMU. This is used
+// primarily for testing purposes.
+func (opt *Option) ArgsString() string {
+	args := opt.Args()
+	return strings.Join(args, " ")
+}
+
+// Table returns a map with key of property name and value of property value
+// (as a string).
+func (opt *Option) Table() map[string]string {
+	table := make(map[string]string)
+
+	if opt.Properties != nil {
+		for _, property := range opt.Properties {
+			table[property.Key] = fmt.Sprint(property.Value)
+		}
+	}
+
+	return table
+}

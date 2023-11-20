@@ -125,10 +125,7 @@ func SerialBackend(id string, path string) *queso.Option {
 // spice support is built in. The name parameter is the name of spice channel to
 // connect to.
 func SpicePortBackend(id string, name string, properties ...*Property) *queso.Option {
-	props := []*Property{
-		NewProperty("id", id),
-		NewProperty("name", name),
-	}
+	props := []*Property{NewProperty("name", name)}
 
 	if properties != nil {
 		props = append(props, properties...)
@@ -141,10 +138,7 @@ func SpicePortBackend(id string, name string, properties ...*Property) *queso.Op
 // and is only available when spice support is built in. The name parameter is
 // the name of spice channel to connect to.
 func SpiceVMCBackend(id string, name string, properties ...*Property) *queso.Option {
-	props := []*Property{
-		NewProperty("id", id),
-		NewProperty("name", name),
-	}
+	props := []*Property{NewProperty("name", name)}
 
 	if properties != nil {
 		props = append(props, properties...)

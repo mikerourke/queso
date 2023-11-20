@@ -25,7 +25,7 @@ func Use(name string, properties ...*Property) *queso.Option {
 		props = append(props, property.Property)
 	}
 
-	table := queso.ToPropertiesTable(props)
+	table := queso.PropertiesTable(props)
 
 	mode := table["mode"]
 	pretty := table["pretty"]
