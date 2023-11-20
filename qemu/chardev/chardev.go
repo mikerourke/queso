@@ -122,22 +122,41 @@ func SerialBackend(id string, path string) *queso.Option {
 
 // SpicePortBackend connects to a spice port, allowing a Spice client to handle the
 // traffic identified by a name (preferably a fqdn)., and is only available when
-// spice support is built in. The debugLevel parameter is the debug level. The name
-// parameter is the name of spice channel to connect to.
-func SpicePortBackend(id string, debugLevel string, name string) *queso.Option {
-	return Backend(BackendTypeSpicePort, id,
-		NewProperty("debug", debugLevel),
-		NewProperty("name", name))
+// spice support is built in. The name parameter is the name of spice channel to
+// connect to.
+func SpicePortBackend(id string, name string, properties ...*Property) *queso.Option {
+	props := []*Property{
+		NewProperty("id", id),
+		NewProperty("name", name),
+	}
+
+	if properties != nil {
+		props = append(props, properties...)
+	}
+
+	return Backend(BackendTypeSpicePort, id, props...)
 }
 
 // SpiceVMCBackend connects to a spice virtual machine channel, such as `vdiport`,
-// and is only available when spice support is built in. The debugLevel
-// parameter is the debug level. The name parameter is the name of spice channel
-// to connect to.
-func SpiceVMCBackend(id string, debugLevel string, name string) *queso.Option {
-	return Backend(BackendTypeSpiceVMC, id,
-		NewProperty("debug", debugLevel),
-		NewProperty("name", name))
+// and is only available when spice support is built in. The name parameter is
+// the name of spice channel to connect to.
+func SpiceVMCBackend(id string, name string, properties ...*Property) *queso.Option {
+	props := []*Property{
+		NewProperty("id", id),
+		NewProperty("name", name),
+	}
+
+	if properties != nil {
+		props = append(props, properties...)
+	}
+
+	return Backend(BackendTypeSpiceVMC, id, props...)
+}
+
+// WithDebugLevel returns the debug flag to set for Spice port and VMC.
+// TODO: Find out if this is supposed to be a string or a number or something else.
+func WithDebugLevel(value string) *Property {
+	return NewProperty("debug", value)
 }
 
 // StdioBackend connects to standard input and standard output of the QEMU process.
