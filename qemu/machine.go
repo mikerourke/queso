@@ -22,7 +22,7 @@ const (
 //
 //	machine := qemu.NewMachine().SetMemoryBackend("pc.ram")
 //	qemu.New("qemu-system-x86_64").
-//		SetOptions(
+//		With(
 //			object.MemoryBackendFile("pc.ram",
 //				object.WithMemorySize("512M"),
 //				object.WithMemoryPath("/hugetlbfs"),

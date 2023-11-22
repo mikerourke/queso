@@ -10,12 +10,14 @@ type SMP struct {
 
 // NewSMP returns a new SMP instance that can be used with QEMU.
 func NewSMP() *SMP {
-	return &SMP{}
+	return &SMP{
+		properties: make([]*queso.Property, 0),
+	}
 }
 
 func (s *SMP) option() *queso.Option {
 	if len(s.properties) == 0 {
-		panic("either SetCPUCount or at least one of the topology parameters must be specified for UseSMP")
+		panic("either SetCPUCount or at least one of the topology parameters must be specified for SMP")
 	}
 
 	return queso.NewOption("smp", "", s.properties...)

@@ -12,7 +12,7 @@ import (
 //
 // Example
 //
-//	qemu.New("qemu-system-x86_64").SetOptions(
+//	qemu.New("qemu-system-x86_64").With(
 //		blockdev.FileDriver("disk.img",
 //			blockdev.WithNodeName("disk")))
 //
@@ -45,7 +45,7 @@ func FileDriver(file string, properties ...*DriverProperty) *queso.Option {
 //
 // Example 1
 //
-// 	qemu.New("qemu-system-x86_64").SetOptions(
+//	qemu.New("qemu-system-x86_64").With(
 //		blockdev.FileDriver("disk.img",
 //			blockdev.WithNodeName("disk_file")),
 //		blockdev.RawDriver(
@@ -60,7 +60,7 @@ func FileDriver(file string, properties ...*DriverProperty) *queso.Option {
 //
 // Example 2
 //
-//	qemu.New("qemu-system-x86_64").SetOptions(
+//	qemu.New("qemu-system-x86_64").With(
 //		blockdev.RawDriver(
 //			blockdev.WithNodeName("disk"),
 //			blockdev.WithDriverProperty("file", blockdev.WithDriverType("file")),
@@ -78,7 +78,7 @@ func RawDriver(properties ...*DriverProperty) *queso.Option {
 //
 // Example 1
 //
-//	qemu.New("qemu-system-x86_64").SetOptions(
+//	qemu.New("qemu-system-x86_64").With(
 //		blockdev.FileDriver("/tmp/disk.qcow2",
 //			blockdev.WithNodeName("my_file")),
 //		blockdev.QCOW2Driver(
@@ -95,7 +95,7 @@ func RawDriver(properties ...*DriverProperty) *queso.Option {
 //
 // Example 2
 //
-//	qemu.New("qemu-system-x86_64").SetOptions(
+//	qemu.New("qemu-system-x86_64").With(
 //		blockdev.QCOW2Driver(
 //			blockdev.WithNodeName("disk"),
 //			blockdev.WithDriverProperty("file", blockdev.WithDriverType("http")),

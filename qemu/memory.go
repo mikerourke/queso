@@ -2,22 +2,6 @@ package qemu
 
 import "github.com/mikerourke/queso"
 
-// MemoryPath allocates guest RAM from a temporarily created file in path.
-func MemoryPath(path string) *queso.Option {
-	return queso.NewOption("mem-path", path)
-}
-
-// PreallocateMemory pre-allocates memory when using MemoryPath.
-func PreallocateMemory() *queso.Option {
-	return queso.NewOption("mem-prealloc", "")
-}
-
-// MemorySize returns an option used to set the memory size with a string and
-// no other options.
-func MemorySize(size string) *queso.Option {
-	return queso.NewOption("m", size)
-}
-
 // Memory sets guest startup RAM size to specified size in megabytes. Default is 128 MiB.
 // Optionally, a suffix of "M" or "G" can be used to signify a value in megabytes
 // or gigabytes respectively.
@@ -50,4 +34,20 @@ func (m *Memory) SetMemorySlots(count int) *Memory {
 func (m *Memory) SetMemoryMaximum(size string) *Memory {
 	m.properties = append(m.properties, queso.NewProperty("maxmem", size))
 	return m
+}
+
+// MemoryPath allocates guest RAM from a temporarily created file in path.
+func MemoryPath(path string) *queso.Option {
+	return queso.NewOption("mem-path", path)
+}
+
+// PreallocateMemory pre-allocates memory when using MemoryPath.
+func PreallocateMemory() *queso.Option {
+	return queso.NewOption("mem-prealloc", "")
+}
+
+// MemorySize returns an option used to set the memory size with a string and
+// no other options.
+func MemorySize(size string) *queso.Option {
+	return queso.NewOption("m", size)
 }

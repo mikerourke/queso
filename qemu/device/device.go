@@ -14,7 +14,7 @@ type Device struct {
 }
 
 // Option returns the option representation of the device.
-func (d *Device) Option() *queso.Option {
+func (d *Device) option() *queso.Option {
 	return Use(d.Type, d.Properties...)
 }
 

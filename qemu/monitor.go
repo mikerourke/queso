@@ -15,13 +15,14 @@ const (
 	MonitorModeQMP MonitorMode = "control"
 )
 
+// Monitor is used to set up a monitor connected to a character device.
 type Monitor struct {
 	Usable
 	Name       string
 	properties []*queso.Property
 }
 
-// NewMonitor returns a new instance of a monitor, which can be used to monitor a
+// NewMonitor returns a new instance of a Monitor, which can be used to monitor a
 // character device.
 func NewMonitor(name string) *Monitor {
 	return &Monitor{
@@ -66,22 +67,9 @@ func (m *Monitor) TogglePretty(enabled bool) *Monitor {
 	return m
 }
 
-func Monitor1(name string, properties ...*MonitorProperty) *queso.Option {
-	props := []*queso.Property{queso.NewProperty("chardev", name)}
-
-	for _, property := range properties {
-		props = append(props, property.Property)
-	}
-
-	table := queso.PropertiesTable(props)
-
-	mode := table["mode"]
-	pretty := table["pretty"]
-	if mode == string(MonitorModeHMP) {
-		if pretty == "on" {
-			panic("you can only enable pretty when mode is QMP")
-		}
-	}
-
-	return queso.NewOption("mon", "", props...)
+// WithMonitorRedirect redirects the monitor to host device "device" (same devices as
+// the serial port). The default device is vc in graphical mode and stdio in
+// non-graphical mode. Use "none" for "device" to disable the default monitor.
+func WithMonitorRedirect(device string) *queso.Option {
+	return queso.NewOption("monitor", device)
 }

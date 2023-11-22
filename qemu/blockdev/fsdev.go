@@ -183,7 +183,7 @@ type ThrottlingOptions struct {
 
 // WithThrottling can be passed into the File System Device multiple times to
 // specify different contexts or units. For example, to throttle the bandwidth
-// for reads, pass this into the qemu.SetOptions call:
+// for reads, pass this into the qemu.With call:
 //
 //	blockdev.WithThrottling(blockdev.ThrottlingOptions{
 //		Context:   ThrottlingContextBandwidth,

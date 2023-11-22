@@ -19,7 +19,7 @@ const (
 //
 // Example
 //
-//	qemu.New("qemu-system-x86_64").SetOptions(
+//	qemu.New("qemu-system-x86_64").With(
 //		object.SecretData("sec0", "letmein", object.SecretFormatRaw))
 //
 // Invocation
@@ -50,25 +50,30 @@ func SecretData(
 // Example (with AES Encryption)
 //
 // First, a master key needs to be created in base64 encoding:
+//
 //	openssl rand -base64 32 > key.b64
 //	KEY=$(base64 -d key.b64 | hexdump  -v -e '/1 "%02X"')
 //
 // Each secret to be encrypted needs to have a random initialization vector generated.
 // These do not need to be kept secret:
+//
 //	openssl rand -base64 16 > iv.b64
 //	IV=$(base64 -d iv.b64 | hexdump  -v -e '/1 "%02X"')
 //
 // The secret to be defined can now be encrypted, in this case we’re telling
 // openssl to base64 encode the result, but it could be left as raw bytes if desired.
+//
 //	SECRET=$(printf "letmein" | openssl enc -aes-256-cbc -a -K $KEY -iv $IV)
 //
 // To utilize this via the qemu library:
-//	qemu.New("qemu-system-x86_64").SetOptions(
+//
+//	qemu.New("qemu-system-x86_64").With(
 //		object.SecretFile("secmaster0", "key.b64", object.SecretFormatBase64),
 //		object.SecretData("sec0", "$SECRET", object.SecretFormatBase64,
 //			object.WithAESEncryption("secmaster0", "$(<iv.b64)")))
 //
 // Invocation
+//
 //	qemu-system-x86_64 \
 //		-object secret,id=secmaster0,format=base64,file=key.b64 \
 //		-object secret,id=sec0,keyid=secmaster0,format=base64,data=$SECRET,iv=$(<iv.b64)
