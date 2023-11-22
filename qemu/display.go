@@ -1,7 +1,4 @@
-// Package display is used to define display options for use with QEMU.
-// See https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-3
-// for more details.
-package display
+package qemu
 
 import (
 	"fmt"
@@ -10,16 +7,19 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-type Type string
+// See https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-3
+// for more details.
+
+type DisplayType string
 
 const (
-	TypeSpiceApp    Type = "spice-app"
-	TypeDBus        Type = "dbus"
-	TypeSDL         Type = "sdl"
-	TypeGTK         Type = "gtk"
-	TypeCurses      Type = "curses"
-	TypeEGLHeadless Type = "egl-headless"
-	TypeVNC         Type = "vnc"
+	DisplayTypeSpiceApp    DisplayType = "spice-app"
+	DisplayTypeDBus        DisplayType = "dbus"
+	DisplayTypeSDL         DisplayType = "sdl"
+	DisplayTypeGTK         DisplayType = "gtk"
+	DisplayTypeCurses      DisplayType = "curses"
+	DisplayTypeEGLHeadless DisplayType = "egl-headless"
+	DisplayTypeVNC         DisplayType = "vnc"
 )
 
 // NoGraphic totally disables graphical output so that QEMU is a simple command
@@ -93,8 +93,8 @@ func EmulateVGACard(card VGACard) *queso.Option {
 	return queso.NewOption("vga", string(card))
 }
 
-// WithNoVGA is a shortcut for using `-vga` with the "none" option.
-func WithNoVGA() *queso.Option {
+// NoVGA is a shortcut for using `-vga` with the "none" option.
+func NoVGA() *queso.Option {
 	return queso.NewOption("vga", string(VGACardNone))
 }
 

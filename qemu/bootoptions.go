@@ -6,10 +6,13 @@ import (
 	"github.com/mikerourke/queso"
 )
 
+// BootOptions represent the options for booting a VM, such as boot order and
+// splash image.
 type BootOptions struct {
 	properties []*queso.Property
 }
 
+// NewBootOptions returns a new instance of BootOptions.
 func NewBootOptions() *BootOptions {
 	return &BootOptions{
 		properties: make([]*queso.Property, 0),
@@ -28,10 +31,6 @@ func (bo *BootOptions) option() *queso.Option {
 // Valid drive letters depend on the target architecture.
 // The x86 PC uses: a, b (floppy 1 and 2), c (first hard disk), d (first CD-ROM),
 // n-p (Etherboot from network adapter 1-4), hard disk boot is the default.
-//
-// This should not be used together with the WithBootIndex property of devices,
-// since the firmware implementations normally do not support both at the same
-// time.
 func (bo *BootOptions) SetBootOrder(drives ...string) *BootOptions {
 	order := strings.Join(drives, "")
 	bo.properties = append(bo.properties, queso.NewProperty("order", order))
@@ -40,10 +39,6 @@ func (bo *BootOptions) SetBootOrder(drives ...string) *BootOptions {
 
 // SetBootOnce specifies Boot drives as a string of drive letters. It applies
 // the boot order only on the first startup. See WithBootOrder for more information.
-//
-// This should not be used together with the WithBootIndex property of devices,
-// since the firmware implementations normally do not support both at the same
-// time.
 func (bo *BootOptions) SetBootOnce(drives ...string) *BootOptions {
 	order := strings.Join(drives, "")
 	bo.properties = append(bo.properties, queso.NewProperty("once", order))

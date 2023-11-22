@@ -1,4 +1,4 @@
-package debug
+package qemu
 
 import "github.com/mikerourke/queso"
 

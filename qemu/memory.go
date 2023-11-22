@@ -10,7 +10,7 @@ type Memory struct {
 	properties []*queso.Property
 }
 
-// NewMemory returns a new Memory instance (for setting memory properties in QEMU).
+// NewMemory returns a new Memory instance (for setting memory properties in VM).
 func NewMemory(size string) *Memory {
 	return &Memory{
 		Size:       size,

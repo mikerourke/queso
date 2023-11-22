@@ -6,52 +6,56 @@ import (
 	"github.com/mikerourke/queso"
 )
 
+// AcceleratorType represents the type of accelerator.
 type AcceleratorType string
 
 const (
-	// HAXM is the Intel Hardware Accelerated Execution Manager.
+	// AcceleratorHAXM is the Intel Hardware Accelerated Execution Manager.
 	// See https://github.com/intel/haxm for more details.
 	// Deprecated: No longer supported, but kept for older versions of QEMU.
-	HAXM AcceleratorType = "hax"
+	AcceleratorHAXM AcceleratorType = "hax"
 
-	// HVF is the Hypervisor.framework accelerator on macOS.
+	// AcceleratorHVF is the Hypervisor.framework accelerator on macOS.
 	// See https://developer.apple.com/documentation/hypervisor for more details.
-	HVF AcceleratorType = "hvf"
+	AcceleratorHVF AcceleratorType = "hvf"
 
-	// KVM is the Kernel Virtual Machine, which is a Linux kernel module.
+	// AcceleratorKVM is the Kernel Virtual Machine, which is a Linux kernel module.
 	// See https://wiki.qemu.org/Features/KVM for more details.
-	KVM AcceleratorType = "kvm"
+	AcceleratorKVM AcceleratorType = "kvm"
 
-	// NVMM is a Type-2 hypervisor and hypervisor platform for NetBSD.
+	// AcceleratorNVMM is a Type-2 hypervisor and hypervisor platform for NetBSD.
 	// See https://m00nbsd.net/4e0798b7f2620c965d0dd9d6a7a2f296.html for more details.
-	NVMM AcceleratorType = "nvmm"
+	AcceleratorNVMM AcceleratorType = "nvmm"
 
-	// TCG is the Tiny Code Generator, which is the core binary translation
+	// AcceleratorTCG is the Tiny Code Generator, which is the core binary translation
 	// engine for QEMU. See https://wiki.qemu.org/Features/TCG for more details.
-	TCG AcceleratorType = "tcg"
+	AcceleratorTCG AcceleratorType = "tcg"
 
-	// WHPX is the Windows Hypervisor Platform accelerator (Hyper-V).
+	// AcceleratorWHPX is the Windows Hypervisor Platform accelerator (Hyper-V).
 	// See https://docs.microsoft.com/en-us/xamarin/android/get-started/installation/android-emulator/hardware-acceleration
 	// for more details.
-	WHPX AcceleratorType = "whpx"
+	AcceleratorWHPX AcceleratorType = "whpx"
 
-	// Xen is a Type-1 (bare metal) hypervisor.
+	// AcceleratorXen is a Type-1 (bare metal) hypervisor.
 	// See https://wiki.xenproject.org/wiki/Xen_Project_Software_Overview for
 	// more details.
-	Xen AcceleratorType = "xen"
+	AcceleratorXen AcceleratorType = "xen"
 )
 
-// WithAccelerator can be used with in conjunction with the qemu.With method
+// AcceleratorOfType can be used in conjunction with the qemu.With method
 // to define an accelerator with no additional properties.
-func WithAccelerator(acceleratorType string) *queso.Option {
-	return queso.NewOption("accel", acceleratorType)
+func AcceleratorOfType(acceleratorType AcceleratorType) *queso.Option {
+	return queso.NewOption("accel", string(acceleratorType))
 }
 
+// Accelerator represents any of the available hardware accelerators.
 type Accelerator struct {
 	Type       string
 	properties []*queso.Property
 }
 
+// NewAccelerator returns a new Accelerator instance with the specified
+// accelerator type.
 func NewAccelerator(acceleratorType string) *Accelerator {
 	return &Accelerator{
 		Type:       acceleratorType,
@@ -59,10 +63,17 @@ func NewAccelerator(acceleratorType string) *Accelerator {
 	}
 }
 
+// SetProperty is used to add arbitrary properties to the Accelerator.
+func (a *Accelerator) SetProperty(key string, value interface{}) *Accelerator {
+	a.properties = append(a.properties, queso.NewProperty(key, value))
+	return a
+}
+
 func (a *Accelerator) option() *queso.Option {
 	return queso.NewOption("accel", a.Type, a.properties...)
 }
 
+// NotifyOnVMExitOption represents the options for notifying when the VM exits.
 type NotifyOnVMExitOption string
 
 const (
@@ -81,6 +92,9 @@ const (
 	NotifyOnVMExitDisable NotifyOnVMExitOption = "disable"
 )
 
+// SetNotifyOnVMExit sets the notify approach as well as the notification window
+// (if applicable). If you're disabling the exit notification, use `0` for the
+// window.
 func (a *Accelerator) SetNotifyOnVMExit(option NotifyOnVMExitOption, window int) *Accelerator {
 	value := string(option)
 	if option == NotifyOnVMExitRun {
@@ -91,25 +105,23 @@ func (a *Accelerator) SetNotifyOnVMExit(option NotifyOnVMExitOption, window int)
 	return a
 }
 
+// KVMAccelerator represents an accelerator using KVM.
 type KVMAccelerator struct {
 	*Accelerator
 }
 
+// NewKVMAccelerator returns a new instace of KVMAccelerator.
 func NewKVMAccelerator() *KVMAccelerator {
 	return &KVMAccelerator{
 		Accelerator: &Accelerator{
-			Type:       string(KVM),
+			Type:       string(AcceleratorKVM),
 			properties: make([]*queso.Property, 0),
 		},
 	}
 }
 
-func (a *KVMAccelerator) option() *queso.Option {
-	return a.option()
-}
-
 // KernelIRQChipMode represents the mode to use for the SetKernelIRQChip
-// property for Accel.
+// property.
 type KernelIRQChipMode string
 
 const (
@@ -146,7 +158,7 @@ func (a *KVMAccelerator) SetKVMShadowMemory(size int) *KVMAccelerator {
 // of two, and it should be 1024 or bigger (but still less than the maximum value
 // that the kernel supports). 4096 could be a good initial value if you have no
 // idea which is the best. Set this value to 0 to disable the feature. By default,
-// this feature is disabled (value = 0). When enabled, KVM will instead record
+// this feature is disabled (value = 0). When enabled, AcceleratorKVM will instead record
 // dirty pages in a bitmap.
 func (a *KVMAccelerator) SetDirtyRingSize(bytes int) *KVMAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("dirty-ring-size", bytes))
@@ -171,45 +183,41 @@ func (a *KVMAccelerator) SetEagerSplitSize(size int) *KVMAccelerator {
 	return a
 }
 
-type XENAccelerator struct {
+// XenAccelerator represents an accelerator using Xen.
+type XenAccelerator struct {
 	*Accelerator
 }
 
-func NewXenAccelerator() *XENAccelerator {
-	return &XENAccelerator{
+// NewXenAccelerator returns a new instace of XenAccelerator.
+func NewXenAccelerator() *XenAccelerator {
+	return &XenAccelerator{
 		Accelerator: &Accelerator{
-			Type:       string(Xen),
+			Type:       string(AcceleratorXen),
 			properties: make([]*queso.Property, 0),
 		},
 	}
-}
-
-func (a *XENAccelerator) option() *queso.Option {
-	return a.option()
 }
 
 // ToggleIGDPassThru controls whether Intel integrated graphics devices can be passed
 // through to the guest.
-func (a *XENAccelerator) ToggleIGDPassThru(enabled bool) *XENAccelerator {
+func (a *XenAccelerator) ToggleIGDPassThru(enabled bool) *XenAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("igd-passthru", enabled))
 	return a
 }
 
+// TCGAccelerator represents an accelerator using tiny code generation (TCG).
 type TCGAccelerator struct {
 	*Accelerator
 }
 
+// NewTCGAccelerator returns a new instace of TCGAccelerator.
 func NewTCGAccelerator() *TCGAccelerator {
 	return &TCGAccelerator{
 		Accelerator: &Accelerator{
-			Type:       string(TCG),
+			Type:       string(AcceleratorTCG),
 			properties: make([]*queso.Property, 0),
 		},
 	}
-}
-
-func (a *TCGAccelerator) option() *queso.Option {
-	return a.option()
 }
 
 // ToggleOneInstructionPerTranslation makes the TCG accelerator put only one guest
@@ -237,7 +245,7 @@ func (a *TCGAccelerator) SetTranslationBlockCacheSize(megabytes int) *TCGAcceler
 	return a
 }
 
-// ThreadingOption represents the type of TCG threads to use for Accel.
+// ThreadingOption represents the type of TCG threads to use.
 type ThreadingOption string
 
 const (

@@ -42,13 +42,13 @@ func SetParameter(group string, id string, arg string, value string) *queso.Opti
 	return queso.NewOption("set", name)
 }
 
-// SetDriverProperty sets the default value of the specified driver's property
+// DriverProperty sets the default value of the specified driver's property
 // to the specified value.
 //
 // In particular, you can use this to set driver properties for devices which are
 // created automatically by the machine model. To create a device which is not
 // created automatically and set properties on it, use DeviceDriver.
-func SetDriverProperty(driver string, name string, value string) *queso.Option {
+func DriverProperty(driver string, name string, value string) *queso.Option {
 	props := []*queso.Property{
 		queso.NewProperty("driver", driver),
 		queso.NewProperty("property", name),
@@ -77,7 +77,8 @@ func SoundHardware(card ...string) *queso.Option {
 }
 
 // DataDirectoryPath sets the directory for the BIOS, VGA BIOS and keymaps to
-// the specified path.
+// the specified path. This corresponds to the -L flag passed to the QEMU
+// executable.
 func DataDirectoryPath(path string) *queso.Option {
 	return queso.NewOption("L", path)
 }

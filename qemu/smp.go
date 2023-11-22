@@ -1,26 +1,33 @@
 package qemu
 
-import "github.com/mikerourke/queso"
+import (
+	"strconv"
+
+	"github.com/mikerourke/queso"
+)
 
 // SMP simulates a SMP system with the count of CPUs initially present on the
 // machine type board.
 type SMP struct {
+	CPUCount   int
 	properties []*queso.Property
 }
 
-// NewSMP returns a new SMP instance that can be used with QEMU.
-func NewSMP() *SMP {
+// NewSMP returns a new SMP instance that can be used with QEMU. The specified
+// cpuCount represents the count of CPUs to use in the SMP.
+func NewSMP(cpuCount int) *SMP {
+	if cpuCount < 1 {
+		panic("CPU count must be at least 1 for the SMP")
+	}
+
 	return &SMP{
+		CPUCount:   cpuCount,
 		properties: make([]*queso.Property, 0),
 	}
 }
 
 func (s *SMP) option() *queso.Option {
-	if len(s.properties) == 0 {
-		panic("either SetCPUCount or at least one of the topology parameters must be specified for SMP")
-	}
-
-	return queso.NewOption("smp", "", s.properties...)
+	return queso.NewOption("smp", strconv.Itoa(s.CPUCount), s.properties...)
 }
 
 // SetCPUCount specifies the initial CPU count to use. If omitted, the maximum

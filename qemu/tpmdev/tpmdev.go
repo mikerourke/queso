@@ -3,7 +3,9 @@
 // more details.
 package tpmdev
 
-import "github.com/mikerourke/queso"
+import (
+	"github.com/mikerourke/queso"
+)
 
 // PassThroughBackend enables access to the host's TPM using the passthrough driver
 // and is only available on Linux hosts.
@@ -22,14 +24,35 @@ import "github.com/mikerourke/queso"
 // the host has to be rebooted and the user is required to enter the firmware's
 // menu to enable and activate the TPM. If the TPM is left disabled and/or deactivated
 // most TPM commands will fail.
-func PassThroughBackend(id string, properties ...*Property) *queso.Option {
-	props := []*queso.Property{queso.NewProperty("id", id)}
+type PassThroughBackend struct {
+	properties []*queso.Property
+}
 
-	for _, property := range properties {
-		props = append(props, property.Property)
+func NewPassThroughBackend(id string) *PassThroughBackend {
+	return &PassThroughBackend{
+		properties: []*queso.Property{
+			queso.NewProperty("id", id),
+		},
 	}
+}
 
-	return queso.NewOption("tpmdev", "passthrough", props...)
+func (ptb *PassThroughBackend) option() *queso.Option {
+	return queso.NewOption("smp", "passthrough", ptb.properties...)
+}
+
+// SetPath specifies the path to the host’s TPM device, i.e., on a Linux host
+// this would be `/dev/tpm0`. The default value is `/dev/tpm0`.
+func (ptb *PassThroughBackend) SetPath(path string) *PassThroughBackend {
+	ptb.properties = append(ptb.properties, queso.NewProperty("path", path))
+	return ptb
+}
+
+// SetCancelPath specifies the path to the host TPM device’s sysfs entry allowing
+// for cancellation of an ongoing TPM command. By default, QEMU will search for the
+// sysfs entry to use.
+func (ptb *PassThroughBackend) SetCancelPath(path string) *PassThroughBackend {
+	ptb.properties = append(ptb.properties, queso.NewProperty("cancel-path", path))
+	return ptb
 }
 
 // EmulatorBackend enables access to a TPM emulator using Unix domain socket-based
@@ -37,33 +60,19 @@ func PassThroughBackend(id string, properties ...*Property) *queso.Option {
 //
 // The chardev parameter specifies the unique ID of a character device
 // backend that provides connection to the software TPM server.
-func EmulatorBackend(id string, chardev string) *queso.Option {
-	return queso.NewOption("tpmdev", "emulator",
-		queso.NewProperty("id", id),
-		queso.NewProperty("chardev", chardev))
+type EmulatorBackend struct {
+	properties []*queso.Property
 }
 
-// Property represents a property to use with a TPM backend option.
-type Property struct {
-	*queso.Property
-}
-
-// NewProperty returns a new instance of Property.
-func NewProperty(key string, value interface{}) *Property {
-	return &Property{
-		Property: queso.NewProperty(key, value),
+func NewEmulatorBackend(id string, chardev string) *EmulatorBackend {
+	return &EmulatorBackend{
+		properties: []*queso.Property{
+			queso.NewProperty("id", id),
+			queso.NewProperty("chardev", chardev),
+		},
 	}
 }
 
-// WithPath specifies the path to the host's TPM device for a PassThroughBackend,
-// i.e., on a Linux host this would be `/dev/tpm0`. The default  is `/dev/tpm0`.
-func WithPath(path string) *Property {
-	return NewProperty("path", path)
-}
-
-// WithCancelPath specifies the path to the host TPM device's sysfs entry allowing
-// for cancellation of an ongoing TPM command for a PassThroughBackend. If omitted,
-// QEMU will search for the sysfs entry to use.
-func WithCancelPath(path string) *Property {
-	return NewProperty("cancel-path", path)
+func (eb *EmulatorBackend) option() *queso.Option {
+	return queso.NewOption("smp", "emulator", eb.properties...)
 }

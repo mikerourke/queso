@@ -6,17 +6,29 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// VMWareIOPortFlag represents the flag to pass to the WithVMWareIOPort property
+// VMWareIOPortFlag represents the flag to pass to the SetVMWareIOPort method
 // for a Machine.
 type VMWareIOPortFlag string
 
 const (
-	VMWareIOPortOn   VMWareIOPortFlag = "on"
-	VMWareIOPortOff  VMWareIOPortFlag = "off"
+	// VMWareIOPortOn indicates that VMWare IO port emulation is enabled.
+	VMWareIOPortOn VMWareIOPortFlag = "on"
+
+	// VMWareIOPortOff indicates that VMWare IO port emulation is disabled.
+	VMWareIOPortOff VMWareIOPortFlag = "off"
+
+	// VMWareIOPortAuto indicates that VMWare IO port emulation is either enabled
+	// or disabled based on the accelerator.
 	VMWareIOPortAuto VMWareIOPortFlag = "auto"
 )
 
 // Machine selects the emulated machine by name.
+type Machine struct {
+	Name       string
+	properties []*queso.Property
+}
+
+// NewMachine returns a new Machine instance.
 //
 // Example
 //
@@ -37,12 +49,6 @@ const (
 //		-object memory-backend-file,id=pc.ram,size=512M,mem-path=/hugetlbfs,prealloc=on,share=on \
 //		-machine memory-backend=pc.ram \
 //		-m 512M
-type Machine struct {
-	Name       string
-	properties []*queso.Property
-}
-
-// NewMachine returns a new Machine instance.
 func NewMachine() *Machine {
 	return &Machine{
 		Name:       "",
@@ -67,10 +73,10 @@ func (m *Machine) SetName(name string) *Machine {
 	return m
 }
 
-// SetAccel specifies one or more accelerators to use for a Machine. If there
+// SetAccelerators specifies one or more accelerators to use for a Machine. If there
 // is more than one accelerator specified, the next one is used if the previous
 // one fails to initialize.
-func (m *Machine) SetAccel(types ...string) *Machine {
+func (m *Machine) SetAccelerators(types ...string) *Machine {
 	nameStrings := make([]string, 0)
 	for _, at := range types {
 		nameStrings = append(nameStrings, string(at))
@@ -83,7 +89,7 @@ func (m *Machine) SetAccel(types ...string) *Machine {
 }
 
 // SetVMWareIOPort sets emulation of VMWare IO port, for vmmouse etc. for a Machine.
-// VMWareIOPortAuto says to select the value based on accel. For Xen accelerator,
+// VMWareIOPortAuto says to select the value based on accel. For AcceleratorXen accelerator,
 // the default is VMWareIOPortOff otherwise the default is VMWareIOPortOn.
 func (m *Machine) SetVMWareIOPort(port VMWareIOPortFlag) *Machine {
 	m.properties = append(m.properties, queso.NewProperty("vmport", port))

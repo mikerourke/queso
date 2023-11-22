@@ -9,14 +9,14 @@ import "github.com/mikerourke/queso"
 // a free-form string that can be used to describe fd, and can be set to an
 // empty string to omit.
 func AddFileDescriptor(fd int, set int, opaque string) *queso.Option {
-	props := []*queso.Property{
+	properties := []*queso.Property{
 		queso.NewProperty("fd", fd),
 		queso.NewProperty("set", set),
 	}
 
 	if opaque != "" {
-		props = append(props, queso.NewProperty("opaque", opaque))
+		properties = append(properties, queso.NewProperty("opaque", opaque))
 	}
 
-	return queso.NewOption("add-fd", "", props...)
+	return queso.NewOption("add-fd", "", properties...)
 }

@@ -1,7 +1,4 @@
-// Package debug contains debug/expert options that can be passed to QEMU.
-// See https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-9 for
-// more details.
-package debug
+package qemu
 
 import (
 	"fmt"
@@ -10,6 +7,10 @@ import (
 
 	"github.com/mikerourke/queso"
 )
+
+// This file contains debug/expert options.
+// See https://qemu.readthedocs.io/en/latest/system/invocation.html#hxtool-9 for
+// more details.
 
 // RedirectSource represents the source that gets redirected to a host device.
 type RedirectSource string
@@ -52,14 +53,14 @@ func HostRedirect(source RedirectSource, device string) *queso.Option {
 	return queso.NewOption(string(source), device)
 }
 
-// UsePIDFile stores the QEMU process PID in file. It is useful if you launch QEMU
+// PIDFile stores the QEMU process PID in file. It is useful if you launch QEMU
 // from a script.
-func UsePIDFile(file string) *queso.Option {
+func PIDFile(file string) *queso.Option {
 	return queso.NewOption("pidfile", file)
 }
 
-// UseSingleStepMode runs the emulation in single step mode.
-func UseSingleStepMode() *queso.Option {
+// SingleStepMode runs the emulation in single step mode.
+func SingleStepMode() *queso.Option {
 	return queso.NewOption("singlestep", "")
 }
 
@@ -118,20 +119,15 @@ func FilterDebugOutput(addresses ...string) *queso.Option {
 	return queso.NewOption("dfilter", value)
 }
 
-// UseSeed forces the guest to use a deterministic pseudo-random number generator,
+// SeedWith forces the guest to use a deterministic pseudo-random number generator,
 // seeded with the specified seed. This does not affect crypto routines within
 // the host.
-func UseSeed(seed int) *queso.Option {
+func SeedWith(seed int) *queso.Option {
 	return queso.NewOption("seed", strconv.Itoa(seed))
 }
 
-// UseDataDirectory sets the directory for the BIOS, VGA BIOS and keymaps.
-func UseDataDirectory(path string) *queso.Option {
-	return queso.NewOption("L", path)
-}
-
-// UseBIOSFile sets the filename for the BIOS.
-func UseBIOSFile(file string) *queso.Option {
+// BIOSFile sets the filename for the BIOS.
+func BIOSFile(file string) *queso.Option {
 	return queso.NewOption("bios", file)
 }
 
@@ -141,15 +137,15 @@ func EnableKVM() *queso.Option {
 	return queso.NewOption("enable-kvm", "")
 }
 
-// UseXenGuestDomainID specifies Xen guest domain id (XEN only).
-func UseXenGuestDomainID(id string) *queso.Option {
+// XenGuestDomainID specifies Xen guest domain id (Xen only).
+func XenGuestDomainID(id string) *queso.Option {
 	return queso.NewOption("xen-domid", id)
 }
 
-// UseXenAttach attaches to existing Xen domain. libxl will use this when starting
+// XenAttach attaches to existing Xen domain. libxl will use this when starting
 // QEMU (Xen only). Restrict set of available Xen operations to specified domain
 // id (Xen only).
-func UseXenAttach() *queso.Option {
+func XenAttach() *queso.Option {
 	return queso.NewOption("xen-attach", "")
 }
 
@@ -165,14 +161,24 @@ func NoShutdown() *queso.Option {
 	return queso.NewOption("no-shutdown", "")
 }
 
-// Action modifies QEMU's default behavior for certain events. Instances of
-// Action are passed to the WithAction option.
+// Action modifies QEMU's default behavior for certain events. It provides a generic
+// method for specifying the same behaviors that are modified by the NoReboot and
+// NoShutdown options.
 type Action struct {
 	Event  string
 	Action string
 }
 
-// NewAction returns a new instance of Action.
+// NewAction returns a new instance of Action. These are passed into the qemu.Use
+// method.
+//
+// Examples
+//
+//	qemu.Use(
+//		qemu.NewAction("panic", "none"),
+//		qemu.NewAction("reboot", "shutdown"),
+//		qemu.NewAction("shutdown", "pause"),
+//		qemu.NewAction("watchdog", "pause"))
 func NewAction(event string, action string) *Action {
 	return &Action{
 		Event:  event,
@@ -180,23 +186,8 @@ func NewAction(event string, action string) *Action {
 	}
 }
 
-// WithAction serves to modify QEMU's default behavior when certain guest events occur.
-// It provides a generic method for specifying the same behaviors that are modified
-// by the NoReboot and NoShutdown options.
-//
-// Examples
-//
-//	qemu.WithAction(qemu.NewAction("panic", "none"))
-//	qemu.WithAction(qemu.NewAction("reboot", "shutdown"), qemu.NewAction("shutdown", "pause"))
-//	qemu.WithAction(qemu.NewAction("watchdog", "pause"))
-func WithAction(actions ...*Action) *queso.Option {
-	props := make([]*queso.Property, 0)
-
-	for _, action := range actions {
-		props = append(props, queso.NewProperty(action.Event, action.Action))
-	}
-
-	return queso.NewOption("action", "", props...)
+func (a *Action) option() *queso.Option {
+	return queso.NewOption("action", "", queso.NewProperty(a.Event, a.Action))
 }
 
 // LoadVM starts right away with a saved state (`loadvm` in monitor).
@@ -212,16 +203,82 @@ func Daemonize() *queso.Option {
 	return queso.NewOption("daemonize", "")
 }
 
-// UseOptionROM loads the contents of file as an option ROM. This option is useful
+// OptionROMFile loads the contents of file as an option ROM. This option is useful
 // to load things like EtherBoot.
-func UseOptionROM(file string) *queso.Option {
+func OptionROMFile(file string) *queso.Option {
 	return queso.NewOption("option-rom", file)
 }
 
-// UseForIncomingMigration prepares/accepts incoming migration on the specified
-// receiver.
-func UseForIncomingMigration(receiver string) *queso.Option {
-	return queso.NewOption("incoming", receiver)
+// TODO: Add -rtc handling.
+
+// TODO: Add -icount handling.
+
+// EscapeCharacter changes the escape character used for switching to the monitor
+// when using monitor and serial sharing. The default is 0x01 when using the
+// -nographic option. 0x01 is equal to pressing Control-a. You can select a
+// different character from the ascii control keys where 1 through 26 map to
+// Control-a through Control-z. For instance, you could use either of the
+// following to change the escape character to Control-t.
+//
+//	qemu.With(qemu.EscapeCharacter(0x14), qemu.EscapeCharacter(20))
+func EscapeCharacter(asciiValue int) *queso.Option {
+	return queso.NewOption("echr", strconv.Itoa(asciiValue))
+}
+
+// IncomingTCPOptions represent options passed to IncomingTCPPort.
+type IncomingTCPOptions struct {
+	Host string
+	Port int
+	To   int
+	IPv4 bool
+	IPv6 bool
+}
+
+// IncomingTCPPort prepares for incoming migration, listen on a given TCP port.
+func IncomingTCPPort(options IncomingTCPOptions) *queso.Option {
+	var flag string
+	if options.Host != "" {
+		flag = fmt.Sprintf("tcp:%s:%d", options.Host, options.Port)
+	} else {
+		flag = fmt.Sprintf("tcp:%d", options.Port)
+	}
+
+	properties := []*queso.Property{
+		queso.NewProperty("to", options.To),
+		queso.NewProperty("ipv4", options.IPv4),
+		queso.NewProperty("ipv6", options.IPv6),
+	}
+
+	return queso.NewOption("incoming", flag, properties...)
+}
+
+// IncomingSocketPath prepares for incoming migration, listens on a given unix socket.
+func IncomingSocketPath(path string) *queso.Option {
+	return queso.NewOption("incoming", fmt.Sprintf("unix:%s", path))
+}
+
+// IncomingFileDescriptor accepts incoming migration from a given file descriptor.
+func IncomingFileDescriptor(fd int) *queso.Option {
+	return queso.NewOption("incoming", fmt.Sprintf("fd:%d", fd))
+}
+
+// IncomingFile accepts incoming migration from a given file starting at offset.
+// offset allows the common size suffixes, or a 0x prefix, but not both.
+func IncomingFile(file string, offset int) *queso.Option {
+	return queso.NewOption("incoming", fmt.Sprintf("file:%s", file), queso.NewProperty("offset", offset))
+}
+
+// IncomingCommand accepts incoming migration as an output from specified external
+// command.
+func IncomingCommand(command string) *queso.Option {
+	return queso.NewOption("incoming", fmt.Sprintf("exec:%s", command))
+}
+
+// IncomingDefer waits for the URI to be specified via migrate_incoming. The monitor
+// can be used to change settings (such as migration parameters) prior to issuing
+// the migrate_incoming to allow the migration to begin.
+func IncomingDefer() *queso.Option {
+	return queso.NewOption("incoming", "defer")
 }
 
 // OnlyAllowMigratableDevices only allows migratable devices. Devices will not be
@@ -249,9 +306,9 @@ func RunAs(user string) *queso.Option {
 	return queso.NewOption("runas", user)
 }
 
-// SetEnvVariable sets the OpenBIOS nvram variable with the specified name to the
+// NVRAMVariable sets the OpenBIOS nvram variable with the specified name to the
 // specified value (PPC, SPARC only).
-func SetEnvVariable(name string, value string) *queso.Option {
+func NVRAMVariable(name string, value string) *queso.Option {
 	return queso.NewOption("prom-env", fmt.Sprintf("%s=%s", name, value))
 }
 
@@ -319,27 +376,78 @@ func SemiHostingConfig(
 	chardev string,
 	arguments ...*Argument,
 ) *queso.Option {
-	props := []*queso.Property{
+	properties := []*queso.Property{
 		queso.NewProperty("enabled", enabled),
 		queso.NewProperty("target", target),
 	}
 
 	if chardev != "" {
-		props = append(props, queso.NewProperty("chardev", chardev))
+		properties = append(properties, queso.NewProperty("chardev", chardev))
 	}
 
 	if arguments != nil {
 		for _, argument := range arguments {
-			props = append(props, queso.NewProperty(argument.Name, argument.Value))
+			properties = append(properties,
+				queso.NewProperty(argument.Name, argument.Value))
 		}
 	}
 
-	return queso.NewOption("semihosting-config", "", props...)
+	return queso.NewOption("semihosting-config", "", properties...)
 }
 
 // OldParamMode uses old param mode (ARM only).
 func OldParamMode() *queso.Option {
 	return queso.NewOption("old-param", "")
+}
+
+// Sandbox enables Seccomp mode 2 system call filter.
+type Sandbox struct {
+	Filter     bool
+	properties []*queso.Property
+}
+
+// NewSandbox returns a new instance of Sandbox. Setting "filter" to true will
+// enable syscall filtering, and false will disable it.
+func NewSandbox(filter bool) *Sandbox {
+	return &Sandbox{
+		Filter:     filter,
+		properties: make([]*queso.Property, 0),
+	}
+}
+
+func (s *Sandbox) option() *queso.Option {
+	return queso.NewOption("sandbox", queso.BoolPropertyToStatus(s.Filter), s.properties...)
+}
+
+// ToggleObsoleteSystemCalls enables or disables obsolete system calls.
+func (s *Sandbox) ToggleObsoleteSystemCalls(enabled bool) *Sandbox {
+	s.properties = append(s.properties, queso.NewProperty("obsolete", enabled))
+	return s
+}
+
+// ToggleElevatedPrivileges enables or disables set*uid|gid system calls.
+func (s *Sandbox) ToggleElevatedPrivileges(enabled bool) *Sandbox {
+	// Since a value of "on" _disables_ elevated privileges, we want to negate
+	// whatever value was passed in to indicate that elevated privileges are
+	// enabled.
+	s.properties = append(s.properties, queso.NewProperty("elevateprivileges", !enabled))
+	return s
+}
+
+// ToggleSpawning enables or disables *fork and execve.
+func (s *Sandbox) ToggleSpawning(enabled bool) *Sandbox {
+	// Since a value of "on" _disables_ spawning, we want to negate
+	// whatever value was passed in to indicate that spawning is enabled.
+	s.properties = append(s.properties, queso.NewProperty("spawn", !enabled))
+	return s
+}
+
+// ToggleResourceControl enables or disables process affinity and schedular priority.
+func (s *Sandbox) ToggleResourceControl(enabled bool) *Sandbox {
+	// Since a value of "on" _disables_ resource control, we want to negate
+	// whatever value was passed in to indicate that resource control is enabled.
+	s.properties = append(s.properties, queso.NewProperty("spawn", !enabled))
+	return s
 }
 
 // ReadConfigurationFile reads device configuration from file. This approach is
@@ -356,66 +464,88 @@ func NoUserConfiguration() *queso.Option {
 }
 
 // Trace traces events matching a pattern or from a file and optionally logs the
-// output to a specified file. See the WithPattern, WithEventsFile, and WithOutputFile
-// properties for more details.
-func Trace(properties ...TraceProperty) *queso.Option {
-	props := make([]*queso.Property, 0)
-
-	for _, property := range properties {
-		props = append(props, property.Property)
-	}
-
-	return queso.NewOption("trace", "", props...)
+// output to a specified file.
+type Trace struct {
+	properties []*queso.Property
 }
 
-// TraceProperty represents a property that can be passed to the Trace option.
-type TraceProperty struct {
-	*queso.Property
-}
-
-// NewTraceProperty returns a new instance of TraceProperty.
-func NewTraceProperty(key string, value interface{}) *TraceProperty {
-	return &TraceProperty{
-		Property: queso.NewProperty(key, value),
+func NewTrace() *Trace {
+	return &Trace{
+		properties: make([]*queso.Property, 0),
 	}
 }
 
-// WithPattern immediately enables events matching pattern (either event name or
+func (t *Trace) option() *queso.Option {
+	return queso.NewOption("trace", "", t.properties...)
+}
+
+// MatchPattern immediately enables events matching pattern (either event name or
 // a globbing pattern) for a Trace. This property is only available if QEMU
 // has been compiled with the "simple", "log", or "ftrace" tracing backend.
-func WithPattern(pattern string) *TraceProperty {
-	return NewTraceProperty("enable", pattern)
+func (t *Trace) MatchPattern(pattern string) *Trace {
+	t.properties = append(t.properties, queso.NewProperty("enable", pattern))
+	return t
 }
 
-// WithEventsFile immediately enable events listed in file for a Trace. The file
+// EnableEventsInFile immediately enable events listed in file for a Trace. The file
 // must contain one event name (as listed in the trace-events-all file) per
 // line; globbing patterns are accepted too. This property is only available if
 // QEMU has been compiled with the "simple", "log", or "ftrace" tracing backend.
-func WithEventsFile(file string) *TraceProperty {
-	return NewTraceProperty("events", file)
+func (t *Trace) EnableEventsInFile(file string) *Trace {
+	t.properties = append(t.properties, queso.NewProperty("events", file))
+	return t
 }
 
-// WithOutputFile logs output traces to file for a Trace. This property is only
+// SetOutputFile logs output traces to file for a Trace. This property is only
 // available if QEMU has been compiled with the "simple" tracing backend.
-func WithOutputFile(file string) *TraceProperty {
-	return NewTraceProperty("file", file)
+func (t *Trace) SetOutputFile(file string) *Trace {
+	t.properties = append(t.properties, queso.NewProperty("file", file))
+	return t
 }
 
 // Plugin loads a plugin from the specified shared library file. Optional arguments
 // can be passed to the plugin.
 func Plugin(file string, arguments ...*Argument) *queso.Option {
-	props := []*queso.Property{queso.NewProperty("file", file)}
-
-	for _, argument := range arguments {
-		props = append(props, queso.NewProperty(argument.Name, argument.Value))
+	properties := []*queso.Property{
+		queso.NewProperty("file", file),
 	}
 
-	return queso.NewOption("plugin", "", props...)
+	for _, argument := range arguments {
+		properties = append(properties, queso.NewProperty(argument.Name, argument.Value))
+	}
+
+	return queso.NewOption("plugin", "", properties...)
 }
 
-// EnableFIPS enables FIPS 140-2 compliance mode.
-func EnableFIPS() *queso.Option {
-	return queso.NewOption("enable-fips", "")
+// RunWithOptions represent the options struct passed to RunWith.
+type RunWithOptions struct {
+	// AsyncTeardown enables asynchronous teardown when true. A new process called
+	// “cleanup/<QEMU_PID>” will be created at startup sharing the address space
+	// with the main QEMU process, using clone. It will wait for the main QEMU
+	// process to terminate completely, and then exit. This allows QEMU to
+	// terminate very quickly even if the guest was huge, leaving the teardown
+	// of the address space to the cleanup process. Since the cleanup process
+	// shares the same cgroups as the main QEMU process, accounting is performed
+	// correctly.
+	//
+	// This only works if the cleanup process is not forcefully killed with
+	// SIGKILL before the main QEMU process has terminated completely.
+	AsyncTeardown bool
+
+	// ChrootDir can be used for doing a chroot to the specified directory immediately
+	// before starting the guest execution. This is especially useful in combination
+	//with RunAs.
+	ChrootDir string
+}
+
+// RunWith sets QEMU process lifecycle options.
+func RunWith(options RunWithOptions) *queso.Option {
+	properties := []*queso.Property{
+		queso.NewProperty("async-teardown", options.AsyncTeardown),
+		queso.NewProperty("chroot", options.ChrootDir),
+	}
+
+	return queso.NewOption("run-with", "", properties...)
 }
 
 // ErrorMessageFormatOptions represent the options for error messages.
@@ -428,13 +558,14 @@ type ErrorMessageFormatOptions struct {
 	GuestName bool
 }
 
-func UseErrorMessageFormat(options ErrorMessageFormatOptions) *queso.Option {
-	props := []*queso.Property{
+// ErrorMessageFormat is used to control error message format.
+func ErrorMessageFormat(options ErrorMessageFormatOptions) *queso.Option {
+	properties := []*queso.Property{
 		queso.NewProperty("timestamp", options.TimeStamp),
 		queso.NewProperty("guest-name", options.GuestName),
 	}
 
-	return queso.NewOption("msg", "", props...)
+	return queso.NewOption("msg", "", properties...)
 }
 
 // DumpVMStateToFile dumps JSON-encoded VM state information for current machine
@@ -446,4 +577,16 @@ func DumpVMStateToFile(file string) *queso.Option {
 // EnableSyncProfiling enables synchronization profiling.
 func EnableSyncProfiling() *queso.Option {
 	return queso.NewOption("enable-sync-profile", "")
+}
+
+// PerfMap generates a map file for Linux perf tools that will allow basic profiling
+// information to be broken down into basic blocks.
+func PerfMap() *queso.Option {
+	return queso.NewOption("perfmap", "")
+}
+
+// JITDump generate a dump file for Linux perf tools that maps basic blocks to
+// symbol names, line numbers and JITted code.
+func JITDump() *queso.Option {
+	return queso.NewOption("jitdump", "")
 }

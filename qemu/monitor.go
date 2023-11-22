@@ -67,9 +67,9 @@ func (m *Monitor) TogglePretty(enabled bool) *Monitor {
 	return m
 }
 
-// WithMonitorRedirect redirects the monitor to host device "device" (same devices as
+// MonitorRedirect redirects the monitor to host device "device" (same devices as
 // the serial port). The default device is vc in graphical mode and stdio in
 // non-graphical mode. Use "none" for "device" to disable the default monitor.
-func WithMonitorRedirect(device string) *queso.Option {
+func MonitorRedirect(device string) *queso.Option {
 	return queso.NewOption("monitor", device)
 }

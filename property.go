@@ -56,3 +56,13 @@ func PropertiesTable(properties []*Property) map[string]string {
 
 	return table
 }
+
+// BoolPropertyToStatus returns "on" if the specified property value is true
+// and "off" if it is false.
+func BoolPropertyToStatus(value bool) string {
+	if value {
+		return "on"
+	} else {
+		return "off"
+	}
+}

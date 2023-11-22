@@ -38,19 +38,17 @@ func main() {
 
 	q := qemu.New("qemu-system-x86_64")
 
-	ns := qemu.NewNUMASystem()
-	node1 := qemu.NewNUMANode(1).SetMemoryDevice("m0")
-	node2 := qemu.NewNUMANode(2)
-	dist := qemu.NewNUMADistance(node1, node2, "10")
-	cpu1 := qemu.NewNUMACPU(node1)
-	ns.Add(node1, node2, dist, cpu1)
-
 	q.
-		Use(ns.Nodes()...).
-		Use(qemu.NewSMP().SetCPUCount(2))
+		Use(qemu.NewSMP(-6)).Use(qemu.NewKVMAccelerator())
 
-	q.SetOptions(
+	log.Println(q.Args())
+
+	q.With(
+		qemu.AddFileDescriptor(1, 2, "s"),
+		qemu.AddFileDescriptor(1, 2, "s"),
+		qemu.MonitorRedirect("none"),
 		qemu.MemorySize("3G"),
+		qemu.AcceleratorOfType(qemu.AcceleratorTCG),
 
 		// Network Settings
 		network.UserBackend("n",
