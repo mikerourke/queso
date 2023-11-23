@@ -1,6 +1,6 @@
 package object
 
-import "github.com/mikerourke/queso"
+import "github.com/mikerourke/queso/internal/cli"
 
 // AuthzSimple creates an authorization object that will control access to
 // network services.
@@ -9,13 +9,13 @@ import "github.com/mikerourke/queso"
 // network service that authorization object is associated with. For authorizing
 // based on TLS x509 certificates, the identity must be the x509 distinguished
 // name. Note that care must be taken to escape any commas in the distinguished name.
-func AuthzSimple(id string, identity string) *queso.Option {
-	props := []*queso.Property{
-		queso.NewProperty("id", id),
-		queso.NewProperty("identity", identity),
+func AuthzSimple(id string, identity string) *cli.Option {
+	props := []*cli.Property{
+		cli.NewProperty("id", id),
+		cli.NewProperty("identity", identity),
 	}
 
-	return queso.NewOption("object", "authz-simple", props...)
+	return cli.NewOption("object", "authz-simple", props...)
 }
 
 // AuthzListFile creates an authorization object that will control access to
@@ -25,6 +25,7 @@ func AuthzSimple(id string, identity string) *queso.Option {
 // access control list rules in JSON format.
 //
 // An example set of rules that match against SASL usernames might look like:
+//
 //	{
 //		"rules": [
 //			{ "match": "fred", "policy": "allow", "format": "exact" },
@@ -44,14 +45,14 @@ func AuthzSimple(id string, identity string) *queso.Option {
 //
 // If the refresh parameter is set to true the file will be monitored and
 // automatically reloaded whenever its content changes.
-func AuthzListFile(id string, file string, refresh bool) *queso.Option {
-	props := []*queso.Property{
-		queso.NewProperty("id", id),
-		queso.NewProperty("filename", file),
-		queso.NewProperty("refresh", refresh),
+func AuthzListFile(id string, file string, refresh bool) *cli.Option {
+	props := []*cli.Property{
+		cli.NewProperty("id", id),
+		cli.NewProperty("filename", file),
+		cli.NewProperty("refresh", refresh),
 	}
 
-	return queso.NewOption("object", "authz-listfile", props...)
+	return cli.NewOption("object", "authz-listfile", props...)
 }
 
 // AuthzPAM creates an authorization object that will control access to network
@@ -60,11 +61,11 @@ func AuthzListFile(id string, file string, refresh bool) *queso.Option {
 // The service parameter provides the name of a PAM service to use for authorization.
 // It requires that a file `/etc/pam.d/service` exist to provide the configuration
 // for the account subsystem.
-func AuthzPAM(id string, service string) *queso.Option {
-	props := []*queso.Property{
-		queso.NewProperty("id", id),
-		queso.NewProperty("service", service),
+func AuthzPAM(id string, service string) *cli.Option {
+	props := []*cli.Property{
+		cli.NewProperty("id", id),
+		cli.NewProperty("service", service),
 	}
 
-	return queso.NewOption("object", "authz-pam", props...)
+	return cli.NewOption("object", "authz-pam", props...)
 }

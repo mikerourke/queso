@@ -5,11 +5,9 @@ import (
 	"strconv"
 
 	"github.com/mikerourke/queso"
-	"github.com/mikerourke/queso/qemu"
 )
 
 type Node struct {
-	qemu.Usable
 	ID         int
 	properties []*queso.Property
 }

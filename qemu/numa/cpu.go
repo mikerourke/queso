@@ -2,11 +2,9 @@ package numa
 
 import (
 	"github.com/mikerourke/queso"
-	"github.com/mikerourke/queso/qemu"
 )
 
 type CPU struct {
-	qemu.Usable
 	properties []*queso.Property
 }
 

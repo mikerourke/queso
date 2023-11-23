@@ -2,7 +2,6 @@ package numa
 
 import (
 	"github.com/mikerourke/queso"
-	"github.com/mikerourke/queso/qemu"
 )
 
 // CacheAssociativity represents the possible values for the WithCacheAssociativity
@@ -23,7 +22,6 @@ const (
 )
 
 type HMATCache struct {
-	qemu.Usable
 	properties []*queso.Property
 }
 

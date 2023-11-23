@@ -1,41 +1,41 @@
-package qemu
+package display
 
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso"
+	"github.com/mikerourke/queso/internal/cli"
 )
 
 type VNCDisplay struct {
 	displayValue string
-	properties   []*queso.Property
+	properties   []*cli.Property
 }
 
 func NewVNCToDisplay(to int) *VNCDisplay {
 	return &VNCDisplay{
 		displayValue: fmt.Sprintf("to=%d", to),
-		properties:   make([]*queso.Property, 0),
+		properties:   make([]*cli.Property, 0),
 	}
 }
 
 func NewVNCHostDisplay(display string) *VNCDisplay {
 	return &VNCDisplay{
 		displayValue: fmt.Sprintf("host=%s", display),
-		properties:   make([]*queso.Property, 0),
+		properties:   make([]*cli.Property, 0),
 	}
 }
 
 func NewVNCUnixDisplay(path string) *VNCDisplay {
 	return &VNCDisplay{
 		displayValue: fmt.Sprintf("unix=%s", path),
-		properties:   make([]*queso.Property, 0),
+		properties:   make([]*cli.Property, 0),
 	}
 }
 
 func NewVNCNoneDisplay() *VNCDisplay {
 	return &VNCDisplay{
 		displayValue: "none",
-		properties:   make([]*queso.Property, 0),
+		properties:   make([]*cli.Property, 0),
 	}
 }
 
@@ -44,7 +44,7 @@ func NewVNCNoneDisplay() *VNCDisplay {
 // NewHostDisplay(<value>), the <value> argument is a TCP port number, not a display
 // number.
 func (v *VNCDisplay) ToggleReverse(enabled bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("reverse", enabled))
+	v.properties = append(v.properties, cli.NewProperty("reverse", enabled))
 	return v
 }
 
@@ -60,7 +60,7 @@ func (v *VNCDisplay) ToggleReverse(enabled bool) *VNCDisplay {
 // mode. If TLS credentials are provided, the WebSocket connection requires encrypted
 // client connections.
 func (v *VNCDisplay) ToggleWebSocket(enabled bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("websocket", enabled))
+	v.properties = append(v.properties, cli.NewProperty("websocket", enabled))
 	return v
 }
 
@@ -85,14 +85,14 @@ func (v *VNCDisplay) ToggleWebSocket(enabled bool) *VNCDisplay {
 // You can also use keywords "now" or "never" for the expiration time to allow <protocol>
 // password to expire immediately or never expire.
 func (v *VNCDisplay) TogglePasswordRequired(required bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("password", required))
+	v.properties = append(v.properties, cli.NewProperty("password", required))
 	return v
 }
 
 // SetPasswordSecret sets the ID of the Secret object containing the
 // password you need to authenticate.
 func (v *VNCDisplay) SetPasswordSecret(secret string) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("password-secret", secret))
+	v.properties = append(v.properties, cli.NewProperty("password-secret", secret))
 	return v
 }
 
@@ -104,7 +104,7 @@ func (v *VNCDisplay) SetPasswordSecret(secret string) *VNCDisplay {
 // auth mechanism. The credentials should have been previously created using
 // object.TLSCredentials* (see object/tls.go).
 func (v *VNCDisplay) SetTLSCredentials(id string) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("tls-creds", id))
+	v.properties = append(v.properties, cli.NewProperty("tls-creds", id))
 	return v
 }
 
@@ -113,7 +113,7 @@ func (v *VNCDisplay) SetTLSCredentials(id string) *VNCDisplay {
 // at time of use, so can be deleted and recreated on the fly while the VNC server
 // is active. If missing, it will default to denying access.
 func (v *VNCDisplay) SetTLSAuthZ(id string) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("tls-authz", id))
+	v.properties = append(v.properties, cli.NewProperty("tls-authz", id))
 	return v
 }
 
@@ -129,7 +129,7 @@ func (v *VNCDisplay) SetTLSAuthZ(id string) *VNCDisplay {
 // enable use of SSL and server certificates. This ensures a data encryption preventing
 // compromise of authentication credentials.
 func (v *VNCDisplay) ToggleSASL(required bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("sasl", required))
+	v.properties = append(v.properties, cli.NewProperty("sasl", required))
 	return v
 }
 
@@ -138,7 +138,7 @@ func (v *VNCDisplay) ToggleSASL(required bool) *VNCDisplay {
 // of use, so can be deleted and recreated on the fly while the VNC server is active.
 // If missing, it will default to denying access.
 func (v *VNCDisplay) SetSASLAuthZ(id string) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("sasl-authz", id))
+	v.properties = append(v.properties, cli.NewProperty("sasl-authz", id))
 	return v
 }
 
@@ -149,7 +149,7 @@ func (v *VNCDisplay) SetSASLAuthZ(id string) *VNCDisplay {
 //
 // Deprecated: Use SetSASLAuthZ or SetTLSAuthZ instead.
 func (v *VNCDisplay) ToggleACL(enabled bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("acl", enabled))
+	v.properties = append(v.properties, cli.NewProperty("acl", enabled))
 	return v
 }
 
@@ -158,7 +158,7 @@ func (v *VNCDisplay) ToggleACL(enabled bool) *VNCDisplay {
 // updates depending on its encoding settings. Enabling this option can save a
 // lot of bandwidth at the expense of quality.
 func (v *VNCDisplay) ToggleLossyCompression(enabled bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("lossy", enabled))
+	v.properties = append(v.properties, cli.NewProperty("lossy", enabled))
 	return v
 }
 
@@ -168,7 +168,7 @@ func (v *VNCDisplay) ToggleLossyCompression(enabled bool) *VNCDisplay {
 // This can be really helpful to save bandwidth when playing videos. Disabling adaptive
 // encodings restores the original static behavior of encodings like Tight.
 func (v *VNCDisplay) ToggleAdaptiveEncoding(enabled bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("non-adaptive", !enabled))
+	v.properties = append(v.properties, cli.NewProperty("non-adaptive", !enabled))
 	return v
 }
 
@@ -197,7 +197,7 @@ const (
 // SetSharingPolicy sets the display sharing policy. See the comments for each
 // SharingPolicy constant for more details.
 func (v *VNCDisplay) SetSharingPolicy(policy SharingPolicy) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("share", policy))
+	v.properties = append(v.properties, cli.NewProperty("share", policy))
 	return v
 }
 
@@ -209,7 +209,7 @@ func (v *VNCDisplay) SetSharingPolicy(policy SharingPolicy) *VNCDisplay {
 // Possible causes for the latter are flaky network connections, or scripts for
 // automated testing.
 func (v *VNCDisplay) SetKeyboardDelay(ms int) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("key-delay-ms", ms))
+	v.properties = append(v.properties, cli.NewProperty("key-delay-ms", ms))
 	return v
 }
 
@@ -218,13 +218,13 @@ func (v *VNCDisplay) SetKeyboardDelay(ms int) *VNCDisplay {
 // (see audiodev.go), this  property must be omitted, otherwise is must be present
 // and specify a valid audio device.
 func (v *VNCDisplay) SetAudioDevice(id string) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("audiodev", id))
+	v.properties = append(v.properties, cli.NewProperty("audiodev", id))
 	return v
 }
 
 // TogglePowerControl permits/prevents the remote client to issue shutdown,
 // reboot, or reset power control requests.
 func (v *VNCDisplay) TogglePowerControl(enabled bool) *VNCDisplay {
-	v.properties = append(v.properties, queso.NewProperty("power-control", enabled))
+	v.properties = append(v.properties, cli.NewProperty("power-control", enabled))
 	return v
 }

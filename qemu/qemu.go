@@ -1,10 +1,14 @@
 package qemu
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
-	"github.com/mikerourke/queso"
+	"golang.org/x/mod/semver"
+
+	"github.com/mikerourke/queso/internal/cli"
 )
 
 // QEMU represents an instance of the QEMU process.
@@ -25,7 +29,7 @@ func New(path string) *QEMU {
 }
 
 // With sets the options to use for invoking QEMU.
-func (q *QEMU) With(options ...*queso.Option) *QEMU {
+func (q *QEMU) With(options ...*cli.Option) *QEMU {
 	args := make([]string, 0)
 
 	for _, option := range options {
@@ -39,7 +43,7 @@ func (q *QEMU) With(options ...*queso.Option) *QEMU {
 
 // Usable represents an item that can be passed to the Use method.
 type Usable interface {
-	option() *queso.Option
+	option() *cli.Option
 }
 
 // Use adds items as args to the QEMU command. It differs from the With method
@@ -65,6 +69,27 @@ func (q *QEMU) Cmd() *exec.Cmd {
 	q.cmd = exec.Command(q.exePath, q.args...)
 
 	return q.cmd
+}
+
+// Version returns the current version of the specified qemu- executable passed
+// into [qemu.New].
+//
+//	qemu-system-* -version
+func (q *QEMU) Version() string {
+	out, err := exec.Command(q.exePath, "-version").Output()
+	if err != nil {
+		panic(err)
+	}
+
+	line := strings.Split(string(out), "\n")[0]
+	words := strings.Split(line, " ")
+	version := strings.Trim(words[len(words)-1], " ")
+
+	if !semver.IsValid(fmt.Sprintf("v%s", version)) {
+		panic("invalid version: " + version)
+	}
+
+	return version
 }
 
 // Run starts the QEMU executable.

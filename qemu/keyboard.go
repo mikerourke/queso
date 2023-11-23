@@ -1,6 +1,6 @@
 package qemu
 
-import "github.com/mikerourke/queso"
+import "github.com/mikerourke/queso/internal/cli"
 
 // Language represents the KeyboardLayout language to use.
 type Language string
@@ -49,6 +49,6 @@ const (
 // not easy to get raw PC keycodes (e.g. on Macs, with some X11 servers or with
 // a VNC or curses display). You don't normally need to use it on PC/Linux or
 // PC/Windows hosts.
-func KeyboardLayout(language Language) *queso.Option {
-	return queso.NewOption("k", string(language))
+func KeyboardLayout(language Language) *cli.Option {
+	return cli.NewOption("k", string(language))
 }
