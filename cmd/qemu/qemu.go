@@ -1,13 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/mikerourke/queso/diskimage"
 	"github.com/mikerourke/queso/qemu"
-	"github.com/mikerourke/queso/qemu/blockdev"
-	"github.com/mikerourke/queso/qemu/device"
-	"github.com/mikerourke/queso/qemu/network"
 )
 
 /*
@@ -38,10 +35,14 @@ func main() {
 
 	q := qemu.New("qemu-system-x86_64")
 
-	q.
-		Use(qemu.NewSMP(-6)).Use(qemu.NewKVMAccelerator())
+	fmt.Println(q.Version())
 
-	log.Println(q.Args())
+	q.
+		Use(qemu.NewSMP(6)).Use(qemu.NewKVMAccelerator())
+
+	fmt.Println(q.Args())
+
+	return
 
 	q.With(
 		qemu.AddFileDescriptor(1, 2, "s"),
@@ -51,25 +52,26 @@ func main() {
 		qemu.AcceleratorOfType(qemu.AcceleratorTCG),
 
 		// Network Settings
-		network.UserBackend("n",
-			network.WithForwardRule(
-				network.NewHostForwardRule(network.PortTypeTCP,
-					9000,
-					445,
-				).WithHostIP("127.0.0.1"))),
-		device.Use("e1000",
-			device.NewProperty("netdev", "n")),
+		// network.UserBackend("n",
+		//	network.WithForwardRule(
+		//		network.NewHostForwardRule(network.PortTypeTCP,
+		//			9000,
+		//			445,
+		//		).WithHostIP("127.0.0.1"))),
+		// device.Use("e1000",
+		//	device.NewProperty("netdev", "n")),
 
 		// USB Settings
 		qemu.EnableUSB(),
 		qemu.USBDevice(qemu.USBDeviceTablet),
 
 		// Drive Settings
-		blockdev.Drive(
-			blockdev.WithDiskImageFile("some-file.qcow2"),
-			blockdev.WithDiskImageFormat(diskimage.FileFormatQCOW2),
-			blockdev.WithDriveMedia(blockdev.DriveMediaDisk)),
-		blockdev.DiskDrive(blockdev.CDROM, "some-iso.iso"))
+		// blockdev.Drive(
+		//	blockdev.WithDiskImageFile("some-file.qcow2"),
+		//	blockdev.WithDiskImageFormat(diskimage.FileFormatQCOW2),
+		//	blockdev.WithDriveMedia(blockdev.DriveMediaDisk)),
+		// blockdev.DiskDrive(blockdev.CDROM, "some-iso.iso")
+	)
 
 	log.Println(q.Args())
 

@@ -72,28 +72,21 @@ const (
 	ReadOnlyFormatParallels ReadOnlyFormat = "parallels"
 )
 
-type CreateOptions struct {
-	Format    FileFormat
-	File      string
-	Size      string
-	Overwrite bool
-}
-
 // Create creates a new disk image using qemu-img.
 // TODO: Add better error handling.
-func Create(opts CreateOptions) error {
-	args := []string{"create", "-f", string(opts.Format), opts.File, opts.Size}
+func Create(format FileFormat, file string, size string, overwrite bool) error {
+	args := []string{"create", "-f", string(format), file, size}
 
 	exists := true
-	if _, err := os.Stat(opts.File); os.IsNotExist(err) {
+	if _, err := os.Stat(file); os.IsNotExist(err) {
 		exists = false
 	}
 
 	if exists {
-		if !opts.Overwrite {
-			return fmt.Errorf("%s already exists", opts.File)
+		if !overwrite {
+			return fmt.Errorf("%s already exists", file)
 		} else {
-			if err := os.Remove(opts.File); err != nil {
+			if err := os.Remove(file); err != nil {
 				return fmt.Errorf("failed to overwrite: %s", err)
 			}
 		}

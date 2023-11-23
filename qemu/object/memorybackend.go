@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/mikerourke/queso/internal/cli"
-	"github.com/mikerourke/queso/internal/vals"
 	"github.com/mikerourke/queso/qemu/numa"
 )
 
@@ -31,12 +30,55 @@ func (b *MemoryBackend) option() *cli.Option {
 	return cli.NewOption("object", b.Type, b.properties...)
 }
 
+// SetHostNodes binds the memory range to the specified list of NUMA host nodes.
+//
+//	qemu-system-* -object memory-backend-*,host-nodes=host-nodes
+func (b *MemoryBackend) SetHostNodes(ids []string) *MemoryBackend {
+	b.properties = append(b.properties,
+		cli.NewProperty("host-nodes", strings.Join(ids, ",")))
+	return b
+}
+
+// SetNUMAPolicy defines the NUMA policy. See [numa.Policy] for additional details.
+//
+//	qemu-system-* -object memory-backend-*,policy=default|preferred|bind|interleave
+func (b *MemoryBackend) SetNUMAPolicy(policy numa.Policy) *MemoryBackend {
+	b.properties = append(b.properties, cli.NewProperty("policy", policy.String()))
+	return b
+}
+
 // SetSize provides the size of the memory region, and accepts common
 // suffixes, e.g. "500M".
 //
 //	qemu-system-* -object memory-backend-*,size=size
 func (b *MemoryBackend) SetSize(size string) *MemoryBackend {
 	b.properties = append(b.properties, cli.NewProperty("size", size))
+	return b
+}
+
+// ToggleDump excludes the memory from core dumps when set to false. This feature
+// is also known as MADV_DONTDUMP.
+//
+//	qemu-system-* -object memory-backend-*,dump=on|off
+func (b *MemoryBackend) ToggleDump(enabled bool) *MemoryBackend {
+	b.properties = append(b.properties, cli.NewProperty("dump", enabled))
+	return b
+}
+
+// ToggleMerging enables or disables memory merge, also known as MADV_MERGEABLE, so
+// that Kernel Samepage Merging will consider the pages for memory deduplication.
+//
+//	qemu-system-* -object memory-backend-*,merge=on|off
+func (b *MemoryBackend) ToggleMerging(enabled bool) *MemoryBackend {
+	b.properties = append(b.properties, cli.NewProperty("merge", enabled))
+	return b
+}
+
+// TogglePrealloc enables or disables memory preallocation.
+//
+//	qemu-system-* -object memory-backend-*,prealloc=on|off
+func (b *MemoryBackend) TogglePrealloc(enabled bool) *MemoryBackend {
+	b.properties = append(b.properties, cli.NewProperty("prealloc", enabled))
 	return b
 }
 
@@ -54,49 +96,6 @@ func (b *MemoryBackend) SetSize(size string) *MemoryBackend {
 //	qemu-system-* -object memory-backend-*,share=on|off
 func (b *MemoryBackend) ToggleSharing(enabled bool) *MemoryBackend {
 	b.properties = append(b.properties, cli.NewProperty("share", enabled))
-	return b
-}
-
-// ToggleMerging enables or disables memory merge, also known as MADV_MERGEABLE, so
-// that Kernel Samepage Merging will consider the pages for memory deduplication.
-//
-//	qemu-system-* -object memory-backend-*,merge=on|off
-func (b *MemoryBackend) ToggleMerging(enabled bool) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("merge", enabled))
-	return b
-}
-
-// ToggleDump excludes the memory from core dumps when set to false. This feature
-// is also known as MADV_DONTDUMP.
-//
-//	qemu-system-* -object memory-backend-*,dump=on|off
-func (b *MemoryBackend) ToggleDump(enabled bool) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("dump", enabled))
-	return b
-}
-
-// TogglePrealloc enables or disables memory preallocation.
-//
-//	qemu-system-* -object memory-backend-*,prealloc=on|off
-func (b *MemoryBackend) TogglePrealloc(enabled bool) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("prealloc", enabled))
-	return b
-}
-
-// SetHostNodes binds the memory range to the specified list of NUMA host nodes.
-//
-//	qemu-system-* -object memory-backend-*,host-nodes=host-nodes
-func (b *MemoryBackend) SetHostNodes(ids []string) *MemoryBackend {
-	b.properties = append(b.properties,
-		cli.NewProperty("host-nodes", strings.Join(ids, ",")))
-	return b
-}
-
-// SetNUMAPolicy defines the NUMA policy. See [numa.Policy] for additional details.
-//
-//	qemu-system-* -object memory-backend-*,policy=default|preferred|bind|interleave
-func (b *MemoryBackend) SetNUMAPolicy(policy numa.Policy) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("policy", policy.String()))
 	return b
 }
 
@@ -126,6 +125,37 @@ func NewMemoryBackendFile(id string) *MemoryBackendFile {
 //	qemu-system-* -object memory-backend-file,mem-path=dir
 func (b *MemoryBackendFile) SetMemoryPath(dir string) *MemoryBackendFile {
 	b.properties = append(b.properties, cli.NewProperty("mem-path", dir))
+	return b
+}
+
+type ROMStatus string
+
+const (
+	// ROMOn indicates that ROM should be created.
+	ROMOn ROMStatus = "on"
+
+	// ROMOff indicates that writable RAM should be created.
+	ROMOff ROMStatus = "off"
+
+	// ROMAuto uses the value set by MemoryBackendFile.ToggleReadOnly.
+	ROMAuto ROMStatus = "auto"
+)
+
+// SetROMStatus specifies whether to create Read Only Memory (ROM) that cannot be modified
+// by the VM. Any write attempts to such ROM will be denied. Most use cases want
+// proper RAM instead of ROM. However, selected use cases, like R/O NVDIMMs, can
+// benefit from ROM.
+//
+// The [ROMAuto] option is primarily helpful when we want to have writable RAM in
+// configurations that would traditionally create ROM before the ROM option was
+// introduced: VM templating, where we want to open a file read-only
+// (ToggleReadOnly called with true) and mark the memory to be private
+// for QEMU (ToggleSharing = false). For this use case, we need
+// writable RAM instead of ROM, and want to also set ToggleReadOnly = false.
+//
+//	qemu-system-* -object memory-backend-file,rom=on|off|auto
+func (b *MemoryBackendFile) SetROMStatus(status ROMStatus) *MemoryBackendFile {
+	b.properties = append(b.properties, cli.NewProperty("rom", status))
 	return b
 }
 
@@ -172,31 +202,9 @@ func (b *MemoryBackendFile) ToggleReadOnly(enabled bool) *MemoryBackendFile {
 	return b
 }
 
-// SetROMStatus specifies whether to create Read Only Memory (ROM) that cannot be modified
-// by the VM. Any write attempts to such ROM will be denied. Most use cases want
-// proper RAM instead of ROM. However, selected use cases, like R/O NVDIMMs, can
-// benefit from ROM.
-//
-//   - If set to [vals.Status.On], create ROM
-//   - If set to [vals.Status.Off], create writable RAM
-//   - If set to [vals.Status.Auto] (default), the value of the readonly option is used.
-//
-// The [vals.Status.Auto] option is primarily helpful when we want to have writable RAM in
-// configurations that would traditionally create ROM before the rom option was
-// introduced: VM templating, where we want to open a file readonly
-// (ToggleReadOnly = true) and mark the memory to be private
-// for QEMU (ToggleSharing = false). For this use case, we need
-// writable RAM instead of ROM, and want to also set ToggleReadOnly = false.
-//
-//	qemu-system-* -object memory-backend-file,rom=on|off|auto
-func (b *MemoryBackendFile) SetROMStatus(status vals.Status) *MemoryBackendFile {
-	b.properties = append(b.properties, cli.NewProperty("rom", status.String()))
-	return b
-}
-
 // MemoryBackendRAM represents a memory backend object which can be used to back the
-// guest RAM. Memory backend objects offer more control than using [qemu.NewMemory] option
-// that is traditionally used to define guest RAM.
+// guest RAM. Memory backend objects offer more control than using qemu.NewMemory,
+// which is traditionally used to define guest RAM.
 type MemoryBackendRAM struct {
 	*MemoryBackend
 }

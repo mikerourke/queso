@@ -88,12 +88,12 @@ func TLSCredentialsPSK(id string, endpoint string, dir string, properties ...*TL
 //
 // For x509 certificate credentials the directory will contain further files providing
 // the x509 certificates. The certificates must be stored in PEM format, in filenames
-//  - `ca-cert.pem`
-//  - `ca-crl.pem` (optional)
-//  - `server-cert.pem` (only servers)
-//  - `server-key.pem` (only servers)
-//  - `client-cert.pem` (only clients)
-//  - `client-key.pem` (only clients)
+//   - `ca-cert.pem`
+//   - `ca-crl.pem` (optional)
+//   - `server-cert.pem` (only servers)
+//   - `server-key.pem` (only servers)
+//   - `client-cert.pem` (only clients)
+//   - `client-key.pem` (only clients)
 //
 // For the `server-key.pem` and `client-key.pem` files which contain sensitive private
 // keys, it is possible to use an encrypted version by providing the WithPasswordID option.
@@ -148,7 +148,7 @@ func NewTLSProperty(key string, value interface{}) *TLSProperty {
 // IsVerifyPeer indicates that once the handshake is completed, the peer
 // credentials will be verified, though this is a no-op for anonymous credentials.
 //
-// // This property is only valid for TLSCredentialsAnon and TLSCredentialsX509.
+// This property is only valid for TLSCredentialsAnon and TLSCredentialsX509.
 func IsVerifyPeer(value bool) *TLSProperty {
 	return NewTLSProperty("verify-peer", value)
 }
