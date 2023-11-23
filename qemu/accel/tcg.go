@@ -1,6 +1,6 @@
 package accel
 
-import "github.com/mikerourke/queso/internal/cli"
+import "github.com/mikerourke/queso/qemu/cli"
 
 // TCGAccelerator represents an accelerator using tiny code generation (TCG).
 type TCGAccelerator struct {

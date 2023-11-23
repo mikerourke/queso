@@ -1,7 +1,5 @@
 package object
 
-import "github.com/mikerourke/queso/internal/cli"
-
 // AuthzSimple creates an authorization object that will control access to
 // network services.
 //

@@ -1,6 +1,8 @@
 package audiodev
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // PulseAudioBackend represents an audio backend using PulseAudio.
 // This backend is available on most systems.

@@ -1,7 +1,5 @@
 package qemu
 
-import "github.com/mikerourke/queso/internal/cli"
-
 // AddFileDescriptor adds a file descriptor to a fd set. The fd parameter defines
 // the file descriptor of which a duplicate is added to fd set. The file
 // descriptor cannot be stdin, stdout, or stderr. The set parameter defines the

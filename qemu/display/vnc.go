@@ -3,7 +3,7 @@ package display
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/internal/cli"
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 type VNCDisplay struct {

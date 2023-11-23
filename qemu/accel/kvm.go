@@ -1,6 +1,6 @@
 package accel
 
-import "github.com/mikerourke/queso/internal/cli"
+import "github.com/mikerourke/queso/qemu/cli"
 
 // KVMAccelerator represents an accelerator using KVM.
 type KVMAccelerator struct {

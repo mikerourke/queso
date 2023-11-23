@@ -1,6 +1,8 @@
 package audiodev
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // ALSABackend represents an audio backend using ALSA. This backend is only
 // available on Linux.

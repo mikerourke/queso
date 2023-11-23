@@ -2,8 +2,6 @@ package debug
 
 import (
 	"fmt"
-
-	"github.com/mikerourke/queso/internal/cli"
 )
 
 // IncomingTCPOptions represent options passed to IncomingTCPPort.

@@ -1,6 +1,6 @@
-package blockdev2
+package blockdev
 
-import "github.com/mikerourke/queso/internal/cli"
+import "github.com/mikerourke/queso/qemu/cli"
 
 // FDA specifies the file to use for 1st floppy disk drive.
 //

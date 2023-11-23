@@ -2,8 +2,6 @@ package qemu
 
 import (
 	"strings"
-
-	"github.com/mikerourke/queso/internal/cli"
 )
 
 // VMWareIOPortFlag represents the flag to pass to the SetVMWareIOPort method

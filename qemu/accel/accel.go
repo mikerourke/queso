@@ -4,7 +4,7 @@ package accel
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/internal/cli"
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // Name represents the type of accelerator.

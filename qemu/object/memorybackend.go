@@ -3,7 +3,6 @@ package object
 import (
 	"strings"
 
-	"github.com/mikerourke/queso/internal/cli"
 	"github.com/mikerourke/queso/qemu/numa"
 )
 

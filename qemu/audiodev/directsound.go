@@ -1,6 +1,8 @@
 package audiodev
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // DirectSoundBackend represents an audio backend using Microsoft’s DirectSound.
 // This backend is only available on Windows and only supports playback.

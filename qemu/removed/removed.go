@@ -3,7 +3,9 @@
 package removed
 
 import (
-	"github.com/mikerourke/queso/internal/cli"
+	"strings"
+
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // EnableFIPS enables FIPS 140-2 compliance mode.
@@ -45,4 +47,25 @@ const (
 // Removed in v7.2. Use `-device` instead.
 func Watchdog(model WatchdogModel) *cli.Option {
 	return cli.NewOption("watchdog", string(model))
+}
+
+// SoundHardware enables audio and selected sound hardware.
+//
+// Removed in v7.2. Sound card devices should be created using Device or -audio.
+// The exception is pcspk which can be activated using -machine pcspk-audiodev=<name>.
+func SoundHardware(card ...string) *cli.Option {
+	name := ""
+
+	switch len(card) {
+	case 0:
+		panic("at least one card is required for SoundHardware")
+
+	case 1:
+		name = card[0]
+
+	default:
+		name = strings.Join(card, ",")
+	}
+
+	return cli.NewOption("soundhw", name)
 }

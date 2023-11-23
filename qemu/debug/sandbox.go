@@ -1,6 +1,9 @@
 package debug
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/internal/cli"
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // Sandbox enables Seccomp mode 2 system call filter.
 type Sandbox struct {

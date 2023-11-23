@@ -1,13 +1,13 @@
 package accel
 
-import "github.com/mikerourke/queso/internal/cli"
+import "github.com/mikerourke/queso/qemu/cli"
 
 // XenAccelerator represents an accelerator using Xen.
 type XenAccelerator struct {
 	*Accelerator
 }
 
-// NewXenAccelerator returns a new instace of XenAccelerator.
+// NewXenAccelerator returns a new instance of [XenAccelerator].
 //
 //	qemu-system-* -accel xen
 func NewXenAccelerator() *XenAccelerator {

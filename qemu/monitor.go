@@ -1,7 +1,5 @@
 package qemu
 
-import "github.com/mikerourke/queso/internal/cli"
-
 // MonitorMode represents the monitor type. QEMU supports two monitors: the
 // Human Monitor Protocol (HMP; for human interaction), and the QEMU Monitor
 // Protocol (QMP; a JSON RPC-style protocol).

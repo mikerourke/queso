@@ -1,6 +1,8 @@
 package qemu
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // AppendCommandLine uses the specified cmdLine as kernel command line.
 //

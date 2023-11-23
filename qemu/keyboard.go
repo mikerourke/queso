@@ -1,6 +1,8 @@
 package qemu
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // Language represents the KeyboardLayout language to use.
 type Language string

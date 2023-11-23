@@ -1,6 +1,8 @@
 package debug
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // WatchdogAction represents the action to perform when the watchdog timer
 // expires.

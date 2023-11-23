@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/mikerourke/queso/internal/cli"
 )
 
 // AcceptGDBConnectionOnDevice accepts a GDB connection on the specified device.

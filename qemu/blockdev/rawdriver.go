@@ -1,6 +1,6 @@
-package blockdev2
+package blockdev
 
-import "github.com/mikerourke/queso/internal/cli"
+import "github.com/mikerourke/queso/qemu/cli"
 
 // RawDriver is the image format block driver for raw images. It is usually stacked
 // on top of a protocol level block driver such as [FileDriver].

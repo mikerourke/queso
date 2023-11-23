@@ -1,6 +1,8 @@
 package audiodev
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // WAVBackend represents a backend that writes audio to a WAV file.
 type WAVBackend struct {

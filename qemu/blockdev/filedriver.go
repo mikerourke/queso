@@ -1,8 +1,8 @@
-package blockdev2
+package blockdev
 
 import (
-	"github.com/mikerourke/queso/internal/cli"
 	"github.com/mikerourke/queso/internal/vals"
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // FileDriver is the protocol-level block driver for accessing regular files.

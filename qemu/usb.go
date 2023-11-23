@@ -1,6 +1,8 @@
 package qemu
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // EnableUSB enables USB emulation on machine types with an on-board USB host controller
 // (if not enabled by default). Note that on-board USB host controllers may not support

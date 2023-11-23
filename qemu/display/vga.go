@@ -1,6 +1,8 @@
 package display
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // VGACard represents the VGA card to emulate.
 type VGACard string

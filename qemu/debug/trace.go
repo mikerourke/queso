@@ -1,7 +1,5 @@
 package debug
 
-import "github.com/mikerourke/queso/internal/cli"
-
 // Trace traces events matching a pattern or from a file and optionally logs the
 // output to a specified file.
 type Trace struct {

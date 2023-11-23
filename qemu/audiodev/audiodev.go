@@ -4,7 +4,7 @@ package audiodev
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/internal/cli"
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // Direction is used to qualify an audio device property for a backend.

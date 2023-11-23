@@ -6,9 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/mikerourke/queso/qemu/cli"
 	"golang.org/x/mod/semver"
-
-	"github.com/mikerourke/queso/internal/cli"
 )
 
 // QEMU represents an instance of the QEMU process.

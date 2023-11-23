@@ -1,6 +1,8 @@
 package audiodev
 
-import "github.com/mikerourke/queso/internal/cli"
+import (
+	"github.com/mikerourke/queso/qemu/cli"
+)
 
 // OSSBackend represents an audio backend using OSS. This backend is available
 // on most Unix-like systems.

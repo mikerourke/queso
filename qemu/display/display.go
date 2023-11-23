@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mikerourke/queso/internal/cli"
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 type Type string
