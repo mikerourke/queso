@@ -3,7 +3,7 @@ package fsdev
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // VirtIO9PType specifies the variant to be used for the virtio-9p machine type.
@@ -39,12 +39,12 @@ func NewVirtIO9PDevice(typeOf VirtIO9PType, deviceID string, mountTag string) *V
 	}
 }
 
-func (d *VirtIO9PDevice) option() *cli.Option {
-	properties := []*cli.Property{
-		cli.NewProperty("fsdev", d.DeviceID),
-		cli.NewProperty("mount_tag", d.MountTag),
+func (d *VirtIO9PDevice) option() *queso.Option {
+	properties := []*queso.Property{
+		queso.NewProperty("fsdev", d.DeviceID),
+		queso.NewProperty("mount_tag", d.MountTag),
 	}
 
-	return cli.NewOption("device",
+	return queso.NewOption("device",
 		fmt.Sprintf("virtio-9p-%s", d.Type), properties...)
 }

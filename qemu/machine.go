@@ -3,7 +3,7 @@ package qemu
 import (
 	"strings"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // VMWareIOPortFlag represents the flag to pass to the SetVMWareIOPort method
@@ -25,7 +25,7 @@ const (
 // Machine selects the emulated machine by name.
 type Machine struct {
 	Name       string
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewMachine returns a new Machine instance.
@@ -50,17 +50,17 @@ type Machine struct {
 func NewMachine() *Machine {
 	return &Machine{
 		Name:       "",
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 
-func (m *Machine) option() *cli.Option {
-	return cli.NewOption("machine", m.Name, m.properties...)
+func (m *Machine) option() *queso.Option {
+	return queso.NewOption("machine", m.Name, m.properties...)
 }
 
 // SetProperty is used to add arbitrary properties to the [Machine].
 func (m *Machine) SetProperty(key string, value interface{}) *Machine {
-	m.properties = append(m.properties, cli.NewProperty(key, value))
+	m.properties = append(m.properties, queso.NewProperty(key, value))
 	return m
 }
 
@@ -80,7 +80,7 @@ func (m *Machine) SetAccelerators(types ...string) *Machine {
 	}
 
 	m.properties = append(m.properties,
-		cli.NewProperty("accel", strings.Join(nameStrings, ":")))
+		queso.NewProperty("accel", strings.Join(nameStrings, ":")))
 
 	return m
 }
@@ -89,14 +89,14 @@ func (m *Machine) SetAccelerators(types ...string) *Machine {
 // VMWareIOPortAuto says to select the value based on accel. For AcceleratorXen accelerator,
 // the default is VMWareIOPortOff otherwise the default is VMWareIOPortOn.
 func (m *Machine) SetVMWareIOPort(port VMWareIOPortFlag) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("vmport", port))
+	m.properties = append(m.properties, queso.NewProperty("vmport", port))
 	return m
 }
 
 // ToggleDumpGuestCore specifies whether to include guest memory in a core dump for
 // a Machine.
 func (m *Machine) ToggleDumpGuestCore(enabled bool) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("dump-guest-core", enabled))
+	m.properties = append(m.properties, queso.NewProperty("dump-guest-core", enabled))
 	return m
 }
 
@@ -104,7 +104,7 @@ func (m *Machine) ToggleDumpGuestCore(enabled bool) *Machine {
 // feature, when supported by the host, de-duplicates identical memory pages
 // among VMs instances. This property is enabled by default.
 func (m *Machine) ToggleMemoryMerge(enabled bool) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("mem-merge", enabled))
+	m.properties = append(m.properties, queso.NewProperty("mem-merge", enabled))
 	return m
 }
 
@@ -113,7 +113,7 @@ func (m *Machine) ToggleMemoryMerge(enabled bool) *Machine {
 // allow execution of AES cryptographic functions. This property is enabled by
 // default.
 func (m *Machine) ToggleAESKeyWrap(enabled bool) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("aes-key-wrap", enabled))
+	m.properties = append(m.properties, queso.NewProperty("aes-key-wrap", enabled))
 	return m
 }
 
@@ -122,33 +122,33 @@ func (m *Machine) ToggleAESKeyWrap(enabled bool) *Machine {
 // to allow execution of DEA cryptographic functions. This property is enabled
 // by default.
 func (m *Machine) ToggleDEAKeyWrap(enabled bool) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("dea-key-wrap", enabled))
+	m.properties = append(m.properties, queso.NewProperty("dea-key-wrap", enabled))
 	return m
 }
 
 // ToggleNVDIMM enables or disables NVDIMM support for a Machine. This property is
 // disabled by default.
 func (m *Machine) ToggleNVDIMM(enabled bool) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("nvdimm", enabled))
+	m.properties = append(m.properties, queso.NewProperty("nvdimm", enabled))
 	return m
 }
 
 // SetMemoryEncryption specifies the memory encryption object to use for a
 // Machine.
 func (m *Machine) SetMemoryEncryption(id string) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("memory-encryption", id))
+	m.properties = append(m.properties, queso.NewProperty("memory-encryption", id))
 	return m
 }
 
 // ToggleHMAT enables or disables ACPI Heterogeneous Memory Attribute Table (HMAT)
 // support for a Machine. This property is disabled by default.
 func (m *Machine) ToggleHMAT(enabled bool) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("hmat", enabled))
+	m.properties = append(m.properties, queso.NewProperty("hmat", enabled))
 	return m
 }
 
 // SetMemoryBackend allows use of a memory backend as main RAM for a Machine.
 func (m *Machine) SetMemoryBackend(id string) *Machine {
-	m.properties = append(m.properties, cli.NewProperty("memory-backend", id))
+	m.properties = append(m.properties, queso.NewProperty("memory-backend", id))
 	return m
 }

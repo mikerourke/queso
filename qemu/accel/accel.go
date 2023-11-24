@@ -4,7 +4,7 @@ package accel
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // Type represents the type of accelerator.
@@ -48,14 +48,14 @@ const (
 // to define an accelerator with no additional properties.
 //
 //	qemu-system-* -accel type
-func WithAccelerator(accelType Type) *cli.Option {
-	return cli.NewOption("accel", string(accelType))
+func WithAccelerator(accelType Type) *queso.Option {
+	return queso.NewOption("accel", string(accelType))
 }
 
 // Accelerator represents any of the available hardware accelerators.
 type Accelerator struct {
 	Type       Type
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // New returns a new [Accelerator] instance with the specified accelerator type.
@@ -64,17 +64,17 @@ type Accelerator struct {
 func New(accelType Type) *Accelerator {
 	return &Accelerator{
 		Type:       accelType,
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 
-func (a *Accelerator) option() *cli.Option {
-	return cli.NewOption("accel", string(a.Type), a.properties...)
+func (a *Accelerator) option() *queso.Option {
+	return queso.NewOption("accel", string(a.Type), a.properties...)
 }
 
 // SetProperty is used to add arbitrary properties to the [Accelerator].
 func (a *Accelerator) SetProperty(key string, value interface{}) *Accelerator {
-	a.properties = append(a.properties, cli.NewProperty(key, value))
+	a.properties = append(a.properties, queso.NewProperty(key, value))
 	return a
 }
 
@@ -110,6 +110,6 @@ func (a *Accelerator) SetNotifyOnVMExit(option NotifyOnVMExitOption, window int)
 		value = string(option)
 	}
 
-	a.properties = append(a.properties, cli.NewProperty("notify-vmexit", value))
+	a.properties = append(a.properties, queso.NewProperty("notify-vmexit", value))
 	return a
 }

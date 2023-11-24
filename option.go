@@ -7,9 +7,10 @@ import (
 
 // Option represents an option passed into the command line.
 type Option struct {
-	Flag       string
-	Name       string
-	Properties []*Property
+	Flag          string
+	Name          string
+	Properties    []*Property
+	noLeadingDash bool
 }
 
 // NewOption returns a new instance of Option.
@@ -19,6 +20,14 @@ func NewOption(flag string, name string, properties ...*Property) *Option {
 		Name:       name,
 		Properties: properties,
 	}
+}
+
+// OmitLeadingDash ensures the flag doesn't include a `-` before it when it is
+// converted to an arg. This is only required for a very small set of flags,
+// which _may_ actually be incorrectly documented.
+func (opt *Option) OmitLeadingDash() *Option {
+	opt.noLeadingDash = true
+	return opt
 }
 
 // Args converts the Option to a string that can be passed into a QEMU tool via

@@ -3,7 +3,7 @@ package display
 import (
 	"strings"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // TODO: Read more about Spice so you can add comments to SpiceChannel.
@@ -37,7 +37,7 @@ func NewSpiceDisplay() *SpiceDisplay {
 //
 //	qemu-system-* -spice,addr=addr
 func (d *SpiceDisplay) SetAddress(addr string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("addr", addr))
+	d.properties = append(d.properties, queso.NewProperty("addr", addr))
 	return d
 }
 
@@ -50,7 +50,7 @@ func (d *SpiceDisplay) SetAddress(addr string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,plaintext-channel=main|display|cursor|inputs|record|playback
 func (d *SpiceDisplay) SetChannelForPlainText(channel SpiceChannel) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("plaintext-channel", channel))
+	d.properties = append(d.properties, queso.NewProperty("plaintext-channel", channel))
 	return d
 }
 
@@ -63,7 +63,7 @@ func (d *SpiceDisplay) SetChannelForPlainText(channel SpiceChannel) *SpiceDispla
 //
 //	qemu-system-* -spice,tls-channel=main|display|cursor|inputs|record|playback
 func (d *SpiceDisplay) SetChannelForTLS(channel SpiceChannel) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("tls-channel", channel))
+	d.properties = append(d.properties, queso.NewProperty("tls-channel", channel))
 	return d
 }
 
@@ -86,7 +86,7 @@ const (
 //	qemu-system-* -spice,image-compression=[auto_glz|auto_lz|quic|glz|lz|off]
 func (d *SpiceDisplay) SetImageCompression(compression ImageCompression) *SpiceDisplay {
 	d.properties = append(d.properties,
-		cli.NewProperty("image-compression", string(compression)))
+		queso.NewProperty("image-compression", string(compression)))
 	return d
 }
 
@@ -95,7 +95,7 @@ func (d *SpiceDisplay) SetImageCompression(compression ImageCompression) *SpiceD
 //
 //	qemu-system-* -spice,password-secret=secret
 func (d *SpiceDisplay) SetPasswordSecret(secret string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("password-secret", secret))
+	d.properties = append(d.properties, queso.NewProperty("password-secret", secret))
 	return d
 }
 
@@ -103,7 +103,7 @@ func (d *SpiceDisplay) SetPasswordSecret(secret string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,port=port
 func (d *SpiceDisplay) SetPort(port int) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("port", port))
+	d.properties = append(d.properties, queso.NewProperty("port", port))
 	return d
 }
 
@@ -112,7 +112,7 @@ func (d *SpiceDisplay) SetPort(port int) *SpiceDisplay {
 //
 //	qemu-system-* -spice,rendernode=file
 func (d *SpiceDisplay) SetRenderNode(file string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("rendernode", file))
+	d.properties = append(d.properties, queso.NewProperty("rendernode", file))
 	return d
 }
 
@@ -120,7 +120,7 @@ func (d *SpiceDisplay) SetRenderNode(file string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,tls-ciphers=ciphers
 func (d *SpiceDisplay) SetTLSCiphers(ciphers ...string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("tls-ciphers", strings.Join(ciphers, ",")))
+	d.properties = append(d.properties, queso.NewProperty("tls-ciphers", strings.Join(ciphers, ",")))
 	return d
 }
 
@@ -128,7 +128,7 @@ func (d *SpiceDisplay) SetTLSCiphers(ciphers ...string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,tls-port=port
 func (d *SpiceDisplay) SetTLSPort(port int) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("tls-port", port))
+	d.properties = append(d.properties, queso.NewProperty("tls-port", port))
 	return d
 }
 
@@ -147,7 +147,7 @@ const (
 //
 //	qemu-system-* -spice,streaming-video=off|all|filter
 func (d *SpiceDisplay) SetVideoStreamDetection(detection VideoStreamDetection) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("streaming-video", string(detection)))
+	d.properties = append(d.properties, queso.NewProperty("streaming-video", string(detection)))
 	return d
 }
 
@@ -169,7 +169,7 @@ const (
 //
 //	qemu-system-* -spice,jpeg-wan-compression=auto|never|always
 func (d *SpiceDisplay) SetWANCompressionForJPEG(mode WANCompressionMode) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("jpeg-wan-compression", string(mode)))
+	d.properties = append(d.properties, queso.NewProperty("jpeg-wan-compression", string(mode)))
 	return d
 }
 
@@ -178,7 +178,7 @@ func (d *SpiceDisplay) SetWANCompressionForJPEG(mode WANCompressionMode) *SpiceD
 //
 //	qemu-system-* -spice,zlib-glz-wan-compression=auto|never|always
 func (d *SpiceDisplay) SetWANCompressionForZlib(mode WANCompressionMode) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("zlib-glz-wan-compression", string(mode)))
+	d.properties = append(d.properties, queso.NewProperty("zlib-glz-wan-compression", string(mode)))
 	return d
 }
 
@@ -186,7 +186,7 @@ func (d *SpiceDisplay) SetWANCompressionForZlib(mode WANCompressionMode) *SpiceD
 //
 //	qemu-system-* -spice,x509-cacert-file=file
 func (d *SpiceDisplay) SetX509CACertFile(file string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("x509-cacert-file", file))
+	d.properties = append(d.properties, queso.NewProperty("x509-cacert-file", file))
 	return d
 }
 
@@ -194,7 +194,7 @@ func (d *SpiceDisplay) SetX509CACertFile(file string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,x509-cert-file=file
 func (d *SpiceDisplay) SetX509CertFile(file string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("x509-cert-file", file))
+	d.properties = append(d.properties, queso.NewProperty("x509-cert-file", file))
 	return d
 }
 
@@ -202,7 +202,7 @@ func (d *SpiceDisplay) SetX509CertFile(file string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,x509-dh-key-file=file
 func (d *SpiceDisplay) SetX509DHKeyFile(file string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("x509-dh-key-file", file))
+	d.properties = append(d.properties, queso.NewProperty("x509-dh-key-file", file))
 	return d
 }
 
@@ -210,7 +210,7 @@ func (d *SpiceDisplay) SetX509DHKeyFile(file string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,x509-key-file=file
 func (d *SpiceDisplay) SetX509KeyFile(file string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("x509-key-file", file))
+	d.properties = append(d.properties, queso.NewProperty("x509-key-file", file))
 	return d
 }
 
@@ -218,7 +218,7 @@ func (d *SpiceDisplay) SetX509KeyFile(file string) *SpiceDisplay {
 //
 //	qemu-system-* -spice,x509-key-password=file
 func (d *SpiceDisplay) SetX509KeyPasswordFile(file string) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("x509-key-password", file))
+	d.properties = append(d.properties, queso.NewProperty("x509-key-password", file))
 	return d
 }
 
@@ -228,7 +228,7 @@ func (d *SpiceDisplay) SetX509KeyPasswordFile(file string) *SpiceDisplay {
 //	qemu-system-* -spice,disable-agent-file-xfer=on|off
 func (d *SpiceDisplay) ToggleAgentFileTransfers(enabled bool) *SpiceDisplay {
 	// Negating enabled to ensure if this is called with true, it does _not_ disable file transfer.
-	d.properties = append(d.properties, cli.NewProperty("disable-agent-file-xfer", !enabled))
+	d.properties = append(d.properties, queso.NewProperty("disable-agent-file-xfer", !enabled))
 	return d
 }
 
@@ -237,7 +237,7 @@ func (d *SpiceDisplay) ToggleAgentFileTransfers(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,disable-ticketing=on|off
 func (d *SpiceDisplay) ToggleConnectWithoutAuth(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("disable-ticketing", enabled))
+	d.properties = append(d.properties, queso.NewProperty("disable-ticketing", enabled))
 	return d
 }
 
@@ -245,7 +245,7 @@ func (d *SpiceDisplay) ToggleConnectWithoutAuth(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,ipv4=on|off
 func (d *SpiceDisplay) ToggleIPv4(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("ipv4", enabled))
+	d.properties = append(d.properties, queso.NewProperty("ipv4", enabled))
 	return d
 }
 
@@ -253,7 +253,7 @@ func (d *SpiceDisplay) ToggleIPv4(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,ipv6=on|off
 func (d *SpiceDisplay) ToggleIPv6(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("ipv6", enabled))
+	d.properties = append(d.properties, queso.NewProperty("ipv6", enabled))
 	return d
 }
 
@@ -262,7 +262,7 @@ func (d *SpiceDisplay) ToggleIPv6(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,agent-mouse=on|off
 func (d *SpiceDisplay) ToggleMouseEventPassing(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("agent-mouse", enabled))
+	d.properties = append(d.properties, queso.NewProperty("agent-mouse", enabled))
 	return d
 }
 
@@ -270,7 +270,7 @@ func (d *SpiceDisplay) ToggleMouseEventPassing(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,gl=on|off
 func (d *SpiceDisplay) ToggleOpenGL(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("gl", enabled))
+	d.properties = append(d.properties, queso.NewProperty("gl", enabled))
 	return d
 }
 
@@ -279,7 +279,7 @@ func (d *SpiceDisplay) ToggleOpenGL(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,playback-compression=on|off
 func (d *SpiceDisplay) TogglePlaybackCompression(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("playback-compression", enabled))
+	d.properties = append(d.properties, queso.NewProperty("playback-compression", enabled))
 	return d
 }
 
@@ -297,14 +297,14 @@ func (d *SpiceDisplay) TogglePlaybackCompression(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,sasl=on|off
 func (d *SpiceDisplay) ToggleSASL(required bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("sasl", required))
+	d.properties = append(d.properties, queso.NewProperty("sasl", required))
 	return d
 }
 
 // ToggleSeamlessMigration enables or disables Spice seamless migration. This
 // property is disabled by default.
 func (d *SpiceDisplay) ToggleSeamlessMigration(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("seamless-migration", enabled))
+	d.properties = append(d.properties, queso.NewProperty("seamless-migration", enabled))
 	return d
 }
 
@@ -314,7 +314,7 @@ func (d *SpiceDisplay) ToggleSeamlessMigration(enabled bool) *SpiceDisplay {
 //	qemu-system-* -spice,disable-copy-paste=on|off
 func (d *SpiceDisplay) ToggleSharedClipboard(enabled bool) *SpiceDisplay {
 	// Negating enabled to ensure if this is called with true, it does _not_ disable copy/paste.
-	d.properties = append(d.properties, cli.NewProperty("disable-copy-paste", !enabled))
+	d.properties = append(d.properties, queso.NewProperty("disable-copy-paste", !enabled))
 	return d
 }
 
@@ -322,6 +322,6 @@ func (d *SpiceDisplay) ToggleSharedClipboard(enabled bool) *SpiceDisplay {
 //
 //	qemu-system-* -spice,unix=on|off
 func (d *SpiceDisplay) ToggleUnix(enabled bool) *SpiceDisplay {
-	d.properties = append(d.properties, cli.NewProperty("unix", enabled))
+	d.properties = append(d.properties, queso.NewProperty("unix", enabled))
 	return d
 }

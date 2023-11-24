@@ -5,7 +5,7 @@ package removed
 import (
 	"strings"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // EnableFIPS enables FIPS 140-2 compliance mode.
@@ -16,8 +16,8 @@ import (
 // built-in cryptography provider are supported on FIPS enabled hosts.
 //
 // Removed in v7.1.
-func EnableFIPS() *cli.Option {
-	return cli.NewOption("enable-fips", "")
+func EnableFIPS() *queso.Option {
+	return queso.NewOption("enable-fips", "")
 }
 
 // WatchdogModel represents the model of hardware watchdog to emulate.
@@ -45,15 +45,15 @@ const (
 // Only one watchdog can be enabled for a guest.
 //
 // Removed in v7.2. Use `-device` instead.
-func Watchdog(model WatchdogModel) *cli.Option {
-	return cli.NewOption("watchdog", string(model))
+func Watchdog(model WatchdogModel) *queso.Option {
+	return queso.NewOption("watchdog", string(model))
 }
 
 // SoundHardware enables audio and selected sound hardware.
 //
 // Removed in v7.2. Sound card devices should be created using Device or -audio.
 // The exception is pcspk which can be activated using -machine pcspk-audiodev=<name>.
-func SoundHardware(card ...string) *cli.Option {
+func SoundHardware(card ...string) *queso.Option {
 	name := ""
 
 	switch len(card) {
@@ -67,5 +67,5 @@ func SoundHardware(card ...string) *cli.Option {
 		name = strings.Join(card, ",")
 	}
 
-	return cli.NewOption("soundhw", name)
+	return queso.NewOption("soundhw", name)
 }

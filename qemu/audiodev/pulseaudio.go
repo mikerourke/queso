@@ -1,8 +1,6 @@
 package audiodev
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso"
 
 // PulseAudioBackend represents an audio backend using PulseAudio.
 // This backend is available on most systems.
@@ -32,7 +30,7 @@ func (b *PulseAudioBackend) SetLatency(direction Direction, usecs int) *PulseAud
 //
 //	qemu-system-* -audiodev pa,server=server
 func (b *PulseAudioBackend) SetServer(server string) *PulseAudioBackend {
-	b.properties = append(b.properties, cli.NewProperty("server", server))
+	b.properties = append(b.properties, queso.NewProperty("server", server))
 	return b
 }
 

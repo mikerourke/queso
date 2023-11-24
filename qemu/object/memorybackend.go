@@ -3,7 +3,7 @@ package object
 import (
 	"strings"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 	"github.com/mikerourke/queso/qemu/numa"
 )
 
@@ -11,7 +11,7 @@ import (
 // built.
 type MemoryBackend struct {
 	Type       string
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewMemoryBackend returns a new instance of [MemoryBackend]. The id is a unique ID
@@ -20,14 +20,14 @@ type MemoryBackend struct {
 func NewMemoryBackend(backendType string, id string) *MemoryBackend {
 	return &MemoryBackend{
 		Type: backendType,
-		properties: []*cli.Property{
-			cli.NewProperty("id", id),
+		properties: []*queso.Property{
+			queso.NewProperty("id", id),
 		},
 	}
 }
 
-func (b *MemoryBackend) option() *cli.Option {
-	return cli.NewOption("object", b.Type, b.properties...)
+func (b *MemoryBackend) option() *queso.Option {
+	return queso.NewOption("object", b.Type, b.properties...)
 }
 
 // SetHostNodes binds the memory range to the specified list of NUMA host nodes.
@@ -35,7 +35,7 @@ func (b *MemoryBackend) option() *cli.Option {
 //	qemu-system-* -object memory-backend-*,host-nodes=host-nodes
 func (b *MemoryBackend) SetHostNodes(ids []string) *MemoryBackend {
 	b.properties = append(b.properties,
-		cli.NewProperty("host-nodes", strings.Join(ids, ",")))
+		queso.NewProperty("host-nodes", strings.Join(ids, ",")))
 	return b
 }
 
@@ -43,7 +43,7 @@ func (b *MemoryBackend) SetHostNodes(ids []string) *MemoryBackend {
 //
 //	qemu-system-* -object memory-backend-*,policy=default|preferred|bind|interleave
 func (b *MemoryBackend) SetNUMAPolicy(policy numa.Policy) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("policy", string(policy)))
+	b.properties = append(b.properties, queso.NewProperty("policy", string(policy)))
 	return b
 }
 
@@ -52,7 +52,7 @@ func (b *MemoryBackend) SetNUMAPolicy(policy numa.Policy) *MemoryBackend {
 //
 //	qemu-system-* -object memory-backend-*,size=size
 func (b *MemoryBackend) SetSize(size string) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("size", size))
+	b.properties = append(b.properties, queso.NewProperty("size", size))
 	return b
 }
 
@@ -61,7 +61,7 @@ func (b *MemoryBackend) SetSize(size string) *MemoryBackend {
 //
 //	qemu-system-* -object memory-backend-*,dump=on|off
 func (b *MemoryBackend) ToggleDump(enabled bool) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("dump", enabled))
+	b.properties = append(b.properties, queso.NewProperty("dump", enabled))
 	return b
 }
 
@@ -70,7 +70,7 @@ func (b *MemoryBackend) ToggleDump(enabled bool) *MemoryBackend {
 //
 //	qemu-system-* -object memory-backend-*,merge=on|off
 func (b *MemoryBackend) ToggleMerging(enabled bool) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("merge", enabled))
+	b.properties = append(b.properties, queso.NewProperty("merge", enabled))
 	return b
 }
 
@@ -78,7 +78,7 @@ func (b *MemoryBackend) ToggleMerging(enabled bool) *MemoryBackend {
 //
 //	qemu-system-* -object memory-backend-*,prealloc=on|off
 func (b *MemoryBackend) TogglePrealloc(enabled bool) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("prealloc", enabled))
+	b.properties = append(b.properties, queso.NewProperty("prealloc", enabled))
 	return b
 }
 
@@ -95,7 +95,7 @@ func (b *MemoryBackend) TogglePrealloc(enabled bool) *MemoryBackend {
 //
 //	qemu-system-* -object memory-backend-*,share=on|off
 func (b *MemoryBackend) ToggleSharing(enabled bool) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("share", enabled))
+	b.properties = append(b.properties, queso.NewProperty("share", enabled))
 	return b
 }
 
@@ -113,8 +113,8 @@ func NewMemoryBackendFile(id string) *MemoryBackendFile {
 	return &MemoryBackendFile{
 		MemoryBackend: &MemoryBackend{
 			Type: "memory-backend-file",
-			properties: []*cli.Property{
-				cli.NewProperty("id", id),
+			properties: []*queso.Property{
+				queso.NewProperty("id", id),
 			},
 		},
 	}
@@ -124,7 +124,7 @@ func NewMemoryBackendFile(id string) *MemoryBackendFile {
 //
 //	qemu-system-* -object memory-backend-file,mem-path=dir
 func (b *MemoryBackendFile) SetMemoryPath(dir string) *MemoryBackendFile {
-	b.properties = append(b.properties, cli.NewProperty("mem-path", dir))
+	b.properties = append(b.properties, queso.NewProperty("mem-path", dir))
 	return b
 }
 
@@ -155,7 +155,7 @@ const (
 //
 //	qemu-system-* -object memory-backend-file,rom=on|off|auto
 func (b *MemoryBackendFile) SetROMStatus(status ROMStatus) *MemoryBackendFile {
-	b.properties = append(b.properties, cli.NewProperty("rom", status))
+	b.properties = append(b.properties, queso.NewProperty("rom", status))
 	return b
 }
 
@@ -167,7 +167,7 @@ func (b *MemoryBackendFile) SetROMStatus(status ROMStatus) *MemoryBackendFile {
 //
 //	qemu-system-* -object memory-backend-file,discard-data=on|off
 func (b *MemoryBackendFile) ToggleDiscardData(enabled bool) *MemoryBackendFile {
-	b.properties = append(b.properties, cli.NewProperty("discard-data", enabled))
+	b.properties = append(b.properties, queso.NewProperty("discard-data", enabled))
 	return b
 }
 
@@ -181,7 +181,7 @@ func (b *MemoryBackendFile) ToggleDiscardData(enabled bool) *MemoryBackendFile {
 //
 //	qemu-system-* -object memory-backend-file,align=align
 func (b *MemoryBackendFile) SetAlignment(align string) *MemoryBackendFile {
-	b.properties = append(b.properties, cli.NewProperty("align", align))
+	b.properties = append(b.properties, queso.NewProperty("align", align))
 	return b
 }
 
@@ -190,7 +190,7 @@ func (b *MemoryBackendFile) SetAlignment(align string) *MemoryBackendFile {
 //
 //	qemu-system-* -object memory-backend-file,offset=offset
 func (b *MemoryBackendFile) SetOffset(offset int) *MemoryBackendFile {
-	b.properties = append(b.properties, cli.NewProperty("offset", offset))
+	b.properties = append(b.properties, queso.NewProperty("offset", offset))
 	return b
 }
 
@@ -198,7 +198,7 @@ func (b *MemoryBackendFile) SetOffset(offset int) *MemoryBackendFile {
 //
 //	qemu-system-* -object memory-backend-file,readonly=on|off
 func (b *MemoryBackendFile) ToggleReadOnly(enabled bool) *MemoryBackendFile {
-	b.properties = append(b.properties, cli.NewProperty("readonly", enabled))
+	b.properties = append(b.properties, queso.NewProperty("readonly", enabled))
 	return b
 }
 
@@ -217,8 +217,8 @@ func NewMemoryBackendRAM(id string) *MemoryBackendFile {
 	return &MemoryBackendFile{
 		MemoryBackend: &MemoryBackend{
 			Type: "memory-backend-ram",
-			properties: []*cli.Property{
-				cli.NewProperty("id", id),
+			properties: []*queso.Property{
+				queso.NewProperty("id", id),
 			},
 		},
 	}

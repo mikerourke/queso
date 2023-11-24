@@ -1,17 +1,17 @@
 package audiodev
 
-// SPICEBackend represents a backend that sends audio through SPICE. This backend
+// SpiceBackend represents a backend that sends audio through Spice. This backend
 // requires the [qemu.SPICE] and automatically selected in that case, so usually
 // you can ignore this option. This backend has no backend specific properties.
-type SPICEBackend struct {
+type SpiceBackend struct {
 	*Backend
 }
 
-// NewSPICEBackend returns a new instance of [SPICEBackend].
+// NewSpiceBackend returns a new instance of [SpiceBackend].
 //
 //	qemu-system-* -audiodev spice,id=id
-func NewSPICEBackend(id string) *SPICEBackend {
-	return &SPICEBackend{
+func NewSpiceBackend(id string) *SpiceBackend {
+	return &SpiceBackend{
 		NewBackend("spice", id),
 	}
 }

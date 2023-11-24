@@ -1,6 +1,6 @@
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // VirtualConsoleBackend connects to a QEMU text console.
 type VirtualConsoleBackend struct {
@@ -22,7 +22,7 @@ func NewVirtualConsoleBackend(id string) *VirtualConsoleBackend {
 //
 //	qemu-system-* -chardev vc,cols=count
 func (b *VirtualConsoleBackend) SetColumns(count int) *VirtualConsoleBackend {
-	b.properties = append(b.properties, cli.NewProperty("cols", count))
+	b.properties = append(b.properties, queso.NewProperty("cols", count))
 	return b
 }
 
@@ -30,7 +30,7 @@ func (b *VirtualConsoleBackend) SetColumns(count int) *VirtualConsoleBackend {
 //
 //	qemu-system-* -chardev vc,height=pixels
 func (b *VirtualConsoleBackend) SetHeight(pixels int) *VirtualConsoleBackend {
-	b.properties = append(b.properties, cli.NewProperty("width", pixels))
+	b.properties = append(b.properties, queso.NewProperty("width", pixels))
 	return b
 }
 
@@ -39,7 +39,7 @@ func (b *VirtualConsoleBackend) SetHeight(pixels int) *VirtualConsoleBackend {
 //
 //	qemu-system-* -chardev vc,rows=count
 func (b *VirtualConsoleBackend) SetRows(count int) *VirtualConsoleBackend {
-	b.properties = append(b.properties, cli.NewProperty("rows", count))
+	b.properties = append(b.properties, queso.NewProperty("rows", count))
 	return b
 }
 
@@ -47,6 +47,6 @@ func (b *VirtualConsoleBackend) SetRows(count int) *VirtualConsoleBackend {
 //
 //	qemu-system-* -chardev vc,width=pixels
 func (b *VirtualConsoleBackend) SetWidth(pixels int) *VirtualConsoleBackend {
-	b.properties = append(b.properties, cli.NewProperty("width", pixels))
+	b.properties = append(b.properties, queso.NewProperty("width", pixels))
 	return b
 }

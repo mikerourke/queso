@@ -1,10 +1,10 @@
 package display
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // EGLHeadlessDisplay offloads all OpenGL operations to a local Direct Rendering
 // Infrastructure (DRI) device. For any graphical display, this display needs to
-// be paired with either VNC or SPICE displays.
+// be paired with either VNC or Spice displays.
 type EGLHeadlessDisplay struct {
 	*Display
 }
@@ -20,6 +20,6 @@ func NewEGLHeadlessDisplay() *EGLHeadlessDisplay {
 //
 //	qemu-system-* -display egl-headless,rendernode=file
 func (d *EGLHeadlessDisplay) SetRenderNode(file string) *EGLHeadlessDisplay {
-	d.properties = append(d.properties, cli.NewProperty("rendernode", file))
+	d.properties = append(d.properties, queso.NewProperty("rendernode", file))
 	return d
 }

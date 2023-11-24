@@ -3,7 +3,7 @@ package display
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // VNCDisplay represents one of the available VNC display options. Normally, if QEMU
@@ -18,7 +18,7 @@ import (
 type VNCDisplay struct {
 	// Type is the type of the display.
 	Type         string
-	properties   []*cli.Property
+	properties   []*queso.Property
 	displayValue string
 }
 
@@ -31,7 +31,7 @@ type VNCDisplay struct {
 func NewVNCHostDisplay(port int, host string) *VNCDisplay {
 	return &VNCDisplay{
 		Type:         "vnc",
-		properties:   make([]*cli.Property, 0),
+		properties:   make([]*queso.Property, 0),
 		displayValue: fmt.Sprintf("%s:%d", host, port),
 	}
 }
@@ -43,7 +43,7 @@ func NewVNCHostDisplay(port int, host string) *VNCDisplay {
 func NewVNCNoneDisplay() *VNCDisplay {
 	return &VNCDisplay{
 		Type:         "vnc",
-		properties:   make([]*cli.Property, 0),
+		properties:   make([]*queso.Property, 0),
 		displayValue: "none",
 	}
 }
@@ -57,7 +57,7 @@ func NewVNCNoneDisplay() *VNCDisplay {
 func NewVNCToDisplay(to int) *VNCDisplay {
 	return &VNCDisplay{
 		Type:         "vnc",
-		properties:   make([]*cli.Property, 0),
+		properties:   make([]*queso.Property, 0),
 		displayValue: fmt.Sprintf("to=%d", to),
 	}
 }
@@ -70,18 +70,18 @@ func NewVNCToDisplay(to int) *VNCDisplay {
 func NewVNCUnixDisplay(path string) *VNCDisplay {
 	return &VNCDisplay{
 		Type:         "vnc",
-		properties:   make([]*cli.Property, 0),
+		properties:   make([]*queso.Property, 0),
 		displayValue: fmt.Sprintf("unix:%s", path),
 	}
 }
 
-func (d *VNCDisplay) option() *cli.Option {
-	return cli.NewOption("vnc", d.displayValue, d.properties...)
+func (d *VNCDisplay) option() *queso.Option {
+	return queso.NewOption("vnc", d.displayValue, d.properties...)
 }
 
 // SetProperty sets arbitrary properties on the [VNCDisplay].
 func (d *VNCDisplay) SetProperty(key string, value interface{}) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty(key, value))
+	d.properties = append(d.properties, queso.NewProperty(key, value))
 	return d
 }
 
@@ -92,7 +92,7 @@ func (d *VNCDisplay) SetProperty(key string, value interface{}) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,audiodev=id
 func (d *VNCDisplay) SetAudioDevice(id string) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("audiodev", id))
+	d.properties = append(d.properties, queso.NewProperty("audiodev", id))
 	return d
 }
 
@@ -106,7 +106,7 @@ func (d *VNCDisplay) SetAudioDevice(id string) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,key-delay-ms=ms
 func (d *VNCDisplay) SetKeyboardDelay(ms int) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("key-delay-ms", ms))
+	d.properties = append(d.properties, queso.NewProperty("key-delay-ms", ms))
 	return d
 }
 
@@ -115,7 +115,7 @@ func (d *VNCDisplay) SetKeyboardDelay(ms int) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,password-secret=secret
 func (d *VNCDisplay) SetPasswordSecret(secret string) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("password-secret", secret))
+	d.properties = append(d.properties, queso.NewProperty("password-secret", secret))
 	return d
 }
 
@@ -126,7 +126,7 @@ func (d *VNCDisplay) SetPasswordSecret(secret string) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,sasl-authz=id
 func (d *VNCDisplay) SetSASLAuthZ(id string) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("sasl-authz", id))
+	d.properties = append(d.properties, queso.NewProperty("sasl-authz", id))
 	return d
 }
 
@@ -157,7 +157,7 @@ const (
 //
 //	qemu-system-* -vnc <display>,share=policy
 func (d *VNCDisplay) SetSharingPolicy(policy SharingPolicy) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("share", policy))
+	d.properties = append(d.properties, queso.NewProperty("share", policy))
 	return d
 }
 
@@ -168,7 +168,7 @@ func (d *VNCDisplay) SetSharingPolicy(policy SharingPolicy) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,tls-authz=id
 func (d *VNCDisplay) SetTLSAuthZ(id string) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("tls-authz", id))
+	d.properties = append(d.properties, queso.NewProperty("tls-authz", id))
 	return d
 }
 
@@ -182,7 +182,7 @@ func (d *VNCDisplay) SetTLSAuthZ(id string) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,tls-creds=id
 func (d *VNCDisplay) SetTLSCredentials(id string) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("tls-creds", id))
+	d.properties = append(d.properties, queso.NewProperty("tls-creds", id))
 	return d
 }
 
@@ -195,7 +195,7 @@ func (d *VNCDisplay) SetTLSCredentials(id string) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,acl=on|off
 func (d *VNCDisplay) ToggleACL(enabled bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("acl", enabled))
+	d.properties = append(d.properties, queso.NewProperty("acl", enabled))
 	return d
 }
 
@@ -207,7 +207,7 @@ func (d *VNCDisplay) ToggleACL(enabled bool) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,non-adaptive=on|off
 func (d *VNCDisplay) ToggleAdaptiveEncoding(enabled bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("non-adaptive", !enabled))
+	d.properties = append(d.properties, queso.NewProperty("non-adaptive", !enabled))
 	return d
 }
 
@@ -218,7 +218,7 @@ func (d *VNCDisplay) ToggleAdaptiveEncoding(enabled bool) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,lossy=on|off
 func (d *VNCDisplay) ToggleLossyCompression(enabled bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("lossy", enabled))
+	d.properties = append(d.properties, queso.NewProperty("lossy", enabled))
 	return d
 }
 
@@ -245,7 +245,7 @@ func (d *VNCDisplay) ToggleLossyCompression(enabled bool) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,password=on|off
 func (d *VNCDisplay) TogglePasswordRequired(required bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("password", required))
+	d.properties = append(d.properties, queso.NewProperty("password", required))
 	return d
 }
 
@@ -254,7 +254,7 @@ func (d *VNCDisplay) TogglePasswordRequired(required bool) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,power-control=on|off
 func (d *VNCDisplay) TogglePowerControl(enabled bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("power-control", enabled))
+	d.properties = append(d.properties, queso.NewProperty("power-control", enabled))
 	return d
 }
 
@@ -265,7 +265,7 @@ func (d *VNCDisplay) TogglePowerControl(enabled bool) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,reverse=on|off
 func (d *VNCDisplay) ToggleReverse(enabled bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("reverse", enabled))
+	d.properties = append(d.properties, queso.NewProperty("reverse", enabled))
 	return d
 }
 
@@ -283,7 +283,7 @@ func (d *VNCDisplay) ToggleReverse(enabled bool) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,sasl=on|off
 func (d *VNCDisplay) ToggleSASL(required bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("sasl", required))
+	d.properties = append(d.properties, queso.NewProperty("sasl", required))
 	return d
 }
 
@@ -301,6 +301,6 @@ func (d *VNCDisplay) ToggleSASL(required bool) *VNCDisplay {
 //
 //	qemu-system-* -vnc <display>,websocket=on|off
 func (d *VNCDisplay) ToggleWebSocket(enabled bool) *VNCDisplay {
-	d.properties = append(d.properties, cli.NewProperty("websocket", enabled))
+	d.properties = append(d.properties, queso.NewProperty("websocket", enabled))
 	return d
 }

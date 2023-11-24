@@ -1,6 +1,6 @@
 package display
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // GTKDisplay displays video output in a GTK window. This interface provides
 // drop-down menus and other UI elements to configure and control the VM during
@@ -20,7 +20,7 @@ func NewGTKDisplay() *GTKDisplay {
 //
 //	qemu-system-* -display gtk,full-screen=on|off
 func (d *GTKDisplay) ToggleFullScreen(enabled bool) *GTKDisplay {
-	d.properties = append(d.properties, cli.NewProperty("full-screen", enabled))
+	d.properties = append(d.properties, queso.NewProperty("full-screen", enabled))
 	return d
 }
 
@@ -28,7 +28,7 @@ func (d *GTKDisplay) ToggleFullScreen(enabled bool) *GTKDisplay {
 //
 //	qemu-system-* -display gtk,gl=on|off
 func (d *GTKDisplay) ToggleOpenGL(enabled bool) *GTKDisplay {
-	d.properties = append(d.properties, cli.NewProperty("gl", enabled))
+	d.properties = append(d.properties, queso.NewProperty("gl", enabled))
 	return d
 }
 
@@ -36,7 +36,7 @@ func (d *GTKDisplay) ToggleOpenGL(enabled bool) *GTKDisplay {
 //
 //	qemu-system-* -display gtk,show-cursor=on|off
 func (d *GTKDisplay) ToggleShowCursor(enabled bool) *GTKDisplay {
-	d.properties = append(d.properties, cli.NewProperty("show-cursor", enabled))
+	d.properties = append(d.properties, queso.NewProperty("show-cursor", enabled))
 	return d
 }
 
@@ -45,7 +45,7 @@ func (d *GTKDisplay) ToggleShowCursor(enabled bool) *GTKDisplay {
 //
 //	qemu-system-* -display gtk,show-menubar=on|off
 func (d *GTKDisplay) ToggleShowMenuBar(enabled bool) *GTKDisplay {
-	d.properties = append(d.properties, cli.NewProperty("show-menubar", enabled))
+	d.properties = append(d.properties, queso.NewProperty("show-menubar", enabled))
 	return d
 }
 
@@ -55,7 +55,7 @@ func (d *GTKDisplay) ToggleShowMenuBar(enabled bool) *GTKDisplay {
 //
 //	qemu-system-* -display gtk,show-tabs=on|off
 func (d *GTKDisplay) ToggleShowTabBar(enabled bool) *GTKDisplay {
-	d.properties = append(d.properties, cli.NewProperty("show-tabs", enabled))
+	d.properties = append(d.properties, queso.NewProperty("show-tabs", enabled))
 	return d
 }
 
@@ -64,7 +64,7 @@ func (d *GTKDisplay) ToggleShowTabBar(enabled bool) *GTKDisplay {
 //
 //	qemu-system-* -display gtk,window-close=on|off
 func (d *GTKDisplay) ToggleWindowClose(enabled bool) *GTKDisplay {
-	d.properties = append(d.properties, cli.NewProperty("window-close", enabled))
+	d.properties = append(d.properties, queso.NewProperty("window-close", enabled))
 	return d
 }
 
@@ -73,6 +73,6 @@ func (d *GTKDisplay) ToggleWindowClose(enabled bool) *GTKDisplay {
 //
 //	qemu-system-* -display gtk,zoom-to-fit=on|off
 func (d *GTKDisplay) ToggleZoomToFit(enabled bool) *GTKDisplay {
-	d.properties = append(d.properties, cli.NewProperty("zoom-to-fit", enabled))
+	d.properties = append(d.properties, queso.NewProperty("zoom-to-fit", enabled))
 	return d
 }

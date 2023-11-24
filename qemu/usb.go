@@ -1,14 +1,14 @@
 package qemu
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // EnableUSB enables USB emulation on machine types with an on-board USB host controller
 // (if not enabled by default). Note that on-board USB host controllers may not support
 // USB 3.0.
 //
 //	qemu-system-* -usb
-func EnableUSB() *cli.Option {
-	return cli.NewOption("usb", "")
+func EnableUSB() *queso.Option {
+	return queso.NewOption("usb", "")
 }
 
 // USBDeviceName represents the device name that can be passed to the
@@ -48,6 +48,6 @@ const (
 // (if necessary) and the desired USB device via the device.New option instead.
 //
 //	qemu-system-* -usbdevice name
-func WithUSBDevice(name USBDeviceName) *cli.Option {
-	return cli.NewOption("usbdevice", string(name))
+func WithUSBDevice(name USBDeviceName) *queso.Option {
+	return queso.NewOption("usbdevice", string(name))
 }

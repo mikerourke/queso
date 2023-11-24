@@ -1,8 +1,6 @@
 package debug
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso"
 
 // WatchdogAction represents the action to perform when the watchdog timer
 // expires.
@@ -37,6 +35,6 @@ const (
 
 // WatchdogActionOnExpiration specifies the action to perform when the watchdog
 // timer expires.
-func WatchdogActionOnExpiration(action WatchdogAction) *cli.Option {
-	return cli.NewOption("watchdog-action", string(action))
+func WatchdogActionOnExpiration(action WatchdogAction) *queso.Option {
+	return queso.NewOption("watchdog-action", string(action))
 }

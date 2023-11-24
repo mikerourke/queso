@@ -1,6 +1,6 @@
 package display
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // CocoaDisplay displays video output in a Cocoa window. Mac only. This interface
 // provides drop-down menus and other UI elements to configure and control the
@@ -20,7 +20,7 @@ func NewCocoaDisplay() *CocoaDisplay {
 //
 //	qemu-system-* -display cocoa,left-command-key=on|off
 func (d *CocoaDisplay) ToggleLeftCommandKey(enabled bool) *CocoaDisplay {
-	d.properties = append(d.properties, cli.NewProperty("left-command-key", enabled))
+	d.properties = append(d.properties, queso.NewProperty("left-command-key", enabled))
 	return d
 }
 
@@ -28,6 +28,6 @@ func (d *CocoaDisplay) ToggleLeftCommandKey(enabled bool) *CocoaDisplay {
 //
 //	qemu-system-* -display cocoa,show-cursor=on|off
 func (d *CocoaDisplay) ToggleShowCursor(enabled bool) *CocoaDisplay {
-	d.properties = append(d.properties, cli.NewProperty("show-cursor", enabled))
+	d.properties = append(d.properties, queso.NewProperty("show-cursor", enabled))
 	return d
 }

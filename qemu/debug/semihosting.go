@@ -1,14 +1,14 @@
 package debug
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // EnableSemiHosting enables semi-hosting mode (ARM, M68K, Xtensa, MIPS, Nios II,
 // RISC-V only).
 //
 // Note that this allows guest direct access to the host filesystem, so should
 // only be used with a trusted guest OS.
-func EnableSemiHosting() *cli.Option {
-	return cli.NewOption("semihosting", "")
+func EnableSemiHosting() *queso.Option {
+	return queso.NewOption("semihosting", "")
 }
 
 // SemiHostingTarget defines where the semihosting calls will be addressed.
@@ -47,22 +47,22 @@ func SemiHostingConfig(
 	target SemiHostingTarget,
 	chardev string,
 	arguments ...*Argument,
-) *cli.Option {
-	properties := []*cli.Property{
-		cli.NewProperty("enabled", enabled),
-		cli.NewProperty("target", target),
+) *queso.Option {
+	properties := []*queso.Property{
+		queso.NewProperty("enabled", enabled),
+		queso.NewProperty("target", target),
 	}
 
 	if chardev != "" {
-		properties = append(properties, cli.NewProperty("chardev", chardev))
+		properties = append(properties, queso.NewProperty("chardev", chardev))
 	}
 
 	if arguments != nil {
 		for _, argument := range arguments {
 			properties = append(properties,
-				cli.NewProperty(argument.Name, argument.Value))
+				queso.NewProperty(argument.Name, argument.Value))
 		}
 	}
 
-	return cli.NewOption("semihosting-config", "", properties...)
+	return queso.NewOption("semihosting-config", "", properties...)
 }

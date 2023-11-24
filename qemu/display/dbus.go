@@ -1,6 +1,6 @@
 package display
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // DBusDisplay exports the display over D-Bus interfaces. (Since 7.0)
 //
@@ -21,7 +21,7 @@ func NewDBusDisplay() *DBusDisplay {
 //
 //	qemu-system-* -display dbus,addr=addr
 func (d *DBusDisplay) SetAddress(addr string) *DBusDisplay {
-	d.properties = append(d.properties, cli.NewProperty("addr", addr))
+	d.properties = append(d.properties, queso.NewProperty("addr", addr))
 	return d
 }
 
@@ -30,7 +30,7 @@ func (d *DBusDisplay) SetAddress(addr string) *DBusDisplay {
 //
 //	qemu-system-* -display dbus,gl=on|off|core|es
 func (d *DBusDisplay) SetOpenGL(gl OpenGLOption) *DBusDisplay {
-	d.properties = append(d.properties, cli.NewProperty("gl", gl))
+	d.properties = append(d.properties, queso.NewProperty("gl", gl))
 	return d
 }
 
@@ -39,7 +39,7 @@ func (d *DBusDisplay) SetOpenGL(gl OpenGLOption) *DBusDisplay {
 //
 //	qemu-system-* -display dbus,p2p=yes|no
 func (d *DBusDisplay) TogglePeerToPeer(enabled bool) *DBusDisplay {
-	value := cli.StatusFromBool(enabled, "yes", "no")
-	d.properties = append(d.properties, cli.NewProperty("p2p", value))
+	value := queso.StatusFromBool(enabled, "yes", "no")
+	d.properties = append(d.properties, queso.NewProperty("p2p", value))
 	return d
 }

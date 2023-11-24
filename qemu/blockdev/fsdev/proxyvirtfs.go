@@ -1,6 +1,6 @@
 package fsdev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // VirtualProxyFileSystemDevice represents a virtual file system device in which
 // accesses to the filesystem are done by virtfs-proxy-helper(1).
@@ -16,7 +16,7 @@ type VirtualProxyFileSystemDevice struct {
 	// SocketInterfaceType is the type of socket interface to use (either path
 	// or file descriptor).
 	SocketInterfaceType SocketInterfaceType
-	properties          []*cli.Property
+	properties          []*queso.Property
 }
 
 // NewVirtualProxyFileSystemDevice returns a new instance of [VirtualProxyFileSystemDevice].
@@ -37,7 +37,7 @@ func NewVirtualProxyFileSystemDevice(
 		MountTag:            mountTag,
 		SocketTarget:        socketTarget,
 		SocketInterfaceType: socketInterfaceType,
-		properties:          make([]*cli.Property, 0),
+		properties:          make([]*queso.Property, 0),
 	}
 }
 
@@ -49,7 +49,7 @@ func NewVirtualProxyFileSystemDevice(
 func (d *VirtualProxyFileSystemDevice) EnableWriteOut() *VirtualProxyFileSystemDevice {
 	d.properties = append(d.properties,
 		// The only supported value is "immediate".
-		cli.NewProperty("writeout", "immediate"))
+		queso.NewProperty("writeout", "immediate"))
 	return d
 }
 
@@ -57,7 +57,7 @@ func (d *VirtualProxyFileSystemDevice) EnableWriteOut() *VirtualProxyFileSystemD
 //
 //	qemu-system-* -virtfs proxy,mount_tag=tag
 func (d *VirtualProxyFileSystemDevice) SetMountTag(tag string) *VirtualProxyFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("mount_tag", tag))
+	d.properties = append(d.properties, queso.NewProperty("mount_tag", tag))
 	return d
 }
 
@@ -66,6 +66,6 @@ func (d *VirtualProxyFileSystemDevice) SetMountTag(tag string) *VirtualProxyFile
 //
 //	qemu-system-* -virtfs proxy,readonly=on|off
 func (d *VirtualProxyFileSystemDevice) ToggleReadOnly(enabled bool) *VirtualProxyFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("readonly", enabled))
+	d.properties = append(d.properties, queso.NewProperty("readonly", enabled))
 	return d
 }

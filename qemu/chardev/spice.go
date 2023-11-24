@@ -1,6 +1,6 @@
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // SpicePortBackend connects to a Spice port, allowing a Spice client to handle
 // the traffic identified by a name (preferably a fqdn).
@@ -17,8 +17,8 @@ type SpicePortBackend struct {
 func NewSpicePortBackend(id string, debugLevel string, name string) *SpicePortBackend {
 	backend := NewBackend("spiceport", id)
 	backend.properties = append(backend.properties,
-		cli.NewProperty("debug", debugLevel),
-		cli.NewProperty("name", name))
+		queso.NewProperty("debug", debugLevel),
+		queso.NewProperty("name", name))
 
 	return &SpicePortBackend{backend}
 }
@@ -37,8 +37,8 @@ type SpiceVMCBackend struct {
 func NewSpiceVMCBackend(id string, debugLevel string, name string) *SpiceVMCBackend {
 	backend := NewBackend("spicevmc", id)
 	backend.properties = append(backend.properties,
-		cli.NewProperty("debug", debugLevel),
-		cli.NewProperty("name", name))
+		queso.NewProperty("debug", debugLevel),
+		queso.NewProperty("name", name))
 
 	return &SpiceVMCBackend{backend}
 }

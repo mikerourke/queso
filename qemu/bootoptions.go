@@ -3,13 +3,13 @@ package qemu
 import (
 	"strings"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // BootOptions represent the options for booting a VM, such as boot order and
 // splash image.
 type BootOptions struct {
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewBootOptions returns a new instance of BootOptions.
@@ -17,16 +17,16 @@ type BootOptions struct {
 //	qemu-system-* -boot
 func NewBootOptions() *BootOptions {
 	return &BootOptions{
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 
-func (bo *BootOptions) option() *cli.Option {
+func (bo *BootOptions) option() *queso.Option {
 	if len(bo.properties) == 0 {
 		panic("at least one property must be specified for BootOptions")
 	}
 
-	return cli.NewOption("boot", "", bo.properties...)
+	return queso.NewOption("boot", "", bo.properties...)
 }
 
 // SetBootOnce specifies Boot drives as a string of drive letters. It applies
@@ -36,7 +36,7 @@ func (bo *BootOptions) option() *cli.Option {
 //	qemu-system-* -boot once=drives
 func (bo *BootOptions) SetBootOnce(drives ...string) *BootOptions {
 	order := strings.Join(drives, "")
-	bo.properties = append(bo.properties, cli.NewProperty("once", order))
+	bo.properties = append(bo.properties, queso.NewProperty("once", order))
 	return bo
 }
 
@@ -48,7 +48,7 @@ func (bo *BootOptions) SetBootOnce(drives ...string) *BootOptions {
 //	qemu-system-* -boot order=drives
 func (bo *BootOptions) SetBootOrder(drives ...string) *BootOptions {
 	order := strings.Join(drives, "")
-	bo.properties = append(bo.properties, cli.NewProperty("order", order))
+	bo.properties = append(bo.properties, queso.NewProperty("order", order))
 	return bo
 }
 
@@ -59,7 +59,7 @@ func (bo *BootOptions) SetBootOrder(drives ...string) *BootOptions {
 //
 //	qemu-system-* -boot reboot-timeout=timeout
 func (bo *BootOptions) SetRebootTimeout(timeout int) *BootOptions {
-	bo.properties = append(bo.properties, cli.NewProperty("reboot-timeout", timeout))
+	bo.properties = append(bo.properties, queso.NewProperty("reboot-timeout", timeout))
 	return bo
 }
 
@@ -73,7 +73,7 @@ func (bo *BootOptions) SetRebootTimeout(timeout int) *BootOptions {
 //
 //	qemu-system-* -boot splash=file
 func (bo *BootOptions) SetSplashImage(file string) *BootOptions {
-	bo.properties = append(bo.properties, cli.NewProperty("splash", file))
+	bo.properties = append(bo.properties, queso.NewProperty("splash", file))
 	return bo
 }
 
@@ -82,7 +82,7 @@ func (bo *BootOptions) SetSplashImage(file string) *BootOptions {
 //
 //	qemu-system-* -boot splash-time=time
 func (bo *BootOptions) SetSplashTime(time int) *BootOptions {
-	bo.properties = append(bo.properties, cli.NewProperty("splash-time", time))
+	bo.properties = append(bo.properties, queso.NewProperty("splash-time", time))
 	return bo
 }
 
@@ -92,7 +92,7 @@ func (bo *BootOptions) SetSplashTime(time int) *BootOptions {
 //
 //	qemu-system-* -boot menu=on|off
 func (bo *BootOptions) ToggleInteractive(enabled bool) *BootOptions {
-	bo.properties = append(bo.properties, cli.NewProperty("menu", enabled))
+	bo.properties = append(bo.properties, queso.NewProperty("menu", enabled))
 	return bo
 }
 
@@ -100,6 +100,6 @@ func (bo *BootOptions) ToggleInteractive(enabled bool) *BootOptions {
 //
 //	qemu-system-* -boot strict=on|off
 func (bo *BootOptions) ToggleStrictBoot(enabled bool) *BootOptions {
-	bo.properties = append(bo.properties, cli.NewProperty("strict", enabled))
+	bo.properties = append(bo.properties, queso.NewProperty("strict", enabled))
 	return bo
 }

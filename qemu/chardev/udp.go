@@ -1,6 +1,6 @@
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // UDPBackend sends all traffic from the guest to a remote host over UDP.
 type UDPBackend struct {
@@ -25,7 +25,7 @@ func NewUDPBackend(id string, port int) *UDPBackend {
 //
 //	qemu-system-* -chardev udp,localaddr=addr
 func (b *UDPBackend) SetLocalAddress(addr string) *UDPBackend {
-	b.properties = append(b.properties, cli.NewProperty("localaddr", addr))
+	b.properties = append(b.properties, queso.NewProperty("localaddr", addr))
 	return b
 }
 
@@ -34,7 +34,7 @@ func (b *UDPBackend) SetLocalAddress(addr string) *UDPBackend {
 //
 //	qemu-system-* -chardev udp,localport=port
 func (b *UDPBackend) SetLocalPort(port int) *UDPBackend {
-	b.properties = append(b.properties, cli.NewProperty("localport", port))
+	b.properties = append(b.properties, queso.NewProperty("localport", port))
 	return b
 }
 
@@ -43,7 +43,7 @@ func (b *UDPBackend) SetLocalPort(port int) *UDPBackend {
 //
 //	qemu-system-* -chardev udp,host=host
 func (b *UDPBackend) SetHost(host string) *UDPBackend {
-	b.properties = append(b.properties, cli.NewProperty("host", host))
+	b.properties = append(b.properties, queso.NewProperty("host", host))
 	return b
 }
 
@@ -51,7 +51,7 @@ func (b *UDPBackend) SetHost(host string) *UDPBackend {
 //
 //	qemu-system-* -chardev udp,ipv4=on|off
 func (b *UDPBackend) ToggleIPv4(enabled bool) *UDPBackend {
-	b.properties = append(b.properties, cli.NewProperty("ipv4", enabled))
+	b.properties = append(b.properties, queso.NewProperty("ipv4", enabled))
 	return b
 }
 
@@ -59,6 +59,6 @@ func (b *UDPBackend) ToggleIPv4(enabled bool) *UDPBackend {
 //
 //	qemu-system-* -chardev udp,ipv6=on|off
 func (b *UDPBackend) ToggleIPv6(enabled bool) *UDPBackend {
-	b.properties = append(b.properties, cli.NewProperty("ipv6", enabled))
+	b.properties = append(b.properties, queso.NewProperty("ipv6", enabled))
 	return b
 }

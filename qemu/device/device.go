@@ -4,13 +4,13 @@ package device
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // Device represents a device used with QEMU.
 type Device struct {
 	Type       string
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // New returns a new instance of a [Device].
@@ -19,33 +19,33 @@ type Device struct {
 func New(deviceType string) *Device {
 	return &Device{
 		Type:       deviceType,
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 
 // Option returns the option representation of the device.
-func (d *Device) option() *cli.Option {
-	return cli.NewOption("device", d.Type, d.properties...)
+func (d *Device) option() *queso.Option {
+	return queso.NewOption("device", d.Type, d.properties...)
 }
 
 // Use adds a device driver with the specified name and properties.
 // There are a _lot_ of options for deviceType. See the QEMU documentation for
 // additional details.
-func Use(deviceType string, properties ...*Property) *cli.Option {
-	props := make([]*cli.Property, 0)
+func Use(deviceType string, properties ...*Property) *queso.Option {
+	props := make([]*queso.Property, 0)
 
 	for _, property := range properties {
 		props = append(props, property.Property)
 	}
 
-	return cli.NewOption("device", deviceType, props...)
+	return queso.NewOption("device", deviceType, props...)
 }
 
 // IPMIBMC adds an IPMI BMC. This is a simulation of a hardware management
 // interface processor that normally sits on a system. It provides a watchdog
 // and the ability to reset and power control the system. You need to connect
 // this to an IPMI interface to make it useful.
-func IPMIBMC(id string, properties ...*Property) *cli.Option {
+func IPMIBMC(id string, properties ...*Property) *queso.Option {
 	props := []*Property{NewProperty("id", id)}
 
 	if properties != nil {
@@ -73,7 +73,7 @@ func IPMIBMCExternal(
 	id string,
 	chardev string,
 	properties ...*Property,
-) *cli.Option {
+) *queso.Option {
 	props := []*Property{
 		NewProperty("id", id),
 		NewProperty("chardev", chardev),
@@ -89,7 +89,7 @@ func IPMIBMCExternal(
 // KCSIPMIOnISABus adds a KCS IPMI interface on the ISA bus. This also adds a
 // corresponding ACPI and SMBIOS entries, if appropriate. The bmc parameter
 // represents the ID of a IPMIBMC or IPMIBMCExternal instance.
-func KCSIPMIOnISABus(bmc string, properties ...*Property) *cli.Option {
+func KCSIPMIOnISABus(bmc string, properties ...*Property) *queso.Option {
 	props := []*Property{NewProperty("bmc", bmc)}
 
 	if properties != nil {
@@ -101,7 +101,7 @@ func KCSIPMIOnISABus(bmc string, properties ...*Property) *cli.Option {
 
 // BTIPMIOnISABus adds a BT IPMI interface on the ISA bus. The bmc parameter
 // represents the ID of a IPMIBMC or IPMIBMCExternal instance.
-func BTIPMIOnISABus(bmc string, properties ...*Property) *cli.Option {
+func BTIPMIOnISABus(bmc string, properties ...*Property) *queso.Option {
 	props := []*Property{NewProperty("bmc", bmc)}
 
 	if properties != nil {
@@ -113,7 +113,7 @@ func BTIPMIOnISABus(bmc string, properties ...*Property) *cli.Option {
 
 // KCSIPMIOnPCIBus adds a KCS IPMI interface on the PCI bus. The bmc parameter
 // represents the ID of a IPMIBMC or IPMIBMCExternal instance.
-func KCSIPMIOnPCIBus(bmc string, properties ...*Property) *cli.Option {
+func KCSIPMIOnPCIBus(bmc string, properties ...*Property) *queso.Option {
 	props := []*Property{NewProperty("bmc", bmc)}
 
 	if properties != nil {
@@ -125,7 +125,7 @@ func KCSIPMIOnPCIBus(bmc string, properties ...*Property) *cli.Option {
 
 // BTIPMIOnPCIBus adds a BT IPMI interface on the PCI bus. The bmc parameter
 // represents the ID of a IPMIBMC or IPMIBMCExternal instance.
-func BTIPMIOnPCIBus(bmc string, properties ...*Property) *cli.Option {
+func BTIPMIOnPCIBus(bmc string, properties ...*Property) *queso.Option {
 	props := []*Property{NewProperty("bmc", bmc)}
 
 	if properties != nil {
@@ -137,7 +137,7 @@ func BTIPMIOnPCIBus(bmc string, properties ...*Property) *cli.Option {
 
 // IntelIOMMU is used to enable Intel VT-d emulation within the guest.
 // This can only be used with Q35 Machine instances.
-func IntelIOMMU(properties ...*Property) *cli.Option {
+func IntelIOMMU(properties ...*Property) *queso.Option {
 	return Use("intel-iommu", properties...)
 }
 
@@ -154,7 +154,7 @@ const (
 // Virtio9P adds a Virtio 9P file system. The fsdev parameter corresponds
 // to a filesystem device (see blockdev/fsdev.go). The mountTag parameter
 // specifies the tag name to be used by the guest to mount this export point.
-func Virtio9P(variant Virtio9PVariant, fsdev string, mountTag string) *cli.Option {
+func Virtio9P(variant Virtio9PVariant, fsdev string, mountTag string) *queso.Option {
 	name := fmt.Sprintf("virtio-9p-%s", variant)
 
 	props := []*Property{
@@ -167,13 +167,13 @@ func Virtio9P(variant Virtio9PVariant, fsdev string, mountTag string) *cli.Optio
 
 // Property represents a property that can be used with the device option.
 type Property struct {
-	*cli.Property
+	*queso.Property
 }
 
 // NewProperty returns a new instance of Property.
 func NewProperty(key string, value interface{}) *Property {
 	return &Property{
-		Property: cli.NewProperty(key, value),
+		Property: queso.NewProperty(key, value),
 	}
 }
 

@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 	"golang.org/x/mod/semver"
 )
 
@@ -28,7 +28,7 @@ func New(path string) *QEMU {
 }
 
 // With sets the options to use for invoking QEMU.
-func (q *QEMU) With(options ...*cli.Option) *QEMU {
+func (q *QEMU) With(options ...*queso.Option) *QEMU {
 	args := make([]string, 0)
 
 	for _, option := range options {
@@ -42,7 +42,7 @@ func (q *QEMU) With(options ...*cli.Option) *QEMU {
 
 // Usable represents an item that can be passed to the Use method.
 type Usable interface {
-	option() *cli.Option
+	option() *queso.Option
 }
 
 // Use adds items as args to the QEMU command. It differs from the With method

@@ -1,9 +1,6 @@
 package driver
 
-import (
-	"github.com/mikerourke/queso/internal/vals"
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso"
 
 // FileDriver is the protocol-level block driver for accessing regular files.
 type FileDriver struct {
@@ -15,7 +12,7 @@ type FileDriver struct {
 //	qemu-system-* -blockdev driver=file
 func NewFileDriver() *FileDriver {
 	return &FileDriver{
-		NewDriver("file"),
+		New("file"),
 	}
 }
 
@@ -38,7 +35,7 @@ const (
 //
 //	qemu-system-* -blockdev driver=file,filename=name
 func (d *FileDriver) SetAIOBackend(backend string) *FileDriver {
-	d.properties = append(d.properties, cli.NewProperty("aio", backend))
+	d.properties = append(d.properties, queso.NewProperty("aio", backend))
 	return d
 }
 
@@ -46,9 +43,17 @@ func (d *FileDriver) SetAIOBackend(backend string) *FileDriver {
 //
 //	qemu-system-* -blockdev driver=file,filename=name
 func (d *FileDriver) SetFileName(name string) *FileDriver {
-	d.properties = append(d.properties, cli.NewProperty("filename", name))
+	d.properties = append(d.properties, queso.NewProperty("filename", name))
 	return d
 }
+
+type OFDLockingStatus string
+
+const (
+	OFDLockingOn   = "on"
+	OFDLockingOff  = "off"
+	OFDLockingAuto = "auto"
+)
 
 // SetOFDLockingStatus specifies whether the image file is protected with Linux
 // OFD/POSIX locks. The default is to use the Linux Open File
@@ -56,7 +61,7 @@ func (d *FileDriver) SetFileName(name string) *FileDriver {
 // applied ([vals.Status.Off]).
 //
 //	qemu-system-* -blockdev driver=file,locking=on|off|auto
-func (d *FileDriver) SetOFDLockingStatus(status vals.Status) *FileDriver {
-	d.properties = append(d.properties, cli.NewProperty("locking", status.String()))
+func (d *FileDriver) SetOFDLockingStatus(status OFDLockingStatus) *FileDriver {
+	d.properties = append(d.properties, queso.NewProperty("locking", string(status)))
 	return d
 }

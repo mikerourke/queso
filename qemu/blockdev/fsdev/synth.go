@@ -1,13 +1,13 @@
 package fsdev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // SyntheticFileSystemDevice represents a synthetic file system, only used by
 // QTests.
 type SyntheticFileSystemDevice struct {
 	// ID is the unique identifier for the device.
 	ID         string
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewSyntheticFileSystemDevice returns a new instance of [SyntheticFileSystemDevice].
@@ -17,7 +17,7 @@ type SyntheticFileSystemDevice struct {
 func NewSyntheticFileSystemDevice(id string) *SyntheticFileSystemDevice {
 	return &SyntheticFileSystemDevice{
 		ID:         id,
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 
@@ -34,7 +34,7 @@ func (d *SyntheticFileSystemDevice) SetID(id string) *SyntheticFileSystemDevice 
 //
 //	qemu-system-* -fsdev synth,readonly=on|off
 func (d *SyntheticFileSystemDevice) ToggleReadOnly(enabled bool) *SyntheticFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("readonly", enabled))
+	d.properties = append(d.properties, queso.NewProperty("readonly", enabled))
 	return d
 }
 
@@ -43,7 +43,7 @@ func (d *SyntheticFileSystemDevice) ToggleReadOnly(enabled bool) *SyntheticFileS
 type VirtualSyntheticFileSystemDevice struct {
 	// MountTag is the tag name to be used by the guest to mount this export point.
 	MountTag   string
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewVirtualSyntheticFileSystemDevice returns a new instance of [VirtualSyntheticFileSystemDevice].
@@ -53,7 +53,7 @@ type VirtualSyntheticFileSystemDevice struct {
 func NewVirtualSyntheticFileSystemDevice(mountTag string) *VirtualSyntheticFileSystemDevice {
 	return &VirtualSyntheticFileSystemDevice{
 		MountTag:   mountTag,
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 

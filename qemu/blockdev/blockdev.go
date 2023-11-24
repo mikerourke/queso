@@ -1,6 +1,6 @@
 package blockdev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // IOOperation specifies an operation for I/O (read, write, or all).
 type IOOperation int
@@ -25,27 +25,27 @@ const (
 // your drive declarations instead of this global option.
 //
 //	qemu-system-* -snapshot
-func EnableSnapshotMode() *cli.Option {
-	return cli.NewOption("snapshot", "")
+func EnableSnapshotMode() *queso.Option {
+	return queso.NewOption("snapshot", "")
 }
 
 // FlashMemory uses the specified file as on-board Flash memory image.
 //
 //	qemu-system-* -mtdblock file
-func FlashMemory(file string) *cli.Option {
-	return cli.NewOption("mtdblock", file)
+func FlashMemory(file string) *queso.Option {
+	return queso.NewOption("mtdblock", file)
 }
 
 // ISCSI configures iSCSI session parameters.
 //
 //	qemu-system-* -iscsi
-func ISCSI() *cli.Option {
-	return cli.NewOption("iscsi", "")
+func ISCSI() *queso.Option {
+	return queso.NewOption("iscsi", "")
 }
 
 // SecureDigitalCard uses the specified file as a SecureDigital card image.
 //
 //	qemu-system-* -sd file
-func SecureDigitalCard(file string) *cli.Option {
-	return cli.NewOption("sd", file)
+func SecureDigitalCard(file string) *queso.Option {
+	return queso.NewOption("sd", file)
 }

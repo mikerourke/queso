@@ -1,11 +1,11 @@
 // Package driver is used to define and manage block driver nodes.
 package driver
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // Driver defines a new block driver node.
 type Driver struct {
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // New returns a new instance of [Driver].
@@ -13,19 +13,19 @@ type Driver struct {
 //	qemu-system-* -blockdev driver=file
 func New(name string) *Driver {
 	return &Driver{
-		properties: []*cli.Property{
-			cli.NewProperty("driver", name),
+		properties: []*queso.Property{
+			queso.NewProperty("driver", name),
 		},
 	}
 }
 
-func (d *Driver) option() *cli.Option {
-	return cli.NewOption("blockdev", "", d.properties...)
+func (d *Driver) option() *queso.Option {
+	return queso.NewOption("blockdev", "", d.properties...)
 }
 
 // SetProperty allows setting arbitrary properties on a [Driver].
 func (d *Driver) SetProperty(key string, value interface{}) *Driver {
-	d.properties = append(d.properties, cli.NewProperty(key, value))
+	d.properties = append(d.properties, queso.NewProperty(key, value))
 	return d
 }
 
@@ -52,7 +52,7 @@ const (
 //
 //	qemu-system-* -blockdev driver=file,detect-zeroes=detect-zeroes
 func (d *Driver) SetDetectZeroes(status DetectZeroesStatus) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("detect-zeroes", status))
+	d.properties = append(d.properties, queso.NewProperty("detect-zeroes", status))
 	return d
 }
 
@@ -66,7 +66,7 @@ func (d *Driver) SetDetectZeroes(status DetectZeroesStatus) *Driver {
 //
 //	qemu-system-* -blockdev driver=file,node-name=name
 func (d *Driver) SetNodeName(name string) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("node-name", name))
+	d.properties = append(d.properties, queso.NewProperty("node-name", name))
 	return d
 }
 
@@ -77,7 +77,7 @@ func (d *Driver) SetNodeName(name string) *Driver {
 //
 //	qemu-system-* -blockdev driver=file,auto-read-only=on|off
 func (d *Driver) ToggleAutoReadOnly(enabled bool) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("auto-read-only", enabled))
+	d.properties = append(d.properties, queso.NewProperty("auto-read-only", enabled))
 	return d
 }
 
@@ -87,7 +87,7 @@ func (d *Driver) ToggleAutoReadOnly(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=file,cache.direct=on|off
 func (d *Driver) ToggleDirectCache(enabled bool) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("cache.direct", enabled))
+	d.properties = append(d.properties, queso.NewProperty("cache.direct", enabled))
 	return d
 }
 
@@ -97,7 +97,7 @@ func (d *Driver) ToggleDirectCache(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=file,discard=on|off
 func (d *Driver) ToggleDiscard(enabled bool) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("discard", enabled))
+	d.properties = append(d.properties, queso.NewProperty("discard", enabled))
 	return d
 }
 
@@ -112,7 +112,7 @@ func (d *Driver) ToggleDiscard(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=file,force-share=on|off
 func (d *Driver) ToggleForceShare(enabled bool) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("force-share", enabled))
+	d.properties = append(d.properties, queso.NewProperty("force-share", enabled))
 	return d
 }
 
@@ -124,7 +124,7 @@ func (d *Driver) ToggleForceShare(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=file,cache.no-flush=on|off
 func (d *Driver) ToggleNoCacheFlushing(enabled bool) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("cache.no-flush", enabled))
+	d.properties = append(d.properties, queso.NewProperty("cache.no-flush", enabled))
 	return d
 }
 
@@ -136,6 +136,6 @@ func (d *Driver) ToggleNoCacheFlushing(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=file,read-only=on|off
 func (d *Driver) ToggleReadOnly(enabled bool) *Driver {
-	d.properties = append(d.properties, cli.NewProperty("read-only", enabled))
+	d.properties = append(d.properties, queso.NewProperty("read-only", enabled))
 	return d
 }

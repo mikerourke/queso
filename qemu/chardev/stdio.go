@@ -1,6 +1,6 @@
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // StdioBackend connects to standard input and standard output of the QEMU process.
 type StdioBackend struct {
@@ -23,6 +23,6 @@ func NewStdioBackend(id string) *StdioBackend {
 //
 //	qemu-system-* -chardev stdio,signals=on|off
 func (b *StdioBackend) ToggleSignals(enabled bool) *StdioBackend {
-	b.properties = append(b.properties, cli.NewProperty("signals", enabled))
+	b.properties = append(b.properties, queso.NewProperty("signals", enabled))
 	return b
 }

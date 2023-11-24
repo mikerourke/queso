@@ -1,6 +1,6 @@
 package accel
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // KVMAccelerator represents an accelerator using the Kernel Virtual Machine,
 // which is a Linux kernel module. See https://wiki.qemu.org/Features/KVM
@@ -28,7 +28,7 @@ func NewKVMAccelerator() *KVMAccelerator {
 //
 //	qemu-system-* -accel kvm dirty-ring-size=bytes
 func (a *KVMAccelerator) SetDirtyRingSize(bytes int) *KVMAccelerator {
-	a.properties = append(a.properties, cli.NewProperty("dirty-ring-size", bytes))
+	a.properties = append(a.properties, queso.NewProperty("dirty-ring-size", bytes))
 	return a
 }
 
@@ -48,7 +48,7 @@ func (a *KVMAccelerator) SetDirtyRingSize(bytes int) *KVMAccelerator {
 //
 //	qemu-system-* -accel kvm eager-split-size=size
 func (a *KVMAccelerator) SetEagerSplitSize(size int) *KVMAccelerator {
-	a.properties = append(a.properties, cli.NewProperty("eager-split-size", size))
+	a.properties = append(a.properties, queso.NewProperty("eager-split-size", size))
 	return a
 }
 
@@ -77,7 +77,7 @@ const (
 //
 //	qemu-system-* -accel kvm kernel-irqchip=on|off|split
 func (a *KVMAccelerator) SetKernelIRQChip(mode KernelIRQChipMode) *KVMAccelerator {
-	a.properties = append(a.properties, cli.NewProperty("kernel-irqchip", mode))
+	a.properties = append(a.properties, queso.NewProperty("kernel-irqchip", mode))
 	return a
 }
 
@@ -85,6 +85,6 @@ func (a *KVMAccelerator) SetKernelIRQChip(mode KernelIRQChipMode) *KVMAccelerato
 //
 //	qemu-system-* -accel kvm kvm-shadow-mem=size
 func (a *KVMAccelerator) SetKVMShadowMemory(size int) *KVMAccelerator {
-	a.properties = append(a.properties, cli.NewProperty("kvm-shadow-mem", size))
+	a.properties = append(a.properties, queso.NewProperty("kvm-shadow-mem", size))
 	return a
 }

@@ -1,6 +1,6 @@
 package display
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // CursesDisplay displays video output via curses. For graphics device models which
 // support a text mode, QEMU can display this output using a curses/ncurses interface.
@@ -23,7 +23,7 @@ func NewCursesDisplay() *CursesDisplay {
 //
 //	qemu-system-* -display curses,charset=encoding
 func (d *CursesDisplay) SetCharset(encoding string) *CursesDisplay {
-	d.properties = append(d.properties, cli.NewProperty("charset", encoding))
+	d.properties = append(d.properties, queso.NewProperty("charset", encoding))
 	return d
 }
 
@@ -31,6 +31,6 @@ func (d *CursesDisplay) SetCharset(encoding string) *CursesDisplay {
 // interface. Nothing is displayed in graphical mode.
 //
 //	qemu-system-* -curses
-func WithCurses() *cli.Option {
-	return cli.NewOption("curses", "")
+func WithCurses() *queso.Option {
+	return queso.NewOption("curses", "")
 }

@@ -1,6 +1,6 @@
 package display
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // OpenGLOption is used to specify which OpenGL option to use for [SDLDisplay].
 type OpenGLOption string
@@ -45,7 +45,7 @@ func NewSDLDisplay() *SDLDisplay {
 //
 //	qemu-system-* -display sdl,grab-mod=mods
 func (d *SDLDisplay) SetMouseGrabbingKeys(mods MouseGrabbingKeys) *SDLDisplay {
-	d.properties = append(d.properties, cli.NewProperty("grab-mods", string(mods)))
+	d.properties = append(d.properties, queso.NewProperty("grab-mods", string(mods)))
 	return d
 }
 
@@ -54,7 +54,7 @@ func (d *SDLDisplay) SetMouseGrabbingKeys(mods MouseGrabbingKeys) *SDLDisplay {
 //
 //	qemu-system-* -display sdl,gl=on|off|core|es
 func (d *SDLDisplay) SetOpenGL(gl OpenGLOption) *SDLDisplay {
-	d.properties = append(d.properties, cli.NewProperty("gl", gl))
+	d.properties = append(d.properties, queso.NewProperty("gl", gl))
 	return d
 }
 
@@ -62,7 +62,7 @@ func (d *SDLDisplay) SetOpenGL(gl OpenGLOption) *SDLDisplay {
 //
 //	qemu-system-* -display sdl,show-cursor=on|off
 func (d *SDLDisplay) ToggleShowCursor(enabled bool) *SDLDisplay {
-	d.properties = append(d.properties, cli.NewProperty("show-cursor", enabled))
+	d.properties = append(d.properties, queso.NewProperty("show-cursor", enabled))
 	return d
 }
 
@@ -71,6 +71,6 @@ func (d *SDLDisplay) ToggleShowCursor(enabled bool) *SDLDisplay {
 //
 //	qemu-system-* -display sdl,window-close=on|off
 func (d *SDLDisplay) ToggleWindowClose(enabled bool) *SDLDisplay {
-	d.properties = append(d.properties, cli.NewProperty("window-close", enabled))
+	d.properties = append(d.properties, queso.NewProperty("window-close", enabled))
 	return d
 }

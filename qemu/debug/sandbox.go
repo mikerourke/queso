@@ -1,13 +1,11 @@
 package debug
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso"
 
 // Sandbox enables Seccomp mode 2 system call filter.
 type Sandbox struct {
 	Filter     bool
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewSandbox returns a new instance of Sandbox. Setting filter to true will
@@ -15,17 +13,17 @@ type Sandbox struct {
 func NewSandbox(filter bool) *Sandbox {
 	return &Sandbox{
 		Filter:     filter,
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 
-func (s *Sandbox) option() *cli.Option {
-	return cli.NewOption("sandbox", cli.StatusFromBool(s.Filter, "on", "off"), s.properties...)
+func (s *Sandbox) option() *queso.Option {
+	return queso.NewOption("sandbox", queso.StatusFromBool(s.Filter, "on", "off"), s.properties...)
 }
 
 // ToggleObsoleteSystemCalls enables or disables obsolete system calls.
 func (s *Sandbox) ToggleObsoleteSystemCalls(enabled bool) *Sandbox {
-	s.properties = append(s.properties, cli.NewProperty("obsolete", enabled))
+	s.properties = append(s.properties, queso.NewProperty("obsolete", enabled))
 	return s
 }
 
@@ -34,7 +32,7 @@ func (s *Sandbox) ToggleElevatedPrivileges(enabled bool) *Sandbox {
 	// Since a value of "on" _disables_ elevated privileges, we want to negate
 	// whatever value was passed in to indicate that elevated privileges are
 	// enabled.
-	s.properties = append(s.properties, cli.NewProperty("elevateprivileges", !enabled))
+	s.properties = append(s.properties, queso.NewProperty("elevateprivileges", !enabled))
 	return s
 }
 
@@ -42,7 +40,7 @@ func (s *Sandbox) ToggleElevatedPrivileges(enabled bool) *Sandbox {
 func (s *Sandbox) ToggleSpawning(enabled bool) *Sandbox {
 	// Since a value of "on" _disables_ spawning, we want to negate
 	// whatever value was passed in to indicate that spawning is enabled.
-	s.properties = append(s.properties, cli.NewProperty("spawn", !enabled))
+	s.properties = append(s.properties, queso.NewProperty("spawn", !enabled))
 	return s
 }
 
@@ -50,6 +48,6 @@ func (s *Sandbox) ToggleSpawning(enabled bool) *Sandbox {
 func (s *Sandbox) ToggleResourceControl(enabled bool) *Sandbox {
 	// Since a value of "on" _disables_ resource control, we want to negate
 	// whatever value was passed in to indicate that resource control is enabled.
-	s.properties = append(s.properties, cli.NewProperty("spawn", !enabled))
+	s.properties = append(s.properties, queso.NewProperty("spawn", !enabled))
 	return s
 }

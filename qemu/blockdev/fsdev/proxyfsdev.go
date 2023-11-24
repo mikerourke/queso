@@ -1,6 +1,6 @@
 package fsdev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // ProxyFileSystemDevice represents a file system device in which accesses to the
 // filesystem are done by virtfs-proxy-helper(1).
@@ -16,7 +16,7 @@ type ProxyFileSystemDevice struct {
 	// SocketInterfaceType is the type of socket interface to use (either path
 	// or file descriptor).
 	SocketInterfaceType SocketInterfaceType
-	properties          []*cli.Property
+	properties          []*queso.Property
 }
 
 // NewProxyFileSystemDevice returns a new instance of [ProxyFileSystemDevice].
@@ -37,15 +37,15 @@ func NewProxyFileSystemDevice(
 		ID:                  id,
 		SocketTarget:        socketTarget,
 		SocketInterfaceType: socketInterfaceType,
-		properties:          make([]*cli.Property, 0),
+		properties:          make([]*queso.Property, 0),
 	}
 }
 
-func (d *ProxyFileSystemDevice) option() *cli.Option {
+func (d *ProxyFileSystemDevice) option() *queso.Option {
 	properties := append(d.properties,
-		cli.NewProperty("id", d.ID),
-		cli.NewProperty(string(d.SocketInterfaceType), d.SocketTarget))
-	return cli.NewOption("fsdev", "proxy", properties...)
+		queso.NewProperty("id", d.ID),
+		queso.NewProperty(string(d.SocketInterfaceType), d.SocketTarget))
+	return queso.NewOption("fsdev", "proxy", properties...)
 }
 
 // EnableWriteOut means that host page cache will be used to read and write data but
@@ -56,7 +56,7 @@ func (d *ProxyFileSystemDevice) option() *cli.Option {
 func (d *ProxyFileSystemDevice) EnableWriteOut() *ProxyFileSystemDevice {
 	d.properties = append(d.properties,
 		// The only supported value is "immediate".
-		cli.NewProperty("writeout", "immediate"))
+		queso.NewProperty("writeout", "immediate"))
 	return d
 }
 
@@ -83,6 +83,6 @@ func (d *ProxyFileSystemDevice) SetSocketTarget(target string) *ProxyFileSystemD
 //
 //	qemu-system-* -fsdev proxy,readonly=on|off
 func (d *ProxyFileSystemDevice) ToggleReadOnly(enabled bool) *ProxyFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("readonly", enabled))
+	d.properties = append(d.properties, queso.NewProperty("readonly", enabled))
 	return d
 }

@@ -1,6 +1,6 @@
 package display
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // NoneDisplay does not display video output. The guest will still see an emulated
 // graphics card, but its output will not be displayed to the QEMU user.
@@ -25,6 +25,6 @@ func NewNoneDisplay() *NoneDisplay {
 // can still use QEMU to debug a Linux kernel with a serial console.
 //
 //	qemu-system-* -nographic
-func WithNoGraphic() *cli.Option {
-	return cli.NewOption("nographic", "")
+func WithNoGraphic() *queso.Option {
+	return queso.NewOption("nographic", "")
 }

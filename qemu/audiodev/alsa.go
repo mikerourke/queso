@@ -1,8 +1,6 @@
 package audiodev
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso"
 
 // ALSABackend represents an audio backend using ALSA. This backend is only
 // available on Linux.
@@ -40,7 +38,7 @@ func (b *ALSABackend) SetPeriodLength(direction Direction, usecs int) *ALSABacke
 //
 //	qemu-system-* -audiodev alsa,threshold=threshold
 func (b *ALSABackend) SetThreshold(usecs int) *ALSABackend {
-	b.properties = append(b.properties, cli.NewProperty("threshold", usecs))
+	b.properties = append(b.properties, queso.NewProperty("threshold", usecs))
 	return b
 }
 

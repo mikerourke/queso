@@ -1,8 +1,6 @@
 package audiodev
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso"
 
 // WAVBackend represents a backend that writes audio to a WAV file.
 type WAVBackend struct {
@@ -22,6 +20,6 @@ func NewWAVBackend(id string) *WAVBackend {
 //
 //	qemu-system-* -audiodev wav,path=path
 func (b *WAVBackend) SetPath(path string) *WAVBackend {
-	b.properties = append(b.properties, cli.NewProperty("path", path))
+	b.properties = append(b.properties, queso.NewProperty("path", path))
 	return b
 }

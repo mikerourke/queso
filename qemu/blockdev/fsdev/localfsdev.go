@@ -1,8 +1,8 @@
 package fsdev
 
 import (
+	"github.com/mikerourke/queso"
 	"github.com/mikerourke/queso/qemu/blockdev"
-	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // LocalFileSystemDevice represents a file system device in which accesses to the
@@ -18,7 +18,7 @@ type LocalFileSystemDevice struct {
 	// SecurityModel is used to specify the security model to be used for the export
 	// path in file system devices.
 	SecurityModel SecurityModel
-	properties    []*cli.Property
+	properties    []*queso.Property
 }
 
 // NewLocalFileSystemDevice returns a new instance of [LocalFileSystemDevice].
@@ -33,16 +33,16 @@ func NewLocalFileSystemDevice(id string, path string, model SecurityModel) *Loca
 		ID:            id,
 		Path:          path,
 		SecurityModel: model,
-		properties:    make([]*cli.Property, 0),
+		properties:    make([]*queso.Property, 0),
 	}
 }
 
-func (d *LocalFileSystemDevice) option() *cli.Option {
+func (d *LocalFileSystemDevice) option() *queso.Option {
 	properties := append(d.properties,
-		cli.NewProperty("id", d.ID),
-		cli.NewProperty("path", d.Path),
-		cli.NewProperty("security_model", d.SecurityModel))
-	return cli.NewOption("fsdev", "local", properties...)
+		queso.NewProperty("id", d.ID),
+		queso.NewProperty("path", d.Path),
+		queso.NewProperty("security_model", d.SecurityModel))
+	return queso.NewOption("fsdev", "local", properties...)
 }
 
 // EnableWriteOut means that host page cache will be used to read and write data but
@@ -53,7 +53,7 @@ func (d *LocalFileSystemDevice) option() *cli.Option {
 func (d *LocalFileSystemDevice) EnableWriteOut() *LocalFileSystemDevice {
 	d.properties = append(d.properties,
 		// The only supported value is "immediate".
-		cli.NewProperty("writeout", "immediate"))
+		queso.NewProperty("writeout", "immediate"))
 	return d
 }
 
@@ -67,17 +67,17 @@ func (d *LocalFileSystemDevice) SetBandwidthBursts(
 	operation blockdev.IOOperation,
 	bps int,
 ) *LocalFileSystemDevice {
-	var property *cli.Property
+	var property *queso.Property
 
 	switch operation {
 	case blockdev.IORead:
-		property = cli.NewProperty("throttling.bps_rd_max", bps)
+		property = queso.NewProperty("throttling.bps_rd_max", bps)
 
 	case blockdev.IOWrite:
-		property = cli.NewProperty("throttling.bps_wr_max", bps)
+		property = queso.NewProperty("throttling.bps_wr_max", bps)
 
 	case blockdev.IOAll:
-		property = cli.NewProperty("throttling.bps_max", bps)
+		property = queso.NewProperty("throttling.bps_max", bps)
 	}
 
 	d.properties = append(d.properties, property)
@@ -94,17 +94,17 @@ func (d *LocalFileSystemDevice) SetBandwidthThrottling(
 	operation blockdev.IOOperation,
 	bps int,
 ) *LocalFileSystemDevice {
-	var property *cli.Property
+	var property *queso.Property
 
 	switch operation {
 	case blockdev.IORead:
-		property = cli.NewProperty("throttling.bps_rd", bps)
+		property = queso.NewProperty("throttling.bps_rd", bps)
 
 	case blockdev.IOWrite:
-		property = cli.NewProperty("throttling.bps_wr", bps)
+		property = queso.NewProperty("throttling.bps_wr", bps)
 
 	case blockdev.IOAll:
-		property = cli.NewProperty("throttling.bps", bps)
+		property = queso.NewProperty("throttling.bps", bps)
 	}
 
 	d.properties = append(d.properties, property)
@@ -117,7 +117,7 @@ func (d *LocalFileSystemDevice) SetBandwidthThrottling(
 //
 //	qemu-system-* -fsdev local,dmode=mode
 func (d *LocalFileSystemDevice) SetDirectoryMode(mode string) *LocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("dmode", mode))
+	d.properties = append(d.properties, queso.NewProperty("dmode", mode))
 	return d
 }
 
@@ -127,7 +127,7 @@ func (d *LocalFileSystemDevice) SetDirectoryMode(mode string) *LocalFileSystemDe
 //
 //	qemu-system-* -fsdev local,fmode=mode
 func (d *LocalFileSystemDevice) SetFileMode(mode string) *LocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("fmode", mode))
+	d.properties = append(d.properties, queso.NewProperty("fmode", mode))
 	return d
 }
 
@@ -158,17 +158,17 @@ func (d *LocalFileSystemDevice) SetRequestRateBursts(
 	operation blockdev.IOOperation,
 	rps int,
 ) *LocalFileSystemDevice {
-	var property *cli.Property
+	var property *queso.Property
 
 	switch operation {
 	case blockdev.IORead:
-		property = cli.NewProperty("throttling.iops_rd_max", rps)
+		property = queso.NewProperty("throttling.iops_rd_max", rps)
 
 	case blockdev.IOWrite:
-		property = cli.NewProperty("throttling.iops_wr_max", rps)
+		property = queso.NewProperty("throttling.iops_wr_max", rps)
 
 	case blockdev.IOAll:
-		property = cli.NewProperty("throttling.iops_max", rps)
+		property = queso.NewProperty("throttling.iops_max", rps)
 	}
 
 	d.properties = append(d.properties, property)
@@ -185,17 +185,17 @@ func (d *LocalFileSystemDevice) SetRequestRateLimits(
 	operation blockdev.IOOperation,
 	rps int,
 ) *LocalFileSystemDevice {
-	var property *cli.Property
+	var property *queso.Property
 
 	switch operation {
 	case blockdev.IORead:
-		property = cli.NewProperty("throttling.iops_rd", rps)
+		property = queso.NewProperty("throttling.iops_rd", rps)
 
 	case blockdev.IOWrite:
-		property = cli.NewProperty("throttling.iops_wr", rps)
+		property = queso.NewProperty("throttling.iops_wr", rps)
 
 	case blockdev.IOAll:
-		property = cli.NewProperty("throttling.iops", rps)
+		property = queso.NewProperty("throttling.iops", rps)
 	}
 
 	d.properties = append(d.properties, property)
@@ -207,7 +207,7 @@ func (d *LocalFileSystemDevice) SetRequestRateLimits(
 //
 //	qemu-system-* -fsdev local,throttling.iops_size=bytes
 func (d *LocalFileSystemDevice) SetRequestSize(bytes int) *LocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("throttling.iops_size", bytes))
+	d.properties = append(d.properties, queso.NewProperty("throttling.iops_size", bytes))
 	return d
 }
 
@@ -225,6 +225,6 @@ func (d *LocalFileSystemDevice) SetSecurityModel(model SecurityModel) *LocalFile
 //
 //	qemu-system-* -fsdev local,readonly=on|off
 func (d *LocalFileSystemDevice) ToggleReadOnly(enabled bool) *LocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("readonly", enabled))
+	d.properties = append(d.properties, queso.NewProperty("readonly", enabled))
 	return d
 }

@@ -1,6 +1,6 @@
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // FileBackend logs all traffic received from the guest to a file.
 type FileBackend struct {
@@ -29,6 +29,6 @@ func NewFileBackend(id string, path string) *FileBackend {
 //
 //	qemu-system-* -chardev file,input-path=path
 func (b *FileBackend) SetInputPath(path string) *FileBackend {
-	b.properties = append(b.properties, cli.NewProperty("input-path", path))
+	b.properties = append(b.properties, queso.NewProperty("input-path", path))
 	return b
 }

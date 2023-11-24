@@ -1,6 +1,6 @@
 package fsdev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // VirtualLocalFileSystemDevice represents a virtual file system device in which
 // accesses to the filesystem are done by QEMU.
@@ -15,7 +15,7 @@ type VirtualLocalFileSystemDevice struct {
 	// SecurityModel is used to specify the security model to be used for the export
 	// path in file system devices.
 	SecurityModel SecurityModel
-	properties    []*cli.Property
+	properties    []*queso.Property
 }
 
 // NewVirtualLocalFileSystemDevice returns a new instance of [VirtualLocalFileSystemDevice].
@@ -34,16 +34,16 @@ func NewVirtualLocalFileSystemDevice(
 		MountTag:      mountTag,
 		Path:          path,
 		SecurityModel: model,
-		properties:    make([]*cli.Property, 0),
+		properties:    make([]*queso.Property, 0),
 	}
 }
 
-func (d *VirtualLocalFileSystemDevice) option() *cli.Option {
+func (d *VirtualLocalFileSystemDevice) option() *queso.Option {
 	properties := append(d.properties,
-		cli.NewProperty("mount_tag", d.MountTag),
-		cli.NewProperty("path", d.Path),
-		cli.NewProperty("security_model", d.SecurityModel))
-	return cli.NewOption("virtfs", "local", properties...)
+		queso.NewProperty("mount_tag", d.MountTag),
+		queso.NewProperty("path", d.Path),
+		queso.NewProperty("security_model", d.SecurityModel))
+	return queso.NewOption("virtfs", "local", properties...)
 }
 
 // EnableWriteOut means that host page cache will be used to read and write data but
@@ -54,7 +54,7 @@ func (d *VirtualLocalFileSystemDevice) option() *cli.Option {
 func (d *VirtualLocalFileSystemDevice) EnableWriteOut() *VirtualLocalFileSystemDevice {
 	d.properties = append(d.properties,
 		// The only supported value is "immediate".
-		cli.NewProperty("writeout", "immediate"))
+		queso.NewProperty("writeout", "immediate"))
 	return d
 }
 
@@ -64,7 +64,7 @@ func (d *VirtualLocalFileSystemDevice) EnableWriteOut() *VirtualLocalFileSystemD
 //
 //	qemu-system-* -virtfs local,dmode=mode
 func (d *VirtualLocalFileSystemDevice) SetDirectoryMode(mode string) *VirtualLocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("dmode", mode))
+	d.properties = append(d.properties, queso.NewProperty("dmode", mode))
 	return d
 }
 
@@ -74,7 +74,7 @@ func (d *VirtualLocalFileSystemDevice) SetDirectoryMode(mode string) *VirtualLoc
 //
 //	qemu-system-* -virtfs local,fmode=mode
 func (d *VirtualLocalFileSystemDevice) SetFileMode(mode string) *VirtualLocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("fmode", mode))
+	d.properties = append(d.properties, queso.NewProperty("fmode", mode))
 	return d
 }
 
@@ -122,7 +122,7 @@ const (
 //
 //	qemu-system-* -virtfs local,multidevs=sharing
 func (d *VirtualLocalFileSystemDevice) SetMultiDeviceSharing(sharing MultiDeviceSharing) *VirtualLocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("multidevs", string(sharing)))
+	d.properties = append(d.properties, queso.NewProperty("multidevs", string(sharing)))
 	return d
 }
 
@@ -149,6 +149,6 @@ func (d *VirtualLocalFileSystemDevice) SetSecurityModel(model SecurityModel) *Vi
 //
 //	qemu-system-* -virtfs local,readonly=on|off
 func (d *VirtualLocalFileSystemDevice) ToggleReadOnly(enabled bool) *VirtualLocalFileSystemDevice {
-	d.properties = append(d.properties, cli.NewProperty("readonly", enabled))
+	d.properties = append(d.properties, queso.NewProperty("readonly", enabled))
 	return d
 }

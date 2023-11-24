@@ -1,6 +1,6 @@
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // SocketBackend creates a two-way stream socket, which can be either a TCP or a
 // Unix socket.
@@ -24,7 +24,7 @@ func NewSocketBackend(id string) *SocketBackend {
 //
 //	qemu-system-* -chardev socket,reconnect=seconds
 func (b *SocketBackend) SetReconnectTimeout(seconds int) *SocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("reconnect", seconds))
+	b.properties = append(b.properties, queso.NewProperty("reconnect", seconds))
 	return b
 }
 
@@ -35,7 +35,7 @@ func (b *SocketBackend) SetReconnectTimeout(seconds int) *SocketBackend {
 //
 //	qemu-system-* -chardev socket,tls-auth=id
 func (b *SocketBackend) SetTLSAuth(id string) *SocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("tls-auth", id))
+	b.properties = append(b.properties, queso.NewProperty("tls-auth", id))
 	return b
 }
 
@@ -46,7 +46,7 @@ func (b *SocketBackend) SetTLSAuth(id string) *SocketBackend {
 //
 //	qemu-system-* -chardev socket,tls-creds=id
 func (b *SocketBackend) SetTLSCredentials(id string) *SocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("tls-creds", id))
+	b.properties = append(b.properties, queso.NewProperty("tls-creds", id))
 	return b
 }
 
@@ -55,7 +55,7 @@ func (b *SocketBackend) SetTLSCredentials(id string) *SocketBackend {
 //
 //	qemu-system-* -chardev socket,wait=on|off
 func (b *SocketBackend) ToggleBlockWaitingForClient(enabled bool) *SocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("server", enabled))
+	b.properties = append(b.properties, queso.NewProperty("server", enabled))
 	return b
 }
 
@@ -63,7 +63,7 @@ func (b *SocketBackend) ToggleBlockWaitingForClient(enabled bool) *SocketBackend
 //
 //	qemu-system-* -chardev socket,server=on|off
 func (b *SocketBackend) ToggleListening(enabled bool) *SocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("server", enabled))
+	b.properties = append(b.properties, queso.NewProperty("server", enabled))
 	return b
 }
 
@@ -72,7 +72,7 @@ func (b *SocketBackend) ToggleListening(enabled bool) *SocketBackend {
 //
 //	qemu-system-* -chardev socket,telnet=on|off
 func (b *SocketBackend) ToggleTelnetEscapeSequences(enabled bool) *SocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("telnet", enabled))
+	b.properties = append(b.properties, queso.NewProperty("telnet", enabled))
 	return b
 }
 
@@ -81,7 +81,7 @@ func (b *SocketBackend) ToggleTelnetEscapeSequences(enabled bool) *SocketBackend
 //
 //	qemu-system-* -chardev socket,websocket=on|off
 func (b *SocketBackend) ToggleWebSocketProtocol(enabled bool) *SocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("websocket", enabled))
+	b.properties = append(b.properties, queso.NewProperty("websocket", enabled))
 	return b
 }
 
@@ -111,7 +111,7 @@ func NewTCPSocketBackend(id string, port string) *TCPSocketBackend {
 //
 //	qemu-system-* -chardev socket,host=host
 func (b *TCPSocketBackend) SetHost(host string) *TCPSocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("host", host))
+	b.properties = append(b.properties, queso.NewProperty("host", host))
 	return b
 }
 
@@ -121,7 +121,7 @@ func (b *TCPSocketBackend) SetHost(host string) *TCPSocketBackend {
 //
 //	qemu-system-* -chardev socket,to=to
 func (b *TCPSocketBackend) SetToPort(to int) *TCPSocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("to", to))
+	b.properties = append(b.properties, queso.NewProperty("to", to))
 	return b
 }
 
@@ -129,7 +129,7 @@ func (b *TCPSocketBackend) SetToPort(to int) *TCPSocketBackend {
 //
 //	qemu-system-* -chardev socket,ipv4=on|off
 func (b *TCPSocketBackend) ToggleIPv4(enabled bool) *TCPSocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("ipv4", enabled))
+	b.properties = append(b.properties, queso.NewProperty("ipv4", enabled))
 	return b
 }
 
@@ -137,7 +137,7 @@ func (b *TCPSocketBackend) ToggleIPv4(enabled bool) *TCPSocketBackend {
 //
 //	qemu-system-* -chardev socket,ipv6=on|off
 func (b *TCPSocketBackend) ToggleIPv6(enabled bool) *TCPSocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("ipv6", enabled))
+	b.properties = append(b.properties, queso.NewProperty("ipv6", enabled))
 	return b
 }
 
@@ -145,7 +145,7 @@ func (b *TCPSocketBackend) ToggleIPv6(enabled bool) *TCPSocketBackend {
 //
 //	qemu-system-* -chardev socket,nodelay=on|off
 func (b *TCPSocketBackend) ToggleNoDelay(enabled bool) *TCPSocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("nodelay", enabled))
+	b.properties = append(b.properties, queso.NewProperty("nodelay", enabled))
 	return b
 }
 
@@ -173,7 +173,7 @@ func NewUnixSocketBackend(id string, path string) *UnixSocketBackend {
 //
 //	qemu-system-* -chardev socket,abstract=on|off
 func (b *UnixSocketBackend) ToggleAbstractNamespace(enabled bool) *UnixSocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("abstract", enabled))
+	b.properties = append(b.properties, queso.NewProperty("abstract", enabled))
 	return b
 }
 
@@ -182,6 +182,6 @@ func (b *UnixSocketBackend) ToggleAbstractNamespace(enabled bool) *UnixSocketBac
 //
 //	qemu-system-* -chardev socket,tight=on|off
 func (b *UnixSocketBackend) ToggleTight(enabled bool) *UnixSocketBackend {
-	b.properties = append(b.properties, cli.NewProperty("tight", enabled))
+	b.properties = append(b.properties, queso.NewProperty("tight", enabled))
 	return b
 }

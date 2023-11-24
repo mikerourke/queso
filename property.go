@@ -22,6 +22,12 @@ func NewProperty(key string, value interface{}) *Property {
 
 // Arg converts the property to a value that gets passed into the command line.
 func (p *Property) Arg() string {
+	stringVal := p.stringValue()
+
+	return fmt.Sprintf("%s=%s", p.Key, stringVal)
+}
+
+func (p *Property) stringValue() string {
 	stringVal := fmt.Sprintf("%v", p.Value)
 
 	if reflect.TypeOf(p.Value).Kind() == reflect.Bool {
@@ -32,7 +38,7 @@ func (p *Property) Arg() string {
 		}
 	}
 
-	return fmt.Sprintf("%s=%s", p.Key, stringVal)
+	return stringVal
 }
 
 // PropertiesTable returns a map of the properties with key of property name
@@ -41,15 +47,7 @@ func PropertiesTable(properties []*Property) map[string]string {
 	table := make(map[string]string)
 
 	for _, property := range properties {
-		stringVal := fmt.Sprintf("%v", property.Value)
-
-		if reflect.TypeOf(property.Value).Kind() == reflect.Bool {
-			if reflect.ValueOf(property.Value).Bool() {
-				stringVal = "on"
-			} else {
-				stringVal = "off"
-			}
-		}
+		stringVal := property.stringValue()
 
 		table[property.Key] = stringVal
 	}

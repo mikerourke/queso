@@ -1,6 +1,6 @@
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // RingBufferBackend represents a ring buffer with fixed size.
 type RingBufferBackend struct {
@@ -22,6 +22,6 @@ func NewRingBufferBackend(id string) *RingBufferBackend {
 //
 //	qemu-system-* -chardev ringbuf,size=size
 func (b *RingBufferBackend) SetSize(size string) *RingBufferBackend {
-	b.properties = append(b.properties, cli.NewProperty("size", size))
+	b.properties = append(b.properties, queso.NewProperty("size", size))
 	return b
 }

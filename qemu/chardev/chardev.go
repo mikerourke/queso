@@ -1,7 +1,7 @@
 // Package chardev is used to add character device backends.
 package chardev
 
-import "github.com/mikerourke/queso/qemu/cli"
+import "github.com/mikerourke/queso"
 
 // Backend represents a generic character device backend of any allowed type.
 type Backend struct {
@@ -10,7 +10,7 @@ type Backend struct {
 
 	// ID is the unique ID, which can be any string up to 127 characters long.
 	ID         string
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewBackend returns a new instance of [Backend]. backendType is the type of
@@ -22,19 +22,19 @@ func NewBackend(backendType string, id string) *Backend {
 	return &Backend{
 		Type:       backendType,
 		ID:         id,
-		properties: make([]*cli.Property, 0),
+		properties: make([]*queso.Property, 0),
 	}
 }
 
-func (b *Backend) option() *cli.Option {
-	properties := append(b.properties, cli.NewProperty("id", b.ID))
+func (b *Backend) option() *queso.Option {
+	properties := append(b.properties, queso.NewProperty("id", b.ID))
 
-	return cli.NewOption("chardev", b.Type, properties...)
+	return queso.NewOption("chardev", b.Type, properties...)
 }
 
 // SetProperty can be used to set arbitrary properties on the backend.
 func (b *Backend) SetProperty(name string, value interface{}) *Backend {
-	b.properties = append(b.properties, cli.NewProperty(name, value))
+	b.properties = append(b.properties, queso.NewProperty(name, value))
 	return b
 }
 
@@ -55,6 +55,6 @@ func (b *Backend) SetProperty(name string, value interface{}) *Backend {
 //
 //	TODO
 func (b *Backend) ToggleMultiplexing(enabled bool) *Backend {
-	b.properties = append(b.properties, cli.NewProperty("mux", enabled))
+	b.properties = append(b.properties, queso.NewProperty("mux", enabled))
 	return b
 }

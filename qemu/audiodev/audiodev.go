@@ -4,7 +4,7 @@ package audiodev
 import (
 	"fmt"
 
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso"
 )
 
 // Direction is used to qualify an audio device property for a backend.
@@ -24,7 +24,7 @@ const (
 // use specified backends (e.g. [ALSABackend]).
 type Backend struct {
 	DriverName string
-	properties []*cli.Property
+	properties []*queso.Property
 }
 
 // NewBackend returns a new instance of a generic audio [Backend]. driverName
@@ -35,19 +35,19 @@ type Backend struct {
 func NewBackend(driverName string, id string) *Backend {
 	return &Backend{
 		DriverName: driverName,
-		properties: []*cli.Property{
-			cli.NewProperty("id", id),
+		properties: []*queso.Property{
+			queso.NewProperty("id", id),
 		},
 	}
 }
 
-func (b *Backend) option() *cli.Option {
-	return cli.NewOption("audiodev", b.DriverName, b.properties...)
+func (b *Backend) option() *queso.Option {
+	return queso.NewOption("audiodev", b.DriverName, b.properties...)
 }
 
 // SetProperty is used to add arbitrary properties to the [Backend].
 func (b *Backend) SetProperty(key string, value interface{}) *Backend {
-	b.properties = append(b.properties, cli.NewProperty(key, value))
+	b.properties = append(b.properties, queso.NewProperty(key, value))
 	return b
 }
 
@@ -119,7 +119,7 @@ func (b *Backend) SetSampleFormat(direction Direction, format SampleFormat) *Bac
 //
 //	qemu-system-* -audiodev pa,timer-period=period
 func (b *Backend) SetTimerPeriod(period int) *Backend {
-	b.properties = append(b.properties, cli.NewProperty("timer-period", period))
+	b.properties = append(b.properties, queso.NewProperty("timer-period", period))
 	return b
 }
 
@@ -156,6 +156,6 @@ func (b *Backend) ToggleMixingEngine(direction Direction, enabled bool) *Backend
 	return b
 }
 
-func newDirectionProperty(key string, direction Direction, value interface{}) *cli.Property {
-	return cli.NewProperty(fmt.Sprintf("%s.%s", direction, key), value)
+func newDirectionProperty(key string, direction Direction, value interface{}) *queso.Property {
+	return queso.NewProperty(fmt.Sprintf("%s.%s", direction, key), value)
 }

@@ -1,8 +1,6 @@
 package audiodev
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso"
 
 // OSSBackend represents an audio backend using OSS. This backend is available
 // on most Unix-like systems.
@@ -43,7 +41,7 @@ func (b *OSSBackend) SetDevice(direction Direction, device string) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,dsp-policy=policy
 func (b *OSSBackend) SetDSPPolicy(policy int) *OSSBackend {
-	b.properties = append(b.properties, cli.NewProperty("dsp-policy", policy))
+	b.properties = append(b.properties, queso.NewProperty("dsp-policy", policy))
 	return b
 }
 
@@ -52,7 +50,7 @@ func (b *OSSBackend) SetDSPPolicy(policy int) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,exclusive=on|off
 func (b *OSSBackend) ToggleExclusive(enabled bool) *OSSBackend {
-	b.properties = append(b.properties, cli.NewProperty("exclusive", enabled))
+	b.properties = append(b.properties, queso.NewProperty("exclusive", enabled))
 	return b
 }
 
@@ -61,7 +59,7 @@ func (b *OSSBackend) ToggleExclusive(enabled bool) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,try-mmap=on|off
 func (b *OSSBackend) ToggleTryMMAP(enabled bool) *OSSBackend {
-	b.properties = append(b.properties, cli.NewProperty("try-mmap", enabled))
+	b.properties = append(b.properties, queso.NewProperty("try-mmap", enabled))
 	return b
 }
 
