@@ -1,5 +1,7 @@
 package qemu
 
+import "github.com/mikerourke/queso/qemu/cli"
+
 // Memory sets guest startup RAM size to specified size in megabytes. Default is 128 MiB.
 // Optionally, a suffix of "M" or "G" can be used to signify a value in megabytes
 // or gigabytes respectively.

@@ -2,7 +2,9 @@ package accel
 
 import "github.com/mikerourke/queso/qemu/cli"
 
-// TCGAccelerator represents an accelerator using tiny code generation (TCG).
+// TCGAccelerator represents an accelerator using the Tiny Code Generator, which
+// is the core binary translation engine for QEMU. See https://wiki.qemu.org/Features/TCG
+// for more details.
 type TCGAccelerator struct {
 	*Accelerator
 }
@@ -12,7 +14,7 @@ type TCGAccelerator struct {
 //	qemu-system-* -accel tcg
 func NewTCGAccelerator() *TCGAccelerator {
 	return &TCGAccelerator{
-		NewAccelerator(TCG),
+		New(TypeTCG),
 	}
 }
 

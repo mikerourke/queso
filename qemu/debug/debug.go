@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // AcceptGDBConnectionOnDevice accepts a GDB connection on the specified device.
@@ -276,7 +278,7 @@ func OldParamMode() *cli.Option {
 
 // ReadConfigurationFile reads device configuration from file. This approach is
 // useful when you want to spawn a QEMU process with many command line options,
-// but you don’t want to exceed the command line character limit.
+// but you don't want to exceed the command line character limit.
 func ReadConfigurationFile(file string) *cli.Option {
 	return cli.NewOption("readconfig", file)
 }

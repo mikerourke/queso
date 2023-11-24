@@ -2,17 +2,19 @@ package accel
 
 import "github.com/mikerourke/queso/qemu/cli"
 
-// KVMAccelerator represents an accelerator using KVM.
+// KVMAccelerator represents an accelerator using the Kernel Virtual Machine,
+// which is a Linux kernel module. See https://wiki.qemu.org/Features/KVM
+// for more details.
 type KVMAccelerator struct {
 	*Accelerator
 }
 
-// NewKVMAccelerator returns a new instace of KVMAccelerator.
+// NewKVMAccelerator returns a new instace of [KVMAccelerator].
 //
 //	qemu-system-* -accel kvm
 func NewKVMAccelerator() *KVMAccelerator {
 	return &KVMAccelerator{
-		NewAccelerator(KVM),
+		New(TypeKVM),
 	}
 }
 

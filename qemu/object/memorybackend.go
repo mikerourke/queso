@@ -3,6 +3,7 @@ package object
 import (
 	"strings"
 
+	"github.com/mikerourke/queso/qemu/cli"
 	"github.com/mikerourke/queso/qemu/numa"
 )
 
@@ -42,7 +43,7 @@ func (b *MemoryBackend) SetHostNodes(ids []string) *MemoryBackend {
 //
 //	qemu-system-* -object memory-backend-*,policy=default|preferred|bind|interleave
 func (b *MemoryBackend) SetNUMAPolicy(policy numa.Policy) *MemoryBackend {
-	b.properties = append(b.properties, cli.NewProperty("policy", policy.String()))
+	b.properties = append(b.properties, cli.NewProperty("policy", string(policy)))
 	return b
 }
 

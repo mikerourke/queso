@@ -7,14 +7,15 @@ import (
 	"github.com/mikerourke/queso/qemu/cli"
 )
 
-// Device represents a device used with QEMU (via the `-device` flag).
+// Device represents a device used with QEMU.
 type Device struct {
 	Type       string
 	properties []*cli.Property
 }
 
-// New returns a new Device instance that can be passed into the WithDevices
-// function.
+// New returns a new instance of a [Device].
+//
+//	qemu-system-* -device <deviceType>
 func New(deviceType string) *Device {
 	return &Device{
 		Type:       deviceType,

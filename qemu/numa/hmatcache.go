@@ -1,8 +1,6 @@
 package numa
 
-import (
-	"github.com/mikerourke/queso"
-)
+import "github.com/mikerourke/queso"
 
 // CacheAssociativity represents the possible values for the WithCacheAssociativity
 // property.

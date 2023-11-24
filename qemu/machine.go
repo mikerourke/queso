@@ -2,10 +2,12 @@ package qemu
 
 import (
 	"strings"
+
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // VMWareIOPortFlag represents the flag to pass to the SetVMWareIOPort method
-// for a Machine.
+// for a [Machine].
 type VMWareIOPortFlag string
 
 const (
@@ -52,12 +54,11 @@ func NewMachine() *Machine {
 	}
 }
 
-// Option returns the Machine settings as an Option for use in command line.
 func (m *Machine) option() *cli.Option {
 	return cli.NewOption("machine", m.Name, m.properties...)
 }
 
-// SetProperty is used to add arbitrary properties to the Machine.
+// SetProperty is used to add arbitrary properties to the [Machine].
 func (m *Machine) SetProperty(key string, value interface{}) *Machine {
 	m.properties = append(m.properties, cli.NewProperty(key, value))
 	return m

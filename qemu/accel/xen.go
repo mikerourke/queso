@@ -12,7 +12,7 @@ type XenAccelerator struct {
 //	qemu-system-* -accel xen
 func NewXenAccelerator() *XenAccelerator {
 	return &XenAccelerator{
-		NewAccelerator(Xen),
+		New(TypeXen),
 	}
 }
 

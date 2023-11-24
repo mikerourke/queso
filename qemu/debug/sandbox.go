@@ -1,7 +1,6 @@
 package debug
 
 import (
-	"github.com/mikerourke/queso/internal/cli"
 	"github.com/mikerourke/queso/qemu/cli"
 )
 
@@ -21,7 +20,7 @@ func NewSandbox(filter bool) *Sandbox {
 }
 
 func (s *Sandbox) option() *cli.Option {
-	return cli.NewOption("sandbox", cli.BoolPropertyToState(s.Filter), s.properties...)
+	return cli.NewOption("sandbox", cli.StatusFromBool(s.Filter, "on", "off"), s.properties...)
 }
 
 // ToggleObsoleteSystemCalls enables or disables obsolete system calls.

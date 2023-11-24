@@ -20,11 +20,18 @@ const (
 	Output Direction = "out"
 )
 
+// Backend represents a generic audio device backend. If possible, try to
+// use specified backends (e.g. [ALSABackend]).
 type Backend struct {
 	DriverName string
 	properties []*cli.Property
 }
 
+// NewBackend returns a new instance of a generic audio [Backend]. driverName
+// is the name of the driver associated with the backend. id is a unique identifier
+// for the backend.
+//
+//	qemu-system-* -audiodev <driverName>,id=id
 func NewBackend(driverName string, id string) *Backend {
 	return &Backend{
 		DriverName: driverName,
@@ -36,6 +43,12 @@ func NewBackend(driverName string, id string) *Backend {
 
 func (b *Backend) option() *cli.Option {
 	return cli.NewOption("audiodev", b.DriverName, b.properties...)
+}
+
+// SetProperty is used to add arbitrary properties to the [Backend].
+func (b *Backend) SetProperty(key string, value interface{}) *Backend {
+	b.properties = append(b.properties, cli.NewProperty(key, value))
+	return b
 }
 
 // SetBufferLength sets the size of the buffer in microseconds.

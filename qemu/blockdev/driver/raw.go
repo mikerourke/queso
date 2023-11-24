@@ -1,4 +1,4 @@
-package blockdev
+package driver
 
 import "github.com/mikerourke/queso/qemu/cli"
 

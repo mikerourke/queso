@@ -1,4 +1,4 @@
-package blockdev
+package driver
 
 import "github.com/mikerourke/queso/qemu/cli"
 
@@ -122,7 +122,7 @@ func (d *QCOW2Driver) SetTotalCacheSize(bytes int) *QCOW2Driver {
 //
 // If image file length is of concern (e.g. when storing QCOW2 images directly on
 // block devices), you should consider enabling this option.
-func (d *Driver) ToggleDiscardNoUnref(enabled bool) *Driver {
+func (d *QCOW2Driver) ToggleDiscardNoUnref(enabled bool) *QCOW2Driver {
 	d.properties = append(d.properties, cli.NewProperty("discard-no-unref", enabled))
 	return d
 }
@@ -131,7 +131,7 @@ func (d *Driver) ToggleDiscardNoUnref(enabled bool) *Driver {
 // The default is taken from the image file.
 //
 //	qemu-system-* -blockdev driver=qcow2,lazy-refcounts=on|off
-func (d *Driver) ToggleLazyRefcounts(enabled bool) *Driver {
+func (d *QCOW2Driver) ToggleLazyRefcounts(enabled bool) *QCOW2Driver {
 	d.properties = append(d.properties, cli.NewProperty("lazy-refcounts", enabled))
 	return d
 }
@@ -140,17 +140,17 @@ func (d *Driver) ToggleLazyRefcounts(enabled bool) *Driver {
 // be issued on other occasions where a cluster gets freed. The default is false.
 //
 //	qemu-system-* -blockdev driver=qcow2,pass-discard-other=on|off
-func (d *Driver) TogglePassDiscardOther(enabled bool) *Driver {
+func (d *QCOW2Driver) TogglePassDiscardOther(enabled bool) *QCOW2Driver {
 	d.properties = append(d.properties, cli.NewProperty("pass-discard-other", enabled))
 	return d
 }
 
 // TogglePassDiscardRequests specifies whether discard requests to the QCOW2 device should
-// be forwarded to the data source. The default is true if [Driver.ToggleDiscard] is
+// be forwarded to the data source. The default is true if [QCOW2Driver.ToggleDiscard] is
 // specified, false otherwise.
 //
 //	qemu-system-* -blockdev driver=qcow2,pass-discard-request=on|off
-func (d *Driver) TogglePassDiscardRequests(enabled bool) *Driver {
+func (d *QCOW2Driver) TogglePassDiscardRequests(enabled bool) *QCOW2Driver {
 	d.properties = append(d.properties, cli.NewProperty("pass-discard-request", enabled))
 	return d
 }
@@ -160,7 +160,7 @@ func (d *Driver) TogglePassDiscardRequests(enabled bool) *Driver {
 // clusters in the QCOW2 file. The default is true.
 //
 //	qemu-system-* -blockdev driver=qcow2,pass-discard-snapshot=on|off
-func (d *Driver) TogglePassDiscardSnapshots(enabled bool) *Driver {
+func (d *QCOW2Driver) TogglePassDiscardSnapshots(enabled bool) *QCOW2Driver {
 	d.properties = append(d.properties, cli.NewProperty("pass-discard-snapshot", enabled))
 	return d
 }

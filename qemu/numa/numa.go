@@ -19,8 +19,3 @@ const (
 	// node list.
 	PolicyInterleave Policy = "interleave"
 )
-
-// String returns the string representation of the [numa.Policy].
-func (p Policy) String() string {
-	return string(p)
-}

@@ -60,7 +60,7 @@ func SecretData(
 //	openssl rand -base64 16 > iv.b64
 //	IV=$(base64 -d iv.b64 | hexdump  -v -e '/1 "%02X"')
 //
-// The secret to be defined can now be encrypted, in this case we’re telling
+// The secret to be defined can now be encrypted, in this case we're telling
 // openssl to base64 encode the result, but it could be left as raw bytes if desired.
 //
 //	SECRET=$(printf "letmein" | openssl enc -aes-256-cbc -a -K $KEY -iv $IV)

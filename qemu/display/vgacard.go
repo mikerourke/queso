@@ -1,8 +1,6 @@
 package display
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso/qemu/cli"
 
 // VGACard represents the VGA card to emulate.
 type VGACard string
@@ -46,16 +44,17 @@ const (
 	VGACardVirtio VGACard = "virtio"
 )
 
-// EmulateVGACard emulates the specified VGA card.
+// WithEmulatedVGACard emulates the specified VGA card. See [VGACard] for more
+// details.
 //
 //	qemu-system-* -vga type
-func EmulateVGACard(card VGACard) *cli.Option {
+func WithEmulatedVGACard(card VGACard) *cli.Option {
 	return cli.NewOption("vga", string(card))
 }
 
-// NoVGA is a shortcut for using `-vga` with the "none" option.
+// WithNoVGA is a shortcut for using `-vga` with the "none" option.
 //
 //	qemu-system-* -vga none
-func NoVGA() *cli.Option {
+func WithNoVGA() *cli.Option {
 	return cli.NewOption("vga", string(VGACardNone))
 }

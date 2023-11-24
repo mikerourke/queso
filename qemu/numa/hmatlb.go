@@ -1,8 +1,6 @@
 package numa
 
-import (
-	"github.com/mikerourke/queso"
-)
+import "github.com/mikerourke/queso"
 
 type HMATLB struct {
 	properties []*queso.Property

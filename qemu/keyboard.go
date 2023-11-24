@@ -4,7 +4,7 @@ import (
 	"github.com/mikerourke/queso/qemu/cli"
 )
 
-// Language represents the KeyboardLayout language to use.
+// Language represents the WithKeyboardLayout language to use.
 type Language string
 
 // TODO: Find out what SL and SV languages are (not in text file).
@@ -46,11 +46,11 @@ const (
 	LanguageSV                Language = "sv"
 )
 
-// KeyboardLayout specifies the keyboard layout language (for example
+// WithKeyboardLayout specifies the keyboard layout language (for example
 // LanguageFrench for French). This option is only needed where it is
 // not easy to get raw PC keycodes (e.g. on Macs, with some X11 servers or with
 // a VNC or curses display). You don't normally need to use it on PC/Linux or
 // PC/Windows hosts.
-func KeyboardLayout(language Language) *cli.Option {
+func WithKeyboardLayout(language Language) *cli.Option {
 	return cli.NewOption("k", string(language))
 }

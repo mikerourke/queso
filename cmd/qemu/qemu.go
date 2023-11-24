@@ -37,19 +37,16 @@ func main() {
 
 	fmt.Println(q.Version())
 
-	q.
-		Use(qemu.NewSMP(6)).Use(qemu.NewKVMAccelerator())
-
 	fmt.Println(q.Args())
 
 	return
 
 	q.With(
+		qemu.WithKeyboardLayout(qemu.LanguageEnglishUS),
 		qemu.AddFileDescriptor(1, 2, "s"),
 		qemu.AddFileDescriptor(1, 2, "s"),
 		qemu.MonitorRedirect("none"),
 		qemu.MemorySize("3G"),
-		qemu.AcceleratorOfType(qemu.AcceleratorTCG),
 
 		// Network Settings
 		// network.UserBackend("n",
@@ -63,7 +60,7 @@ func main() {
 
 		// USB Settings
 		qemu.EnableUSB(),
-		qemu.USBDevice(qemu.USBDeviceTablet),
+		qemu.WithUSBDevice(qemu.USBDeviceTablet),
 
 		// Drive Settings
 		// blockdev.Drive(

@@ -14,7 +14,7 @@ import "github.com/mikerourke/queso"
 // IOThreads use an adaptive polling algorithm to reduce event loop latency.
 // Instead of entering a blocking system call to monitor file descriptors and
 // then pay the cost of being woken up when an event occurs, the polling algorithm
-// spins waiting for events for a short time. The algorithm’s default parameters
+// spins waiting for events for a short time. The algorithm's default parameters
 // are suitable for many cases but can be adjusted based on knowledge of the
 // workload and/or host device latency.
 //

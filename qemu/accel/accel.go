@@ -7,76 +7,75 @@ import (
 	"github.com/mikerourke/queso/qemu/cli"
 )
 
-// Name represents the type of accelerator.
-type Name string
+// Type represents the type of accelerator.
+type Type string
 
 const (
-	// HVF is the Hypervisor.framework accelerator on macOS.
+	// TypeHVF is the Hypervisor.framework accelerator on macOS.
 	// See https://developer.apple.com/documentation/hypervisor for more details.
-	HVF Name = "hvf"
+	TypeHVF Type = "hvf"
 
-	// KVM is the Kernel Virtual Machine, which is a Linux kernel module.
+	// TypeKVM is the Kernel Virtual Machine, which is a Linux kernel module.
 	// See https://wiki.qemu.org/Features/KVM for more details.
-	KVM Name = "kvm"
+	TypeKVM Type = "kvm"
 
-	// NVMM is a Type-2 hypervisor and hypervisor platform for NetBSD.
+	// TypeNVMM is a Type-2 hypervisor and hypervisor platform for NetBSD.
 	// See https://m00nbsd.net/4e0798b7f2620c965d0dd9d6a7a2f296.html for more details.
-	NVMM Name = "nvmm"
+	TypeNVMM Type = "nvmm"
 
-	// TCG is the Tiny Code Generator, which is the core binary translation
+	// TypeTCG is the Tiny Code Generator, which is the core binary translation
 	// engine for QEMU. See https://wiki.qemu.org/Features/TCG for more details.
-	TCG Name = "tcg"
+	TypeTCG Type = "tcg"
 
-	// WHPX is the Windows Hypervisor Platform accelerator (Hyper-V).
+	// TypeWHPX is the Windows Hypervisor Platform accelerator (Hyper-V).
 	// See https://docs.microsoft.com/en-us/xamarin/android/get-started/installation/android-emulator/hardware-acceleration
 	// for more details.
-	WHPX Name = "whpx"
+	TypeWHPX Type = "whpx"
 
-	// Xen is a Type-1 (bare metal) hypervisor.
+	// TypeXen is a Type-1 (bare metal) hypervisor.
 	// See https://wiki.xenproject.org/wiki/Xen_Project_Software_Overview for
 	// more details.
-	Xen Name = "xen"
+	TypeXen Type = "xen"
 
-	// HAXM is the Intel Hardware Accelerated Execution Manager.
+	// TypeHAXM is the Intel Hardware Accelerated Execution Manager.
 	// See https://github.com/intel/haxm for more details.
 	//
 	// Deprecated: No longer supported, but kept for older versions of QEMU.
-	HAXM Name = "hax"
+	TypeHAXM Type = "hax"
 )
 
-// WithAccelerator can be used in conjunction with the [qemu.QEMU.With] method
+// WithAccelerator can be used in conjunction with the qemu.With method
 // to define an accelerator with no additional properties.
 //
-//	qemu-system-* -accel name
-func WithAccelerator(name Name) *cli.Option {
-	return cli.NewOption("accel", string(name))
+//	qemu-system-* -accel type
+func WithAccelerator(accelType Type) *cli.Option {
+	return cli.NewOption("accel", string(accelType))
 }
 
 // Accelerator represents any of the available hardware accelerators.
 type Accelerator struct {
-	Name       Name
+	Type       Type
 	properties []*cli.Property
 }
 
-// NewAccelerator returns a new Accelerator instance with the specified
-// accelerator name.
+// New returns a new [Accelerator] instance with the specified accelerator type.
 //
-//	qemu-system-* -accel name
-func NewAccelerator(name Name) *Accelerator {
+//	qemu-system-* -accel type
+func New(accelType Type) *Accelerator {
 	return &Accelerator{
-		Name:       name,
+		Type:       accelType,
 		properties: make([]*cli.Property, 0),
 	}
 }
 
-// SetProperty is used to add arbitrary properties to the Accelerator.
+func (a *Accelerator) option() *cli.Option {
+	return cli.NewOption("accel", string(a.Type), a.properties...)
+}
+
+// SetProperty is used to add arbitrary properties to the [Accelerator].
 func (a *Accelerator) SetProperty(key string, value interface{}) *Accelerator {
 	a.properties = append(a.properties, cli.NewProperty(key, value))
 	return a
-}
-
-func (a *Accelerator) option() *cli.Option {
-	return cli.NewOption("accel", string(a.Name), a.properties...)
 }
 
 // NotifyOnVMExitOption represents the options for notifying when the VM exits.
@@ -86,7 +85,7 @@ const (
 	// NotifyOnVMExitRun enables VM exit support on x86 host. "window" specifies the
 	// corresponding notification window of time to trigger the VM exit if enabled.
 	//
-	// This feature can mitigate the CPU stuck issue due to event windows that don’t
+	// This feature can mitigate the CPU stuck issue due to event windows that don't
 	// open up for a specified amount of time.
 	NotifyOnVMExitRun NotifyOnVMExitOption = "run"
 

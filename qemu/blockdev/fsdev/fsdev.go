@@ -29,12 +29,12 @@ const (
 // SecurityModel is used to specify the security model to be used for the export
 // path in file system devices. Specifying this is mandatory only for
 // [LocalFileSystemDevice] and [VirtualLocalFileSystemDevice]. Other drivers
-// (like [ProxyFileSystemDevice]) don’t take security model as a parameter.
+// (like [ProxyFileSystemDevice]) don't take security model as a parameter.
 type SecurityModel string
 
 const (
 	// SecurityModelNone is the same as SecurityModelPassthrough except the server
-	// won’t report failures if it fails to set file attributes like ownership.
+	// won't report failures if it fails to set file attributes like ownership.
 	SecurityModelNone SecurityModel = "none"
 
 	// SecurityModelPassthrough represents a model in which files are stored using

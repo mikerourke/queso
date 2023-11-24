@@ -1,4 +1,5 @@
-package blockdev
+// Package driver is used to define and manage block driver nodes.
+package driver
 
 import "github.com/mikerourke/queso/qemu/cli"
 
@@ -7,15 +8,25 @@ type Driver struct {
 	properties []*cli.Property
 }
 
-// NewDriver returns a new instance of [Driver].
+// New returns a new instance of [Driver].
 //
 //	qemu-system-* -blockdev driver=file
-func NewDriver(name string) *Driver {
+func New(name string) *Driver {
 	return &Driver{
 		properties: []*cli.Property{
 			cli.NewProperty("driver", name),
 		},
 	}
+}
+
+func (d *Driver) option() *cli.Option {
+	return cli.NewOption("blockdev", "", d.properties...)
+}
+
+// SetProperty allows setting arbitrary properties on a [Driver].
+func (d *Driver) SetProperty(key string, value interface{}) *Driver {
+	d.properties = append(d.properties, cli.NewProperty(key, value))
+	return d
 }
 
 // DetectZeroesStatus represents the status passed in to the [Driver.SetDetectZeroes]

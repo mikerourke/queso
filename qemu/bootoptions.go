@@ -2,6 +2,8 @@ package qemu
 
 import (
 	"strings"
+
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // BootOptions represent the options for booting a VM, such as boot order and

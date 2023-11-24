@@ -2,14 +2,14 @@ package blockdev
 
 import (
 	"github.com/mikerourke/queso/diskimage"
-	"github.com/mikerourke/queso/qemu/cli"
+	"github.com/mikerourke/queso/qemu/blockdev/driver"
 )
 
 // Drive represents a new drive. This includes creating a block driver node (the backend)
 // as well as a guest device, and is mostly a shortcut for defining the corresponding
 // [Driver] and Device options.
 type Drive struct {
-	*Driver
+	*driver.Driver
 }
 
 // NewDrive returns a new instance of a [Drive].
@@ -17,9 +17,7 @@ type Drive struct {
 //	qemu-system-* -drive
 func NewDrive() *Drive {
 	return &Drive{
-		&Driver{
-			properties: make([]*cli.Property, 0),
-		},
+		driver.New(""),
 	}
 }
 
@@ -27,7 +25,7 @@ func NewDrive() *Drive {
 //
 //	qemu-system-* -drive aio=backend
 func (d *Drive) SetAIOBackend(backend string) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("aio", backend))
+	d.SetProperty("aio", backend)
 	return d
 }
 
@@ -39,20 +37,17 @@ func (d *Drive) SetAIOBackend(backend string) *Drive {
 //	qemu-system-* -drive bps_wr_max=bps
 //	qemu-system-* -drive bps_max=bps
 func (d *Drive) SetBandwidthBursts(operation IOOperation, bps int) *Drive {
-	var property *cli.Property
-
 	switch operation {
 	case IORead:
-		property = cli.NewProperty("bps_rd_max", bps)
+		d.SetProperty("bps_rd_max", bps)
 
 	case IOWrite:
-		property = cli.NewProperty("bps_wr_max", bps)
+		d.SetProperty("bps_wr_max", bps)
 
 	case IOAll:
-		property = cli.NewProperty("bps_max", bps)
+		d.SetProperty("bps_max", bps)
 	}
 
-	d.properties = append(d.properties, property)
 	return d
 }
 
@@ -64,20 +59,17 @@ func (d *Drive) SetBandwidthBursts(operation IOOperation, bps int) *Drive {
 //	qemu-system-* -drive bps_wr=bps
 //	qemu-system-* -drive bps=bps
 func (d *Drive) SetBandwidthThrottling(operation IOOperation, bps int) *Drive {
-	var property *cli.Property
-
 	switch operation {
 	case IORead:
-		property = cli.NewProperty("bps_rd", bps)
+		d.SetProperty("bps_rd", bps)
 
 	case IOWrite:
-		property = cli.NewProperty("bps_wr", bps)
+		d.SetProperty("bps_wr", bps)
 
 	case IOAll:
-		property = cli.NewProperty("bps", bps)
+		d.SetProperty("bps", bps)
 	}
 
-	d.properties = append(d.properties, property)
 	return d
 }
 
@@ -85,7 +77,7 @@ func (d *Drive) SetBandwidthThrottling(operation IOOperation, bps int) *Drive {
 //
 //	qemu-system-* -drive bus=bus
 func (d *Drive) SetBus(bus string) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("bus", bus))
+	d.SetProperty("bus", bus)
 	return d
 }
 
@@ -106,7 +98,7 @@ const (
 //
 //	qemu-system-* -drive cache=cache
 func (d *Drive) SetCacheAccess(access CacheAccess) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("cache", access))
+	d.SetProperty("cache", access)
 	return d
 }
 
@@ -123,7 +115,7 @@ func (d *Drive) SetCacheAccess(access CacheAccess) *Drive {
 //
 //	qemu-system-* -drive file=file
 func (d *Drive) SetFile(file string) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("file", file))
+	d.SetProperty("file", file)
 	return d
 }
 
@@ -133,7 +125,7 @@ func (d *Drive) SetFile(file string) *Drive {
 //
 //	qemu-system-* -drive format=format
 func (d *Drive) SetFormat(format diskimage.FileFormat) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("format", format))
+	d.SetProperty("format", format)
 	return d
 }
 
@@ -144,7 +136,7 @@ func (d *Drive) SetFormat(format diskimage.FileFormat) *Drive {
 //
 //	qemu-system-* -drive group=name
 func (d *Drive) SetGroupName(name string) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("group", name))
+	d.SetProperty("group", name)
 	return d
 }
 
@@ -153,7 +145,7 @@ func (d *Drive) SetGroupName(name string) *Drive {
 //
 //	qemu-system-* -drive index=index
 func (d *Drive) SetIndex(index int) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("index", index))
+	d.SetProperty("index", index)
 	return d
 }
 
@@ -162,21 +154,21 @@ func (d *Drive) SetIndex(index int) *Drive {
 type DriveInterface string
 
 const (
-	InterfaceNone          DriveInterface = "none"
-	InterfaceFlashMemory   DriveInterface = "mtd"
-	InterfaceFloppy        DriveInterface = "floppy"
-	InterfaceIDE           DriveInterface = "ide"
-	InterfaceParallelFlash DriveInterface = "pflash"
-	InterfaceSCSI          DriveInterface = "scsi"
-	InterfaceSDCard        DriveInterface = "sd"
-	InterfaceVirtio        DriveInterface = "virtio"
+	DriveInterfaceNone          DriveInterface = "none"
+	DriveInterfaceFlashMemory   DriveInterface = "mtd"
+	DriveInterfaceFloppy        DriveInterface = "floppy"
+	DriveInterfaceIDE           DriveInterface = "ide"
+	DriveInterfaceParallelFlash DriveInterface = "pflash"
+	DriveInterfaceSCSI          DriveInterface = "scsi"
+	DriveInterfaceSDCard        DriveInterface = "sd"
+	DriveInterfaceVirtio        DriveInterface = "virtio"
 )
 
 // SetInterface defines on which type on interface the drive is connected.
 //
 //	qemu-system-* -drive if=interface
 func (d *Drive) SetInterface(driveInterface DriveInterface) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("if", driveInterface))
+	d.SetProperty("if", driveInterface)
 	return d
 }
 
@@ -196,7 +188,7 @@ const (
 //
 //	qemu-system-* -drive media=media
 func (d *Drive) SetMedia(media DriveMedia) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("media", media))
+	d.SetProperty("media", media)
 	return d
 }
 
@@ -207,20 +199,17 @@ func (d *Drive) SetMedia(media DriveMedia) *Drive {
 //	qemu-system-* -drive iops_wr_max=rps
 //	qemu-system-* -drive iops_max=rps
 func (d *Drive) SetRequestRateBursts(operation IOOperation, rps int) *Drive {
-	var property *cli.Property
-
 	switch operation {
 	case IORead:
-		property = cli.NewProperty("iops_rd_max", rps)
+		d.SetProperty("iops_rd_max", rps)
 
 	case IOWrite:
-		property = cli.NewProperty("iops_wr_max", rps)
+		d.SetProperty("iops_wr_max", rps)
 
 	case IOAll:
-		property = cli.NewProperty("iops_max", rps)
+		d.SetProperty("iops_max", rps)
 	}
 
-	d.properties = append(d.properties, property)
 	return d
 }
 
@@ -231,20 +220,17 @@ func (d *Drive) SetRequestRateBursts(operation IOOperation, rps int) *Drive {
 //	qemu-system-* -drive iops_wr=rps
 //	qemu-system-* -drive iops=rps
 func (d *Drive) SetRequestRateLimits(operation IOOperation, rps int) *Drive {
-	var property *cli.Property
-
 	switch operation {
 	case IORead:
-		property = cli.NewProperty("iops_rd", rps)
+		d.SetProperty("iops_rd", rps)
 
 	case IOWrite:
-		property = cli.NewProperty("iops_wr", rps)
+		d.SetProperty("iops_wr", rps)
 
 	case IOAll:
-		property = cli.NewProperty("iops", rps)
+		d.SetProperty("iops", rps)
 	}
 
-	d.properties = append(d.properties, property)
 	return d
 }
 
@@ -254,7 +240,7 @@ func (d *Drive) SetRequestRateLimits(operation IOOperation, rps int) *Drive {
 //
 //	qemu-system-* -drive iops_size=bytes
 func (d *Drive) SetRequestSize(bytes int) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("iops_size", bytes))
+	d.SetProperty("iops_size", bytes)
 	return d
 }
 
@@ -262,7 +248,7 @@ func (d *Drive) SetRequestSize(bytes int) *Drive {
 //
 //	qemu-system-* -drive unit=unit
 func (d *Drive) SetUnit(unit string) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("unit", unit))
+	d.SetProperty("unit", unit)
 	return d
 }
 
@@ -291,7 +277,7 @@ const (
 //
 //	qemu-system-* -drive rerror=action
 func (d *Drive) SetReadErrorAction(action DriveErrorAction) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("rerror", action))
+	d.SetProperty("rerror", action)
 	return d
 }
 
@@ -300,7 +286,7 @@ func (d *Drive) SetReadErrorAction(action DriveErrorAction) *Drive {
 //
 //	qemu-system-* -drive werror=action
 func (d *Drive) SetWriteErrorAction(action DriveErrorAction) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("werror", action))
+	d.SetProperty("werror", action)
 	return d
 }
 
@@ -309,7 +295,7 @@ func (d *Drive) SetWriteErrorAction(action DriveErrorAction) *Drive {
 //
 //	qemu-system-* -drive copy-on-read=on|off
 func (d *Drive) ToggleCopyOnRead(enabled bool) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("copy-on-read", enabled))
+	d.SetProperty("copy-on-read", enabled)
 	return d
 }
 
@@ -319,6 +305,6 @@ func (d *Drive) ToggleCopyOnRead(enabled bool) *Drive {
 //
 //	qemu-system-* -drive snapshot=on|off
 func (d *Drive) ToggleSnapshotMode(enabled bool) *Drive {
-	d.properties = append(d.properties, cli.NewProperty("snapshot", enabled))
+	d.SetProperty("snapshot", enabled)
 	return d
 }

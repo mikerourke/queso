@@ -11,7 +11,7 @@ type System struct {
 	nodes []qemu.Usable
 }
 
-// NewSystem creates a new System.
+// NewSystem returns a new instance of [System].
 func NewSystem() *System {
 	return &System{
 		nodes: make([]qemu.Usable, 0),
@@ -31,6 +31,21 @@ func (s *System) Nodes() []qemu.Usable {
 	return s.nodes
 }
 
+// UseIn is a convenience function for using the NUMA elements defined in a
+// [System].
+//
+// Example
+//
+//	// Instead of:
+//	q := qemu.New()
+//	ns := numa.NewSystem()
+//	// ... add stuff to system here ...
+//	qemu.Use(ns.Nodes()...)
+//
+//	You can do this:
+//	q := qemu.New()
+//	ns := numa.NewSystem()
+//	ns.UseIn(q)
 func (s *System) UseIn(q *qemu.QEMU) {
 	q.Use(s.nodes...)
 }

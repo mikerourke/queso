@@ -2,6 +2,8 @@ package qemu
 
 import (
 	"strconv"
+
+	"github.com/mikerourke/queso/qemu/cli"
 )
 
 // SMP simulates a SMP system with the count of CPUs initially present on the

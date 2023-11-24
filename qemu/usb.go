@@ -1,18 +1,18 @@
 package qemu
 
-import (
-	"github.com/mikerourke/queso/qemu/cli"
-)
+import "github.com/mikerourke/queso/qemu/cli"
 
 // EnableUSB enables USB emulation on machine types with an on-board USB host controller
 // (if not enabled by default). Note that on-board USB host controllers may not support
 // USB 3.0.
+//
+//	qemu-system-* -usb
 func EnableUSB() *cli.Option {
 	return cli.NewOption("usb", "")
 }
 
-// USBDeviceName represents the device name that can be passed to the USBDevice
-// option.
+// USBDeviceName represents the device name that can be passed to the
+// [WithUSBDevice] option.
 type USBDeviceName string
 
 const (
@@ -38,12 +38,16 @@ const (
 	USBDeviceWacomTablet USBDeviceName = "wacom-tablet"
 )
 
-// USBDevice add the USB device name, and enables an on-board USB controller if possible and
-// necessary (just like it can be done via NewMachineProperty("usb", true)).
+// WithUSBDevice add the USB device name, and enables an on-board USB controller
+// if possible and necessary. You can achieve this using NewMachine as well:
+//
+//	qemu.Use(NewMachine().SetProperty("usb", true))
 //
 // Note that this option is mainly intended for the user's convenience only.
 // More fine-grained control can be achieved by selecting a USB host controller
-// (if necessary) and the desired USB device via the NewDevice() option instead.
-func USBDevice(name USBDeviceName) *cli.Option {
+// (if necessary) and the desired USB device via the device.New option instead.
+//
+//	qemu-system-* -usbdevice name
+func WithUSBDevice(name USBDeviceName) *cli.Option {
 	return cli.NewOption("usbdevice", string(name))
 }

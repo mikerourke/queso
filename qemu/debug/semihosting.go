@@ -1,5 +1,7 @@
 package debug
 
+import "github.com/mikerourke/queso/qemu/cli"
+
 // EnableSemiHosting enables semi-hosting mode (ARM, M68K, Xtensa, MIPS, Nios II,
 // RISC-V only).
 //

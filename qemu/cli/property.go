@@ -3,8 +3,6 @@ package cli
 import (
 	"fmt"
 	"reflect"
-
-	"github.com/mikerourke/queso/internal/vals"
 )
 
 // Property represents a property associated with an [Option] that gets passed
@@ -24,15 +22,7 @@ func NewProperty(key string, value interface{}) *Property {
 
 // Arg converts the property to a value that gets passed into the command line.
 func (p *Property) Arg() string {
-	stringVal := fmt.Sprintf("%v", p.Value)
-
-	if reflect.TypeOf(p.Value).Kind() == reflect.Bool {
-		if reflect.ValueOf(p.Value).Bool() {
-			stringVal = "on"
-		} else {
-			stringVal = "off"
-		}
-	}
+	stringVal := p.stringValue()
 
 	return fmt.Sprintf("%s=%s", p.Key, stringVal)
 }
@@ -43,18 +33,34 @@ func PropertiesTable(properties []*Property) map[string]string {
 	table := make(map[string]string)
 
 	for _, property := range properties {
-		stringVal := fmt.Sprintf("%v", property.Value)
-
-		if reflect.TypeOf(property.Value).Kind() == reflect.Bool {
-			if reflect.ValueOf(property.Value).Bool() {
-				stringVal = vals.On.String()
-			} else {
-				stringVal = vals.Off.String()
-			}
-		}
+		stringVal := property.stringValue()
 
 		table[property.Key] = stringVal
 	}
 
 	return table
+}
+
+func (p *Property) stringValue() string {
+	stringVal := fmt.Sprintf("%v", p.Value)
+
+	if reflect.TypeOf(p.Value).Kind() == reflect.Bool {
+		if reflect.ValueOf(p.Value).Bool() {
+			stringVal = "on"
+		} else {
+			stringVal = "off"
+		}
+	}
+
+	return stringVal
+}
+
+// StatusFromBool returns the ifTrue if the specified property value is true
+// and elseFalse if it is false.
+func StatusFromBool(value bool, ifTrue string, elseFalse string) string {
+	if value {
+		return ifTrue
+	} else {
+		return elseFalse
+	}
 }
