@@ -22,7 +22,7 @@ type PipeBackend struct {
 //	qemu-system-* -chardev pipe,id=id,path=path
 func NewPipeBackend(id string, path string) *PipeBackend {
 	return &PipeBackend{
-		Backend: NewBackend("pipe", id),
+		Backend: New("pipe", id),
 		Path:    path,
 	}
 }

@@ -54,14 +54,15 @@ func WithAccelerator(accelType Type) *queso.Option {
 
 // Accelerator represents any of the available hardware accelerators.
 type Accelerator struct {
-	Type       Type
+	Type       string
 	properties []*queso.Property
 }
 
 // New returns a new [Accelerator] instance with the specified accelerator type.
+// accelType is a string rather than an enum to allow for additional accelerators.
 //
 //	qemu-system-* -accel type
-func New(accelType Type) *Accelerator {
+func New(accelType string) *Accelerator {
 	return &Accelerator{
 		Type:       accelType,
 		properties: make([]*queso.Property, 0),
@@ -101,7 +102,7 @@ const (
 // (if applicable). If you're disabling the exit notification, use `0` for the
 // window.
 //
-//	qemu-system-* -accel name,notify-vmexit=run|internal-error|disable,notify-window=n
+//	qemu-system-* -accel <type>,notify-vmexit=run|internal-error|disable,notify-window=n
 func (a *Accelerator) SetNotifyOnVMExit(option NotifyOnVMExitOption, window int) *Accelerator {
 	var value string
 	if option == NotifyOnVMExitRun {

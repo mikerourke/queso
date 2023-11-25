@@ -6,19 +6,33 @@ import (
 	"github.com/mikerourke/queso"
 )
 
-// TODO: Read more about Spice so you can add comments to SpiceChannel.
-
-// SpiceChannel is a channel.
+// SpiceChannel represents the channels that the server and client use to communicate.
+// Each channel is dedicated to a specific type of data. See
+// https://www.spice-space.org/spice-user-manual.html for more details.
 type SpiceChannel string
 
 const (
-	SpiceChannelCursor   SpiceChannel = "cursor"
-	SpiceChannelDisplay  SpiceChannel = "display"
-	SpiceChannelDefault  SpiceChannel = "default"
-	SpiceChannelInputs   SpiceChannel = "inputs"
-	SpiceChannelMain     SpiceChannel = "main"
+	// SpiceChannelCursor manages pointer device position and cursor shape.
+	SpiceChannelCursor SpiceChannel = "cursor"
+
+	// SpiceChannelDisplay manages graphics commands images and video streams.
+	SpiceChannelDisplay SpiceChannel = "display"
+
+	// SpiceChannelDefault is the default channel.
+	SpiceChannelDefault SpiceChannel = "default"
+
+	// SpiceChannelInputs manages keyboard and mouse inputs.
+	SpiceChannelInputs SpiceChannel = "inputs"
+
+	// SpiceChannelMain manages control and configuration.
+	SpiceChannelMain SpiceChannel = "main"
+
+	// SpiceChannelPlayback manages audio received from the server to be played
+	// by the client.
 	SpiceChannelPlayback SpiceChannel = "playback"
-	SpiceChannelRecord   SpiceChannel = "record"
+
+	// SpiceChannelRecord manages audio captured on the client side.
+	SpiceChannelRecord SpiceChannel = "record"
 )
 
 // SpiceDisplay is a display that uses the Spice remote desktop protocol.
@@ -35,7 +49,7 @@ func NewSpiceDisplay() *SpiceDisplay {
 
 // SetAddress sets the IP address spice is listening on. Default is any address.
 //
-//	qemu-system-* -spice,addr=addr
+//	qemu-system-* -spice addr=addr
 func (d *SpiceDisplay) SetAddress(addr string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("addr", addr))
 	return d
@@ -48,7 +62,7 @@ func (d *SpiceDisplay) SetAddress(addr string) *SpiceDisplay {
 // For channels which are not explicitly forced into one mode, the Spice client is
 // allowed to pick TLS/plain text as it pleases.
 //
-//	qemu-system-* -spice,plaintext-channel=main|display|cursor|inputs|record|playback
+//	qemu-system-* -spice plaintext-channel=main|display|cursor|inputs|record|playback
 func (d *SpiceDisplay) SetChannelForPlainText(channel SpiceChannel) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("plaintext-channel", channel))
 	return d
@@ -61,7 +75,7 @@ func (d *SpiceDisplay) SetChannelForPlainText(channel SpiceChannel) *SpiceDispla
 // For channels which are not explicitly forced into one mode, the Spice client is
 // allowed to pick TLS/plain text as it pleases.
 //
-//	qemu-system-* -spice,tls-channel=main|display|cursor|inputs|record|playback
+//	qemu-system-* -spice tls-channel=main|display|cursor|inputs|record|playback
 func (d *SpiceDisplay) SetChannelForTLS(channel SpiceChannel) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("tls-channel", channel))
 	return d
@@ -83,7 +97,7 @@ const (
 // SetImageCompression configures image compression (lossless). The default
 // is [ImageCompressionAutoGLZ].
 //
-//	qemu-system-* -spice,image-compression=[auto_glz|auto_lz|quic|glz|lz|off]
+//	qemu-system-* -spice image-compression=[auto_glz|auto_lz|quic|glz|lz|off]
 func (d *SpiceDisplay) SetImageCompression(compression ImageCompression) *SpiceDisplay {
 	d.properties = append(d.properties,
 		queso.NewProperty("image-compression", string(compression)))
@@ -93,7 +107,7 @@ func (d *SpiceDisplay) SetImageCompression(compression ImageCompression) *SpiceD
 // SetPasswordSecret sets the ID of the Secret object containing the
 // password you need to authenticate.
 //
-//	qemu-system-* -spice,password-secret=secret
+//	qemu-system-* -spice password-secret=secret
 func (d *SpiceDisplay) SetPasswordSecret(secret string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("password-secret", secret))
 	return d
@@ -101,7 +115,7 @@ func (d *SpiceDisplay) SetPasswordSecret(secret string) *SpiceDisplay {
 
 // SetPort sets the TCP port Spice is listening on for plaintext channels.
 //
-//	qemu-system-* -spice,port=port
+//	qemu-system-* -spice port=port
 func (d *SpiceDisplay) SetPort(port int) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("port", port))
 	return d
@@ -110,7 +124,7 @@ func (d *SpiceDisplay) SetPort(port int) *SpiceDisplay {
 // SetRenderNode sets the DRM render node for OpenGL rendering. If not specified,
 // it will pick the first available. (Since 2.9)
 //
-//	qemu-system-* -spice,rendernode=file
+//	qemu-system-* -spice rendernode=file
 func (d *SpiceDisplay) SetRenderNode(file string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("rendernode", file))
 	return d
@@ -118,7 +132,7 @@ func (d *SpiceDisplay) SetRenderNode(file string) *SpiceDisplay {
 
 // SetTLSCiphers specifies which ciphers to use.
 //
-//	qemu-system-* -spice,tls-ciphers=ciphers
+//	qemu-system-* -spice tls-ciphers=ciphers
 func (d *SpiceDisplay) SetTLSCiphers(ciphers ...string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("tls-ciphers", strings.Join(ciphers, ",")))
 	return d
@@ -126,7 +140,7 @@ func (d *SpiceDisplay) SetTLSCiphers(ciphers ...string) *SpiceDisplay {
 
 // SetTLSPort sets the TCP port Spice is listening on for encrypted channels.
 //
-//	qemu-system-* -spice,tls-port=port
+//	qemu-system-* -spice tls-port=port
 func (d *SpiceDisplay) SetTLSPort(port int) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("tls-port", port))
 	return d
@@ -145,7 +159,7 @@ const (
 // SetVideoStreamDetection configures video stream detection. The default is
 // [VideoStreamDetectionOff].
 //
-//	qemu-system-* -spice,streaming-video=off|all|filter
+//	qemu-system-* -spice streaming-video=off|all|filter
 func (d *SpiceDisplay) SetVideoStreamDetection(detection VideoStreamDetection) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("streaming-video", string(detection)))
 	return d
@@ -167,7 +181,7 @@ const (
 // SetWANCompressionForJPEG configures WAN image compression for JPEG (lossy
 // for slow links). The default is [WANCompressionAuto].
 //
-//	qemu-system-* -spice,jpeg-wan-compression=auto|never|always
+//	qemu-system-* -spice jpeg-wan-compression=auto|never|always
 func (d *SpiceDisplay) SetWANCompressionForJPEG(mode WANCompressionMode) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("jpeg-wan-compression", string(mode)))
 	return d
@@ -176,7 +190,7 @@ func (d *SpiceDisplay) SetWANCompressionForJPEG(mode WANCompressionMode) *SpiceD
 // SetWANCompressionForZlib configures WAN image compression for Zlib (lossy
 // for slow links). The default is [WANCompressionAuto].
 //
-//	qemu-system-* -spice,zlib-glz-wan-compression=auto|never|always
+//	qemu-system-* -spice zlib-glz-wan-compression=auto|never|always
 func (d *SpiceDisplay) SetWANCompressionForZlib(mode WANCompressionMode) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("zlib-glz-wan-compression", string(mode)))
 	return d
@@ -184,7 +198,7 @@ func (d *SpiceDisplay) SetWANCompressionForZlib(mode WANCompressionMode) *SpiceD
 
 // SetX509CACertFile sets the x509 CA certificate file path.
 //
-//	qemu-system-* -spice,x509-cacert-file=file
+//	qemu-system-* -spice x509-cacert-file=file
 func (d *SpiceDisplay) SetX509CACertFile(file string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("x509-cacert-file", file))
 	return d
@@ -192,7 +206,7 @@ func (d *SpiceDisplay) SetX509CACertFile(file string) *SpiceDisplay {
 
 // SetX509CertFile sets the x509 certificate file path.
 //
-//	qemu-system-* -spice,x509-cert-file=file
+//	qemu-system-* -spice x509-cert-file=file
 func (d *SpiceDisplay) SetX509CertFile(file string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("x509-cert-file", file))
 	return d
@@ -200,7 +214,7 @@ func (d *SpiceDisplay) SetX509CertFile(file string) *SpiceDisplay {
 
 // SetX509DHKeyFile sets the x509 DH key file path.
 //
-//	qemu-system-* -spice,x509-dh-key-file=file
+//	qemu-system-* -spice x509-dh-key-file=file
 func (d *SpiceDisplay) SetX509DHKeyFile(file string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("x509-dh-key-file", file))
 	return d
@@ -208,7 +222,7 @@ func (d *SpiceDisplay) SetX509DHKeyFile(file string) *SpiceDisplay {
 
 // SetX509KeyFile sets the x509 key file path.
 //
-//	qemu-system-* -spice,x509-key-file=file
+//	qemu-system-* -spice x509-key-file=file
 func (d *SpiceDisplay) SetX509KeyFile(file string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("x509-key-file", file))
 	return d
@@ -216,7 +230,7 @@ func (d *SpiceDisplay) SetX509KeyFile(file string) *SpiceDisplay {
 
 // SetX509KeyPasswordFile sets the x509 key password file path.
 //
-//	qemu-system-* -spice,x509-key-password=file
+//	qemu-system-* -spice x509-key-password=file
 func (d *SpiceDisplay) SetX509KeyPasswordFile(file string) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("x509-key-password", file))
 	return d
@@ -225,7 +239,7 @@ func (d *SpiceDisplay) SetX509KeyPasswordFile(file string) *SpiceDisplay {
 // ToggleAgentFileTransfers enables or disables spice-vdagent based file transfer
 // between the client and the guest.
 //
-//	qemu-system-* -spice,disable-agent-file-xfer=on|off
+//	qemu-system-* -spice disable-agent-file-xfer=on|off
 func (d *SpiceDisplay) ToggleAgentFileTransfers(enabled bool) *SpiceDisplay {
 	// Negating enabled to ensure if this is called with true, it does _not_ disable file transfer.
 	d.properties = append(d.properties, queso.NewProperty("disable-agent-file-xfer", !enabled))
@@ -235,7 +249,7 @@ func (d *SpiceDisplay) ToggleAgentFileTransfers(enabled bool) *SpiceDisplay {
 // ToggleConnectWithoutAuth enables or disables client connections without
 // authentication.
 //
-//	qemu-system-* -spice,disable-ticketing=on|off
+//	qemu-system-* -spice disable-ticketing=on|off
 func (d *SpiceDisplay) ToggleConnectWithoutAuth(enabled bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("disable-ticketing", enabled))
 	return d
@@ -243,7 +257,7 @@ func (d *SpiceDisplay) ToggleConnectWithoutAuth(enabled bool) *SpiceDisplay {
 
 // ToggleIPv4 specifies if IPv4 may be used.
 //
-//	qemu-system-* -spice,ipv4=on|off
+//	qemu-system-* -spice ipv4=on|off
 func (d *SpiceDisplay) ToggleIPv4(enabled bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("ipv4", enabled))
 	return d
@@ -251,7 +265,7 @@ func (d *SpiceDisplay) ToggleIPv4(enabled bool) *SpiceDisplay {
 
 // ToggleIPv6 specifies if IPv6 may be used.
 //
-//	qemu-system-* -spice,ipv6=on|off
+//	qemu-system-* -spice ipv6=on|off
 func (d *SpiceDisplay) ToggleIPv6(enabled bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("ipv6", enabled))
 	return d
@@ -260,7 +274,7 @@ func (d *SpiceDisplay) ToggleIPv6(enabled bool) *SpiceDisplay {
 // ToggleMouseEventPassing enables or disables passing mouse events via vdagent
 // for Spice. This property is enabled by default.
 //
-//	qemu-system-* -spice,agent-mouse=on|off
+//	qemu-system-* -spice agent-mouse=on|off
 func (d *SpiceDisplay) ToggleMouseEventPassing(enabled bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("agent-mouse", enabled))
 	return d
@@ -268,7 +282,7 @@ func (d *SpiceDisplay) ToggleMouseEventPassing(enabled bool) *SpiceDisplay {
 
 // ToggleOpenGL enables or disables OpenGL for displaying.
 //
-//	qemu-system-* -spice,gl=on|off
+//	qemu-system-* -spice gl=on|off
 func (d *SpiceDisplay) ToggleOpenGL(enabled bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("gl", enabled))
 	return d
@@ -277,7 +291,7 @@ func (d *SpiceDisplay) ToggleOpenGL(enabled bool) *SpiceDisplay {
 // TogglePlaybackCompression enables or disables audio stream compression
 // (using celt 0.5.1). This property is enabled by default.
 //
-//	qemu-system-* -spice,playback-compression=on|off
+//	qemu-system-* -spice playback-compression=on|off
 func (d *SpiceDisplay) TogglePlaybackCompression(enabled bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("playback-compression", enabled))
 	return d
@@ -295,7 +309,7 @@ func (d *SpiceDisplay) TogglePlaybackCompression(enabled bool) *SpiceDisplay {
 // to enable use of SSL and server certificates. This ensures a data encryption
 // preventing compromise of authentication credentials.
 //
-//	qemu-system-* -spice,sasl=on|off
+//	qemu-system-* -spice sasl=on|off
 func (d *SpiceDisplay) ToggleSASL(required bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("sasl", required))
 	return d
@@ -311,7 +325,7 @@ func (d *SpiceDisplay) ToggleSeamlessMigration(enabled bool) *SpiceDisplay {
 // ToggleSharedClipboard enables or disables copy/paste between the client and
 // the guest.
 //
-//	qemu-system-* -spice,disable-copy-paste=on|off
+//	qemu-system-* -spice disable-copy-paste=on|off
 func (d *SpiceDisplay) ToggleSharedClipboard(enabled bool) *SpiceDisplay {
 	// Negating enabled to ensure if this is called with true, it does _not_ disable copy/paste.
 	d.properties = append(d.properties, queso.NewProperty("disable-copy-paste", !enabled))
@@ -320,7 +334,7 @@ func (d *SpiceDisplay) ToggleSharedClipboard(enabled bool) *SpiceDisplay {
 
 // ToggleUnix specifies if Unix socket may be used.
 //
-//	qemu-system-* -spice,unix=on|off
+//	qemu-system-* -spice unix=on|off
 func (d *SpiceDisplay) ToggleUnix(enabled bool) *SpiceDisplay {
 	d.properties = append(d.properties, queso.NewProperty("unix", enabled))
 	return d

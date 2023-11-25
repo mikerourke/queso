@@ -12,7 +12,7 @@ type WAVBackend struct {
 //	qemu-system-* -audiodev spice,id=id
 func NewWAVBackend(id string) *WAVBackend {
 	return &WAVBackend{
-		NewBackend("wav", id),
+		New("wav", id),
 	}
 }
 

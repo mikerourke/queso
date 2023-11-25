@@ -2,11 +2,13 @@ package display
 
 import "github.com/mikerourke/queso"
 
-// CursesDisplay displays video output via curses. For graphics device models which
-// support a text mode, QEMU can display this output using a curses/ncurses interface.
+// CursesDisplay displays video output via curses. For graphics device models
+// which support a text mode, QEMU can display this output using a curses/ncurses
+// interface.
 //
-// Nothing is displayed when the graphics device is in graphical mode or if the graphics
-// device does not support a text mode. Generally only the VGA device models support text mode.
+// Nothing is displayed when the graphics device is in graphical mode or if the
+// graphics device does not support a text mode. Generally only the VGA device
+// models support text mode.
 type CursesDisplay struct {
 	*Display
 }

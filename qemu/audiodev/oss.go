@@ -13,13 +13,13 @@ type OSSBackend struct {
 //	qemu-system-* -audiodev oss,id=id
 func NewOSSBackend(id string) *OSSBackend {
 	return &OSSBackend{
-		NewBackend("oss", id),
+		New("oss", id),
 	}
 }
 
 // SetBufferCount sets the count of buffers.
 //
-//	qemu-system-* -audiodev os,buffer-count=count
+//	qemu-system-* -audiodev oss,buffer-count=count
 func (b *OSSBackend) SetBufferCount(direction Direction, count string) *OSSBackend {
 	b.properties = append(b.properties, newDirectionProperty("buffer-count", direction, count))
 	return b
@@ -36,8 +36,8 @@ func (b *OSSBackend) SetDevice(direction Direction, device string) *OSSBackend {
 
 // SetDSPPolicy sets the timing policy (between 0 and 10, where smaller number means
 // smaller latency but higher CPU usage). Use -1 to use buffer sizes specified by
-// buffer and [OSSBackend.SetBufferCount]. This option is ignored if you do not have OSS 4.
-// The default value is 5.
+// buffer and [OSSBackend.SetBufferCount]. This option is ignored if you do not
+// have OSS 4. The default value is 5.
 //
 //	qemu-system-* -audiodev oss,dsp-policy=policy
 func (b *OSSBackend) SetDSPPolicy(policy int) *OSSBackend {

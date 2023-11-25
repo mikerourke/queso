@@ -39,7 +39,7 @@ func (d *DBusDisplay) SetOpenGL(gl OpenGLOption) *DBusDisplay {
 //
 //	qemu-system-* -display dbus,p2p=yes|no
 func (d *DBusDisplay) TogglePeerToPeer(enabled bool) *DBusDisplay {
-	value := queso.StatusFromBool(enabled, "yes", "no")
+	value := queso.Ternary(enabled, "yes", "no")
 	d.properties = append(d.properties, queso.NewProperty("p2p", value))
 	return d
 }

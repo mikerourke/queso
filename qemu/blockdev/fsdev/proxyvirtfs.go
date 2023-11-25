@@ -41,6 +41,19 @@ func NewVirtualProxyFileSystemDevice(
 	}
 }
 
+func (d *VirtualProxyFileSystemDevice) option() *queso.Option {
+	properties := append(d.properties,
+		queso.NewProperty("mount_tag", d.MountTag),
+		queso.NewProperty(string(d.SocketInterfaceType), d.SocketTarget))
+	return queso.NewOption("virtfs", "proxy", properties...)
+}
+
+// SetProperty is used to add arbitrary properties to the [VirtualProxyFileSystemDevice].
+func (d *VirtualProxyFileSystemDevice) SetProperty(key string, value interface{}) *VirtualProxyFileSystemDevice {
+	d.properties = append(d.properties, queso.NewProperty(key, value))
+	return d
+}
+
 // EnableWriteOut means that host page cache will be used to read and write data but
 // write notification will be sent to the guest only when the data has been reported
 // as written by the storage subsystem.
@@ -57,7 +70,17 @@ func (d *VirtualProxyFileSystemDevice) EnableWriteOut() *VirtualProxyFileSystemD
 //
 //	qemu-system-* -virtfs proxy,mount_tag=tag
 func (d *VirtualProxyFileSystemDevice) SetMountTag(tag string) *VirtualProxyFileSystemDevice {
-	d.properties = append(d.properties, queso.NewProperty("mount_tag", tag))
+	d.MountTag = tag
+	return d
+}
+
+// SetSocketTarget sets the socket path or socket descriptor path (based
+// on the [SocketInterfaceType] specified when the device was created).
+//
+//	qemu-system-* -virtfs proxy,socket=target
+//	qemu-system-* -virtfs proxy,sock_fd=target
+func (d *VirtualProxyFileSystemDevice) SetSocketTarget(target string) *VirtualProxyFileSystemDevice {
+	d.SocketTarget = target
 	return d
 }
 

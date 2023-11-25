@@ -13,6 +13,6 @@ type HAXMAccelerator struct {
 //	qemu-system-* -accel haxm
 func NewHAXMAccelerator() *HAXMAccelerator {
 	return &HAXMAccelerator{
-		New(TypeHAXM),
+		New(string(TypeHAXM)),
 	}
 }

@@ -32,8 +32,8 @@ func (d *QCOW2Driver) SetBackingFile(name string) *QCOW2Driver {
 // platforms, and 0 on other platforms. Setting it to 0 disables this feature.
 //
 //	qemu-system-* -blockdev driver=qcow2,cache-clean-interval=seconds
-func (d *QCOW2Driver) SetCacheCleanInterval(seconds int) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("cache-clean-interval", seconds))
+func (d *QCOW2Driver) SetCacheCleanInterval(interval int) *QCOW2Driver {
+	d.properties = append(d.properties, queso.NewProperty("cache-clean-interval", interval))
 	return d
 }
 
@@ -122,6 +122,8 @@ func (d *QCOW2Driver) SetTotalCacheSize(bytes int) *QCOW2Driver {
 //
 // If image file length is of concern (e.g. when storing QCOW2 images directly on
 // block devices), you should consider enabling this option.
+//
+//	qemu-system-* -blockdev driver=qcow2,discard-no-unref=on|off
 func (d *QCOW2Driver) ToggleDiscardNoUnref(enabled bool) *QCOW2Driver {
 	d.properties = append(d.properties, queso.NewProperty("discard-no-unref", enabled))
 	return d
@@ -146,7 +148,7 @@ func (d *QCOW2Driver) TogglePassDiscardOther(enabled bool) *QCOW2Driver {
 }
 
 // TogglePassDiscardRequests specifies whether discard requests to the QCOW2 device should
-// be forwarded to the data source. The default is true if [QCOW2Driver.ToggleDiscard] is
+// be forwarded to the data source. The default is true if [QCOW2Driver.TogglePassDiscardOther] is
 // specified, false otherwise.
 //
 //	qemu-system-* -blockdev driver=qcow2,pass-discard-request=on|off

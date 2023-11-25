@@ -48,6 +48,12 @@ func (d *ProxyFileSystemDevice) option() *queso.Option {
 	return queso.NewOption("fsdev", "proxy", properties...)
 }
 
+// SetProperty is used to add arbitrary properties to the [ProxyFileSystemDevice].
+func (d *ProxyFileSystemDevice) SetProperty(key string, value interface{}) *ProxyFileSystemDevice {
+	d.properties = append(d.properties, queso.NewProperty(key, value))
+	return d
+}
+
 // EnableWriteOut means that host page cache will be used to read and write data but
 // write notification will be sent to the guest only when the data has been reported
 // as written by the storage subsystem.

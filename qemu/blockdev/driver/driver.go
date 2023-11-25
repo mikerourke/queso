@@ -5,22 +5,36 @@ import "github.com/mikerourke/queso"
 
 // Driver defines a new block driver node.
 type Driver struct {
+	flag       string
 	properties []*queso.Property
 }
 
-// New returns a new instance of [Driver].
+// New returns a new instance of [Driver]. name is the name of the driver type.
 //
-//	qemu-system-* -blockdev driver=file
+//	qemu-system-* -blockdev driver=name
 func New(name string) *Driver {
+	var flag string
+	properties := make([]*queso.Property, 0)
+
+	// For a Drive, the name gets set to an empty string. In that case, we
+	// don't want to add a "driver" property with that name. Drives are defined
+	// with the -drive flag, rather than -blockdev, so we specify the flag
+	// to ensure QEMU is called correctly.
+	if name == "" {
+		flag = "drive"
+	} else {
+		flag = "blockdev"
+		properties = append(properties, queso.NewProperty("driver", name))
+	}
+
 	return &Driver{
-		properties: []*queso.Property{
-			queso.NewProperty("driver", name),
-		},
+		flag:       flag,
+		properties: properties,
 	}
 }
 
 func (d *Driver) option() *queso.Option {
-	return queso.NewOption("blockdev", "", d.properties...)
+	return queso.NewOption(d.flag, "", d.properties...)
 }
 
 // SetProperty allows setting arbitrary properties on a [Driver].
@@ -50,7 +64,7 @@ const (
 // [DetectZeroesUnmap] if discard is set to “unmap” to allow a zero write to be
 // converted to an unmap operation.
 //
-//	qemu-system-* -blockdev driver=file,detect-zeroes=detect-zeroes
+//	qemu-system-* -blockdev driver=<name>,detect-zeroes=detect-zeroes
 func (d *Driver) SetDetectZeroes(status DetectZeroesStatus) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("detect-zeroes", status))
 	return d
@@ -64,7 +78,7 @@ func (d *Driver) SetDetectZeroes(status DetectZeroesStatus) *Driver {
 // name is not intended to be predictable and changes between QEMU invocations.
 // For the top level, an explicit node name must be specified.
 //
-//	qemu-system-* -blockdev driver=file,node-name=name
+//	qemu-system-* -blockdev driver=<name>,node-name=name
 func (d *Driver) SetNodeName(name string) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("node-name", name))
 	return d
@@ -75,7 +89,7 @@ func (d *Driver) SetNodeName(name string) *Driver {
 // modes as needed, e.g. depending on whether the image file is writable or whether
 // a writing user is attached to the node.
 //
-//	qemu-system-* -blockdev driver=file,auto-read-only=on|off
+//	qemu-system-* -blockdev driver=<name>,auto-read-only=on|off
 func (d *Driver) ToggleAutoReadOnly(enabled bool) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("auto-read-only", enabled))
 	return d
@@ -85,7 +99,7 @@ func (d *Driver) ToggleAutoReadOnly(enabled bool) *Driver {
 // If true, this will attempt to do disk IO directly to the guest's memory. QEMU
 // may still perform an internal copy of the data.
 //
-//	qemu-system-* -blockdev driver=file,cache.direct=on|off
+//	qemu-system-* -blockdev driver=<name>,cache.direct=on|off
 func (d *Driver) ToggleDirectCache(enabled bool) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("cache.direct", enabled))
 	return d
@@ -95,7 +109,7 @@ func (d *Driver) ToggleDirectCache(enabled bool) *Driver {
 // ignored (false) or passed to the filesystem (true). Some machine types may not
 // support discard requests.
 //
-//	qemu-system-* -blockdev driver=file,discard=on|off
+//	qemu-system-* -blockdev driver=<name>,discard=on|off
 func (d *Driver) ToggleDiscard(enabled bool) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("discard", enabled))
 	return d
@@ -110,19 +124,19 @@ func (d *Driver) ToggleDiscard(enabled bool) *Driver {
 //
 // Calling this with true requires [Driver.ToggleReadOnly] to be called with true.
 //
-//	qemu-system-* -blockdev driver=file,force-share=on|off
+//	qemu-system-* -blockdev driver=<name>,force-share=on|off
 func (d *Driver) ToggleForceShare(enabled bool) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("force-share", enabled))
 	return d
 }
 
 // ToggleNoCacheFlushing should be enabled if you don't care about data integrity over
-// host failures for a Driver. This option tells QEMU that it never needs to write
+// host failures for a [Driver]. This option tells QEMU that it never needs to write
 // any data to the disk but can instead keep things in cache. If anything goes
 // wrong, like your host losing power, the disk storage getting disconnected
 // accidentally, etc. your image will most probably be rendered unusable.
 //
-//	qemu-system-* -blockdev driver=file,cache.no-flush=on|off
+//	qemu-system-* -blockdev driver=<name>,cache.no-flush=on|off
 func (d *Driver) ToggleNoCacheFlushing(enabled bool) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("cache.no-flush", enabled))
 	return d
@@ -134,7 +148,7 @@ func (d *Driver) ToggleNoCacheFlushing(enabled bool) *Driver {
 // or in certain configurations. In this case, the default value of false does not
 // work and the option must be specified explicitly.
 //
-//	qemu-system-* -blockdev driver=file,read-only=on|off
+//	qemu-system-* -blockdev driver=<name>,read-only=on|off
 func (d *Driver) ToggleReadOnly(enabled bool) *Driver {
 	d.properties = append(d.properties, queso.NewProperty("read-only", enabled))
 	return d

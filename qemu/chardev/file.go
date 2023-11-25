@@ -17,7 +17,7 @@ type FileBackend struct {
 //	qemu-system-* -chardev file,id=id,path=path
 func NewFileBackend(id string, path string) *FileBackend {
 	return &FileBackend{
-		Backend: NewBackend("file", id),
+		Backend: New("file", id),
 		Path:    path,
 	}
 }

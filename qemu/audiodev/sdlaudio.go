@@ -11,7 +11,7 @@ type SDLBackend struct {
 //	qemu-system-* -audiodev sdl,id=id
 func NewSDLBackend(id string) *SDLBackend {
 	return &SDLBackend{
-		NewBackend("sdl", id),
+		New("sdl", id),
 	}
 }
 

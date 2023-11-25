@@ -17,7 +17,7 @@ func NewFileDriver() *FileDriver {
 }
 
 // AIOBackend represents the asynchronous I/O backend values that can be
-// passed to the SetAIOBackend method.
+// passed to the [FileDriver.SetAIOBackend] method.
 type AIOBackend string
 
 const (
@@ -33,7 +33,7 @@ const (
 
 // SetAIOBackend specified the AIO backend. The default value is [AIOBackendThreads].
 //
-//	qemu-system-* -blockdev driver=file,filename=name
+//	qemu-system-* -blockdev driver=file,aio=backend
 func (d *FileDriver) SetAIOBackend(backend string) *FileDriver {
 	d.properties = append(d.properties, queso.NewProperty("aio", backend))
 	return d
@@ -47,18 +47,26 @@ func (d *FileDriver) SetFileName(name string) *FileDriver {
 	return d
 }
 
+// OFDLockingStatus represents the possible status options for
+// [FileDriver.SetOFDLockingStatus].
 type OFDLockingStatus string
 
 const (
-	OFDLockingOn   = "on"
-	OFDLockingOff  = "off"
+	// OFDLockingOn indicates that OFD/POSIX locks are applied.
+	OFDLockingOn = "on"
+
+	// OFDLockingOff indicates that no OFD/POSIX locks are applied.
+	OFDLockingOff = "off"
+
+	// OFDLockingAuto indicates that QEMU should try to use the Linux Open File
+	// Descriptor API if available.
 	OFDLockingAuto = "auto"
 )
 
 // SetOFDLockingStatus specifies whether the image file is protected with Linux
 // OFD/POSIX locks. The default is to use the Linux Open File
-// Descriptor API if available ([vals.Status.Auto]), otherwise no lock is
-// applied ([vals.Status.Off]).
+// Descriptor API if available ([OFDLockingAuto]), otherwise no lock is
+// applied ([OFDLockingOff]).
 //
 //	qemu-system-* -blockdev driver=file,locking=on|off|auto
 func (d *FileDriver) SetOFDLockingStatus(status OFDLockingStatus) *FileDriver {

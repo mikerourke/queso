@@ -12,14 +12,14 @@ type XenAccelerator struct {
 //	qemu-system-* -accel xen
 func NewXenAccelerator() *XenAccelerator {
 	return &XenAccelerator{
-		New(TypeXen),
+		New(string(TypeXen)),
 	}
 }
 
-// ToggleIGDPassThru controls whether Intel integrated graphics devices can be passed
-// through to the guest.
+// ToggleIGDPassThru controls whether Intel integrated graphics devices can be
+// passed through to the guest.
 //
-//	qemu-system-* -accel xen igd-passthru=on|off
+//	qemu-system-* -accel xen,igd-passthru=on|off
 func (a *XenAccelerator) ToggleIGDPassThru(enabled bool) *XenAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("igd-passthru", enabled))
 	return a

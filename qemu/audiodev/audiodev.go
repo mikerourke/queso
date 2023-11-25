@@ -23,16 +23,17 @@ const (
 // Backend represents a generic audio device backend. If possible, try to
 // use specified backends (e.g. [ALSABackend]).
 type Backend struct {
+	// DriverName is the name of the audio device driver.
 	DriverName string
 	properties []*queso.Property
 }
 
-// NewBackend returns a new instance of a generic audio [Backend]. driverName
-// is the name of the driver associated with the backend. id is a unique identifier
-// for the backend.
+// New returns a new instance of a generic audio [Backend]. driverName
+// is the name of the driver associated with the backend. id is a unique
+// identifier for the backend.
 //
 //	qemu-system-* -audiodev <driverName>,id=id
-func NewBackend(driverName string, id string) *Backend {
+func New(driverName string, id string) *Backend {
 	return &Backend{
 		DriverName: driverName,
 		properties: []*queso.Property{
@@ -53,16 +54,16 @@ func (b *Backend) SetProperty(key string, value interface{}) *Backend {
 
 // SetBufferLength sets the size of the buffer in microseconds.
 //
-//	qemu-system-* -audiodev pa,in|out.buffer-length=usecs
-func (b *Backend) SetBufferLength(direction Direction, usecs int) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("buffer-length", direction, usecs))
+//	qemu-system-* -audiodev <name>,in|out.buffer-length=usecs
+func (b *Backend) SetBufferLength(direction Direction, length int) *Backend {
+	b.properties = append(b.properties, newDirectionProperty("buffer-length", direction, length))
 	return b
 }
 
 // SetChannels specifies the number of channels to use when [Backend.ToggleFixedSettings]
 // was called with true. The default is 2 (stereo).
 //
-//	qemu-system-* -audiodev pa,in|out.channels=channels
+//	qemu-system-* -audiodev <name>,in|out.channels=channels
 func (b *Backend) SetChannels(direction Direction, count int) *Backend {
 	b.properties = append(b.properties, newDirectionProperty("channels", direction, count))
 	return b
@@ -71,14 +72,14 @@ func (b *Backend) SetChannels(direction Direction, count int) *Backend {
 // SetFrequency specifies the frequency to use when [Backend.ToggleFixedSettings]
 // was called with true. The default is 44100Hz.
 //
-//	qemu-system-* -audiodev pa,in|out.frequency=frequency
+//	qemu-system-* -audiodev <name>,in|out.frequency=frequency
 func (b *Backend) SetFrequency(direction Direction, frequency string) *Backend {
 	b.properties = append(b.properties, newDirectionProperty("frequency", direction, frequency))
 	return b
 }
 
 // SampleFormat represents the sample format (number of bits per sample) to use
-// in the WithSampleFormat property.
+// in the [Backend.SetSampleFormat] method.
 // See https://www.metadata2go.com/file-info/sample-fmt for more details.
 type SampleFormat string
 
@@ -108,7 +109,7 @@ const (
 // SetSampleFormat specifies the sample format to use when [Backend.ToggleFixedSettings]
 // was called with true.
 //
-//	qemu-system-* -audiodev pa,in|out.format=format
+//	qemu-system-* -audiodev <name>,in|out.format=format
 func (b *Backend) SetSampleFormat(direction Direction, format SampleFormat) *Backend {
 	b.properties = append(b.properties, newDirectionProperty("format", direction, format))
 	return b
@@ -117,7 +118,7 @@ func (b *Backend) SetSampleFormat(direction Direction, format SampleFormat) *Bac
 // SetTimerPeriod sets the timer period used by the audio subsystem in
 // microseconds. The default is 10,000 (10 ms).
 //
-//	qemu-system-* -audiodev pa,timer-period=period
+//	qemu-system-* -audiodev <name>,timer-period=period
 func (b *Backend) SetTimerPeriod(period int) *Backend {
 	b.properties = append(b.properties, queso.NewProperty("timer-period", period))
 	return b
@@ -125,7 +126,7 @@ func (b *Backend) SetTimerPeriod(period int) *Backend {
 
 // SetVoices specifies the number of voices. The default is 1.
 //
-//	qemu-system-* -audiodev pa,in|out.voices=voices
+//	qemu-system-* -audiodev <name>,in|out.voices=voices
 func (b *Backend) SetVoices(direction Direction, count int) *Backend {
 	b.properties = append(b.properties, newDirectionProperty("voices", direction, count))
 	return b
@@ -136,21 +137,23 @@ func (b *Backend) SetVoices(direction Direction, count int) *Backend {
 // this case you must not specify frequency, channels or format. This is enabled
 // by default.
 //
-//	qemu-system-* -audiodev pa,in|out.fixed-settings=on|off
+//	qemu-system-* -audiodev <name>,in|out.fixed-settings=on|off
 func (b *Backend) ToggleFixedSettings(direction Direction, enabled bool) *Backend {
 	b.properties = append(b.properties, newDirectionProperty("fixed-settings", direction, enabled))
 	return b
 }
 
-// ToggleMixingEngine enables/disables QEMU's mixing engine to mix all streams inside QEMU
-// and convert audio formats when not supported by the backend. When disabled,
-// [Backend.ToggleFixedSettings] must be disabled too. Note that disabling this option means
-// that the selected backend must support multiple streams and the audio formats
-// used by the virtual cards, otherwise you'll get no sound. It's not
-// recommended disabling this option unless you want to use 5.1 or 7.1 audio, as
-// mixing engine only supports mono and stereo audio. This property is enabled by default.
+// ToggleMixingEngine enables/disables QEMU's mixing engine to mix all streams inside
+// QEMU and convert audio formats when not supported by the backend.
+// When disabled, [Backend.ToggleFixedSettings] must be disabled too.
 //
-//	qemu-system-* -audiodev pa,in|out.mixing-engine=on|off
+// Note that disabling this option means that the selected backend must support
+// multiple streams and the audio formats used by the virtual cards, otherwise
+// you'll get no sound. It's not recommended disabling this option unless you
+// want to use 5.1 or 7.1 audio, as mixing engine only supports mono and stereo
+// audio. This property is enabled by default.
+//
+//	qemu-system-* -audiodev <name>,in|out.mixing-engine=on|off
 func (b *Backend) ToggleMixingEngine(direction Direction, enabled bool) *Backend {
 	b.properties = append(b.properties, newDirectionProperty("mixing-engine", direction, enabled))
 	return b

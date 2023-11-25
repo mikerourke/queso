@@ -15,7 +15,7 @@ type SpicePortBackend struct {
 //
 //	qemu-system-* -chardev spiceport,id=id,debug=debug,name=name
 func NewSpicePortBackend(id string, debugLevel string, name string) *SpicePortBackend {
-	backend := NewBackend("spiceport", id)
+	backend := New("spiceport", id)
 	backend.properties = append(backend.properties,
 		queso.NewProperty("debug", debugLevel),
 		queso.NewProperty("name", name))
@@ -35,7 +35,7 @@ type SpiceVMCBackend struct {
 //
 //	qemu-system-* -chardev spiceport,id=id,debug=debug,name=name
 func NewSpiceVMCBackend(id string, debugLevel string, name string) *SpiceVMCBackend {
-	backend := NewBackend("spicevmc", id)
+	backend := New("spicevmc", id)
 	backend.properties = append(backend.properties,
 		queso.NewProperty("debug", debugLevel),
 		queso.NewProperty("name", name))

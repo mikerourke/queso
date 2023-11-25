@@ -45,6 +45,12 @@ func (d *LocalFileSystemDevice) option() *queso.Option {
 	return queso.NewOption("fsdev", "local", properties...)
 }
 
+// SetProperty is used to add arbitrary properties to the [LocalFileSystemDevice].
+func (d *LocalFileSystemDevice) SetProperty(key string, value interface{}) *LocalFileSystemDevice {
+	d.properties = append(d.properties, queso.NewProperty(key, value))
+	return d
+}
+
 // EnableWriteOut means that host page cache will be used to read and write data but
 // write notification will be sent to the guest only when the data has been reported
 // as written by the storage subsystem.

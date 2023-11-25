@@ -7,7 +7,7 @@ import (
 
 // Drive represents a new drive. This includes creating a block driver node (the backend)
 // as well as a guest device, and is mostly a shortcut for defining the corresponding
-// [Driver] and Device options.
+// [driver.Driver] and Device options.
 type Drive struct {
 	*driver.Driver
 }
@@ -21,7 +21,8 @@ func NewDrive() *Drive {
 	}
 }
 
-// SetAIOBackend specified the AIO backend. The default value is [AIOBackendThreads].
+// SetAIOBackend specified the AIO backend. The default value is
+// [driver.AIOBackendThreads].
 //
 //	qemu-system-* -drive aio=backend
 func (d *Drive) SetAIOBackend(backend string) *Drive {
@@ -84,6 +85,8 @@ func (d *Drive) SetBus(bus string) *Drive {
 // CacheAccess controls how the host cache is used to access block data on
 // the drive and is passed to the [Drive.SetCacheAccess] property.
 type CacheAccess string
+
+// TODO: Add comments for the cache accesses below.
 
 const (
 	CacheAccessNone         CacheAccess = "none"
@@ -149,9 +152,11 @@ func (d *Drive) SetIndex(index int) *Drive {
 	return d
 }
 
-// DriveInterface represents an interface that can be used with a Drive and is
+// DriveInterface represents an interface that can be used with a [Drive] and is
 // passed to the [Drive.SetInterface] method.
 type DriveInterface string
+
+// TODO: Add comments for the driver interfaces below.
 
 const (
 	DriveInterfaceNone          DriveInterface = "none"
@@ -164,7 +169,8 @@ const (
 	DriveInterfaceVirtio        DriveInterface = "virtio"
 )
 
-// SetInterface defines on which type on interface the drive is connected.
+// SetInterface defines which type of interface the drive is connected. See
+// [DriveInterface] for more details.
 //
 //	qemu-system-* -drive if=interface
 func (d *Drive) SetInterface(driveInterface DriveInterface) *Drive {
@@ -172,7 +178,7 @@ func (d *Drive) SetInterface(driveInterface DriveInterface) *Drive {
 	return d
 }
 
-// DriveMedia represents the type of Drive media and is passed to the
+// DriveMedia represents the type of drive media and is passed to the
 // [Drive.SetMedia] method.
 type DriveMedia string
 

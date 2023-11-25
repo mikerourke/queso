@@ -12,6 +12,6 @@ type NVMMAccelerator struct {
 //	qemu-system-* -accel nvmm
 func NewNVMMAccelerator() *NVMMAccelerator {
 	return &NVMMAccelerator{
-		New(TypeNVMM),
+		New(string(TypeNVMM)),
 	}
 }

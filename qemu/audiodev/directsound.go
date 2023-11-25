@@ -13,7 +13,7 @@ type DirectSoundBackend struct {
 //	qemu-system-* -audiodev dsound,id=id
 func NewDirectSoundBackend(id string) *DirectSoundBackend {
 	return &DirectSoundBackend{
-		NewBackend("dsound", id),
+		New("dsound", id),
 	}
 }
 
@@ -21,7 +21,7 @@ func NewDirectSoundBackend(id string) *DirectSoundBackend {
 // default is 10,000 (10 us).
 //
 //	qemu-system-* -audiodev dsound,latency=usecs
-func (b *DirectSoundBackend) SetLatency(usecs int) *DirectSoundBackend {
-	b.properties = append(b.properties, queso.NewProperty("latency", usecs))
+func (b *DirectSoundBackend) SetLatency(latency int) *DirectSoundBackend {
+	b.properties = append(b.properties, queso.NewProperty("latency", latency))
 	return b
 }

@@ -13,7 +13,7 @@ type PulseAudioBackend struct {
 //	qemu-system-* -audiodev pa,id=id
 func NewPulseAudioBackend(id string) *PulseAudioBackend {
 	return &PulseAudioBackend{
-		NewBackend("pa", id),
+		New("pa", id),
 	}
 }
 
@@ -21,8 +21,8 @@ func NewPulseAudioBackend(id string) *PulseAudioBackend {
 // will try to honor this value but actual latencies may be lower or higher.
 //
 //	qemu-system-* -audiodev pa,in|out.latency=usecs
-func (b *PulseAudioBackend) SetLatency(direction Direction, usecs int) *PulseAudioBackend {
-	b.properties = append(b.properties, newDirectionProperty("latency", direction, usecs))
+func (b *PulseAudioBackend) SetLatency(direction Direction, latency int) *PulseAudioBackend {
+	b.properties = append(b.properties, newDirectionProperty("latency", direction, latency))
 	return b
 }
 

@@ -12,6 +12,6 @@ type SpiceBackend struct {
 //	qemu-system-* -audiodev spice,id=id
 func NewSpiceBackend(id string) *SpiceBackend {
 	return &SpiceBackend{
-		NewBackend("spice", id),
+		New("spice", id),
 	}
 }

@@ -11,15 +11,15 @@ type PipeWireBackend struct {
 //	qemu-system-* -audiodev pipewire,id=id
 func NewPipeWireBackend(id string) *PipeWireBackend {
 	return &PipeWireBackend{
-		NewBackend("pipewire", id),
+		New("pipewire", id),
 	}
 }
 
 // SetLatency sets the desired latency in microseconds.
 //
 //	qemu-system-* -audiodev pipewire,in|out.latency=usecs
-func (b *PipeWireBackend) SetLatency(direction Direction, usecs int) *PipeWireBackend {
-	b.properties = append(b.properties, newDirectionProperty("latency", direction, usecs))
+func (b *PipeWireBackend) SetLatency(direction Direction, latency int) *PipeWireBackend {
+	b.properties = append(b.properties, newDirectionProperty("latency", direction, latency))
 	return b
 }
 

@@ -12,6 +12,6 @@ type HVFAccelerator struct {
 //	qemu-system-* -accel hvf
 func NewHVFAccelerator() *HVFAccelerator {
 	return &HVFAccelerator{
-		New(TypeHVF),
+		New(string(TypeHVF)),
 	}
 }

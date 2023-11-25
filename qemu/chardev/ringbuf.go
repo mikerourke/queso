@@ -13,7 +13,7 @@ type RingBufferBackend struct {
 //	qemu-system-* -chardev ringbuf,id=id
 func NewRingBufferBackend(id string) *RingBufferBackend {
 	return &RingBufferBackend{
-		NewBackend("ringbuf", id),
+		New("ringbuf", id),
 	}
 }
 

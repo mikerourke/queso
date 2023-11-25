@@ -13,12 +13,12 @@ type Backend struct {
 	properties []*queso.Property
 }
 
-// NewBackend returns a new instance of [Backend]. backendType is the type of
+// New returns a new instance of [Backend]. backendType is the type of
 // backend, this is a string rather than a constant to allow for future backend
 // types. id is the unique ID, which can be any string up to 127 characters long.
 //
-//	qemu-system-* -chardev backend,id=id
-func NewBackend(backendType string, id string) *Backend {
+//	qemu-system-* -chardev <backendType>,id=id
+func New(backendType string, id string) *Backend {
 	return &Backend{
 		Type:       backendType,
 		ID:         id,
@@ -32,7 +32,7 @@ func (b *Backend) option() *queso.Option {
 	return queso.NewOption("chardev", b.Type, properties...)
 }
 
-// SetProperty can be used to set arbitrary properties on the backend.
+// SetProperty can be used to set arbitrary properties on the [Backend].
 func (b *Backend) SetProperty(name string, value interface{}) *Backend {
 	b.properties = append(b.properties, queso.NewProperty(name, value))
 	return b
@@ -53,7 +53,7 @@ func (b *Backend) SetProperty(name string, value interface{}) *Backend {
 // For instance, you could use this to allow a single stdio character device to be
 // used by two serial ports and the QEMU monitor:
 //
-//	TODO
+//	TODO: Add examples using Queso rather than QEMU.
 func (b *Backend) ToggleMultiplexing(enabled bool) *Backend {
 	b.properties = append(b.properties, queso.NewProperty("mux", enabled))
 	return b

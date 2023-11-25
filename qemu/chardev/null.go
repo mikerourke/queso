@@ -12,6 +12,6 @@ type NullBackend struct {
 //	qemu-system-* -chardev null,id=id
 func NewNullBackend(id string) *NullBackend {
 	return &NullBackend{
-		NewBackend("null", id),
+		New("null", id),
 	}
 }

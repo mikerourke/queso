@@ -15,7 +15,7 @@ type SerialBackend struct {
 //	qemu-system-* -chardev serial,id=id,path=path
 func NewSerialBackend(id string, path string) *SerialBackend {
 	return &SerialBackend{
-		Backend: NewBackend("serial", id),
+		Backend: New("serial", id),
 		Path:    path,
 	}
 }

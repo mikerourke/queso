@@ -13,7 +13,7 @@ type VirtualConsoleBackend struct {
 //	qemu-system-* -chardev vc,id=id
 func NewVirtualConsoleBackend(id string) *VirtualConsoleBackend {
 	return &VirtualConsoleBackend{
-		NewBackend("vc", id),
+		New("vc", id),
 	}
 }
 

@@ -14,7 +14,7 @@ type TCGAccelerator struct {
 //	qemu-system-* -accel tcg
 func NewTCGAccelerator() *TCGAccelerator {
 	return &TCGAccelerator{
-		New(TypeTCG),
+		New(string(TypeTCG)),
 	}
 }
 
@@ -35,7 +35,7 @@ const (
 // and front-ends support it and no incompatible TCG features have been enabled
 // (e.g. icount/replay).
 //
-//	qemu-system-* -accel tcg thread=single|multi
+//	qemu-system-* -accel tcg,thread=single|multi
 func (a *TCGAccelerator) SetThreads(option ThreadingOption) *TCGAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("thread", option))
 	return a
@@ -44,7 +44,7 @@ func (a *TCGAccelerator) SetThreads(option ThreadingOption) *TCGAccelerator {
 // SetTranslationBlockCacheSize controls the size (in MiB) of the TCG
 // translation block cache.
 //
-//	qemu-system-* -accel tcg tb-size=mb
+//	qemu-system-* -accel tcg,tb-size=mb
 func (a *TCGAccelerator) SetTranslationBlockCacheSize(mb int) *TCGAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("tb-size", mb))
 	return a
@@ -55,7 +55,7 @@ func (a *TCGAccelerator) SetTranslationBlockCacheSize(mb int) *TCGAccelerator {
 // can be useful in some situations, such as when trying to analyse the logs
 // produced during debugging.
 //
-//	qemu-system-* -accel tcg one-insn-per-tb=on|off
+//	qemu-system-* -accel tcg,one-insn-per-tb=on|off
 func (a *TCGAccelerator) ToggleOneInstructionPerTranslation(enabled bool) *TCGAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("one-insn-per-tb", enabled))
 	return a
@@ -66,7 +66,7 @@ func (a *TCGAccelerator) ToggleOneInstructionPerTranslation(enabled bool) *TCGAc
 // such a case this will default to true. On other operating systems, this will
 // default to false, but one may enable this for testing or debugging.
 //
-//	qemu-system-* -accel tcg split-wx=on|off
+//	qemu-system-* -accel tcg,split-wx=on|off
 func (a *TCGAccelerator) ToggleSplitWX(enabled bool) *TCGAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("split-wx", enabled))
 	return a

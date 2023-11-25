@@ -64,3 +64,13 @@ func BoolPropertyToStatus(value bool) string {
 		return "off"
 	}
 }
+
+// Ternary returns the ifValue if the specified value is true, or elseValue if
+// false.
+func Ternary(value bool, ifValue string, elseValue string) string {
+	if value {
+		return ifValue
+	} else {
+		return elseValue
+	}
+}

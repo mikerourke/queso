@@ -15,7 +15,7 @@ type ParallelBackend struct {
 //	qemu-system-* -chardev parallel,id=id,path=path
 func NewParallelBackend(id string, path string) *ParallelBackend {
 	return &ParallelBackend{
-		Backend: NewBackend("parallel", id),
+		Backend: New("parallel", id),
 		Path:    path,
 	}
 }

@@ -11,6 +11,6 @@ type DummyBackend struct {
 //	qemu-system-* -audiodev none,id=id
 func NewDummyBackend(id string) *DummyBackend {
 	return &DummyBackend{
-		NewBackend("none", id),
+		New("none", id),
 	}
 }

@@ -9,12 +9,12 @@ type KVMAccelerator struct {
 	*Accelerator
 }
 
-// NewKVMAccelerator returns a new instace of [KVMAccelerator].
+// NewKVMAccelerator returns a new instance of [KVMAccelerator].
 //
 //	qemu-system-* -accel kvm
 func NewKVMAccelerator() *KVMAccelerator {
 	return &KVMAccelerator{
-		New(TypeKVM),
+		New(string(TypeKVM)),
 	}
 }
 
@@ -26,7 +26,7 @@ func NewKVMAccelerator() *KVMAccelerator {
 // this feature is disabled (value = 0). When enabled, KVM will instead record
 // dirty pages in a bitmap.
 //
-//	qemu-system-* -accel kvm dirty-ring-size=bytes
+//	qemu-system-* -accel kvm,dirty-ring-size=bytes
 func (a *KVMAccelerator) SetDirtyRingSize(bytes int) *KVMAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("dirty-ring-size", bytes))
 	return a
@@ -46,7 +46,7 @@ func (a *KVMAccelerator) SetDirtyRingSize(bytes int) *KVMAccelerator {
 // Be wary of specifying a higher size as it will have an impact on the memory.
 // By default, this feature is disabled (i.e. size is set to 0).
 //
-//	qemu-system-* -accel kvm eager-split-size=size
+//	qemu-system-* -accel kvm,eager-split-size=size
 func (a *KVMAccelerator) SetEagerSplitSize(size int) *KVMAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("eager-split-size", size))
 	return a
@@ -75,7 +75,7 @@ const (
 // kernel attack surface, at a performance cost for non-MSI interrupts. Disabling
 // the in-kernel irqchip completely is not recommended except for debugging purposes.
 //
-//	qemu-system-* -accel kvm kernel-irqchip=on|off|split
+//	qemu-system-* -accel kvm,kernel-irqchip=on|off|split
 func (a *KVMAccelerator) SetKernelIRQChip(mode KernelIRQChipMode) *KVMAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("kernel-irqchip", mode))
 	return a
@@ -83,7 +83,7 @@ func (a *KVMAccelerator) SetKernelIRQChip(mode KernelIRQChipMode) *KVMAccelerato
 
 // SetKVMShadowMemory defines the size of the KVM shadow MMU.
 //
-//	qemu-system-* -accel kvm kvm-shadow-mem=size
+//	qemu-system-* -accel kvm,kvm-shadow-mem=size
 func (a *KVMAccelerator) SetKVMShadowMemory(size int) *KVMAccelerator {
 	a.properties = append(a.properties, queso.NewProperty("kvm-shadow-mem", size))
 	return a

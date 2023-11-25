@@ -6,10 +6,19 @@ import "github.com/mikerourke/queso"
 type OpenGLOption string
 
 const (
-	OpenGLOn   OpenGLOption = "on"
-	OpenGLOff  OpenGLOption = "off"
+	// OpenGLOn indicates OpenGL is enabled.
+	OpenGLOn OpenGLOption = "on"
+
+	// OpenGLOff indicates OpenGL is disabled.
+	OpenGLOff OpenGLOption = "off"
+
+	// OpenGLCore indicates that OpenGL Core (i.e. the core subsset of OpenGL),
+	// should be used.
 	OpenGLCore OpenGLOption = "core"
-	OpenGLES   OpenGLOption = "es"
+
+	// OpenGLES indicates that OpenGL for Embedded Systems should be used.
+	// See https://www.khronos.org/opengles/ for more details.
+	OpenGLES OpenGLOption = "es"
 )
 
 // MouseGrabbingKeys represents which keys to use to toggle mouse grabbing in

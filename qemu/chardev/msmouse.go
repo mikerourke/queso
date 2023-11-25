@@ -12,6 +12,6 @@ type MSMouseBackend struct {
 //	qemu-system-* -chardev msmouse,id=id
 func NewMSMouseBackend(id string) *MSMouseBackend {
 	return &MSMouseBackend{
-		NewBackend("msmouse", id),
+		New("msmouse", id),
 	}
 }

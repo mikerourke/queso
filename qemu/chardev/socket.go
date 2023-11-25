@@ -14,7 +14,7 @@ type SocketBackend struct {
 //	qemu-system-* -chardev socket,id=id
 func NewSocketBackend(id string) *SocketBackend {
 	return &SocketBackend{
-		NewBackend("socket", id),
+		New("socket", id),
 	}
 }
 

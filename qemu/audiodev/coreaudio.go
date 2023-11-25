@@ -11,7 +11,7 @@ type CoreAudioBackend struct {
 //	qemu-system-* -audiodev coreaudio,id=id
 func NewCoreAudioBackend(id string) *CoreAudioBackend {
 	return &CoreAudioBackend{
-		NewBackend("coreaudio", id),
+		New("coreaudio", id),
 	}
 }
 

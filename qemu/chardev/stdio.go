@@ -13,7 +13,7 @@ type StdioBackend struct {
 //	qemu-system-* -chardev stdio,id=id
 func NewStdioBackend(id string) *StdioBackend {
 	return &StdioBackend{
-		NewBackend("stdio", id),
+		New("stdio", id),
 	}
 }
 

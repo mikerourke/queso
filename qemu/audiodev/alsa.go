@@ -13,7 +13,7 @@ type ALSABackend struct {
 //	qemu-system-* -audiodev alsa,id=id
 func NewALSABackend(id string) *ALSABackend {
 	return &ALSABackend{
-		NewBackend("alsa", id),
+		New("alsa", id),
 	}
 }
 
@@ -26,19 +26,19 @@ func (b *ALSABackend) SetDevice(direction Direction, device string) *ALSABackend
 	return b
 }
 
-// SetPeriodLength sets the period length in microseconds
+// SetPeriodLength sets the period length in microseconds.
 //
 //	qemu-system-* -audiodev alsa,in|out.period-length=usecs
-func (b *ALSABackend) SetPeriodLength(direction Direction, usecs int) *ALSABackend {
-	b.properties = append(b.properties, newDirectionProperty("period-length", direction, usecs))
+func (b *ALSABackend) SetPeriodLength(direction Direction, length int) *ALSABackend {
+	b.properties = append(b.properties, newDirectionProperty("period-length", direction, length))
 	return b
 }
 
-// SetThreshold specifies the threshold (in microseconds) when playback starts.
+// SetThreshold specifies the threshold in microseconds when playback starts.
 //
 //	qemu-system-* -audiodev alsa,threshold=threshold
-func (b *ALSABackend) SetThreshold(usecs int) *ALSABackend {
-	b.properties = append(b.properties, queso.NewProperty("threshold", usecs))
+func (b *ALSABackend) SetThreshold(threshold int) *ALSABackend {
+	b.properties = append(b.properties, queso.NewProperty("threshold", threshold))
 	return b
 }
 

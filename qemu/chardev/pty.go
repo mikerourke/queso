@@ -12,6 +12,6 @@ type PTYBackend struct {
 //	qemu-system-* -chardev pty,id=id
 func NewPTYBackend(id string) *PTYBackend {
 	return &PTYBackend{
-		NewBackend("pty", id),
+		New("pty", id),
 	}
 }

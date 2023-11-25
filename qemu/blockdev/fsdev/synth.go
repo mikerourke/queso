@@ -21,6 +21,17 @@ func NewSyntheticFileSystemDevice(id string) *SyntheticFileSystemDevice {
 	}
 }
 
+func (d *SyntheticFileSystemDevice) option() *queso.Option {
+	properties := append(d.properties, queso.NewProperty("id", d.ID))
+	return queso.NewOption("fsdev", "synth", properties...)
+}
+
+// SetProperty is used to add arbitrary properties to the [SyntheticFileSystemDevice].
+func (d *SyntheticFileSystemDevice) SetProperty(key string, value interface{}) *SyntheticFileSystemDevice {
+	d.properties = append(d.properties, queso.NewProperty(key, value))
+	return d
+}
+
 // SetID specifies the identifier for this device.
 //
 //	qemu-system-* -fsdev synth,id=id
@@ -55,6 +66,17 @@ func NewVirtualSyntheticFileSystemDevice(mountTag string) *VirtualSyntheticFileS
 		MountTag:   mountTag,
 		properties: make([]*queso.Property, 0),
 	}
+}
+
+func (d *VirtualSyntheticFileSystemDevice) option() *queso.Option {
+	properties := append(d.properties, queso.NewProperty("mount_tag", d.MountTag))
+	return queso.NewOption("virtfs", "synth", properties...)
+}
+
+// SetProperty is used to add arbitrary properties to the [VirtualSyntheticFileSystemDevice].
+func (d *VirtualSyntheticFileSystemDevice) SetProperty(key string, value interface{}) *VirtualSyntheticFileSystemDevice {
+	d.properties = append(d.properties, queso.NewProperty(key, value))
+	return d
 }
 
 // SetMountTag specifies the tag name to be used by the guest to mount this export point.

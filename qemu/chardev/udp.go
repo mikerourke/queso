@@ -15,7 +15,7 @@ type UDPBackend struct {
 //	qemu-system-* -chardev udp,id=id,port=port
 func NewUDPBackend(id string, port int) *UDPBackend {
 	return &UDPBackend{
-		Backend: NewBackend("udp", id),
+		Backend: New("udp", id),
 		Port:    port,
 	}
 }

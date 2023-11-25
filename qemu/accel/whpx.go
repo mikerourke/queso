@@ -12,6 +12,6 @@ type WHPXAccelerator struct {
 //	qemu-system-* -accel whpx
 func NewWHPXAccelerator() *WHPXAccelerator {
 	return &WHPXAccelerator{
-		New(TypeWHPX),
+		New(string(TypeWHPX)),
 	}
 }

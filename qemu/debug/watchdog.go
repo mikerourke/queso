@@ -33,8 +33,10 @@ const (
 	WatchdogActionNone WatchdogAction = "none"
 )
 
-// WatchdogActionOnExpiration specifies the action to perform when the watchdog
-// timer expires.
-func WatchdogActionOnExpiration(action WatchdogAction) *queso.Option {
+// WithWatchdogActionOnExpiration specifies the action to perform when the
+// watchdog timer expires.
+//
+//	qemu-system-* -watchdog-action action
+func WithWatchdogActionOnExpiration(action WatchdogAction) *queso.Option {
 	return queso.NewOption("watchdog-action", string(action))
 }

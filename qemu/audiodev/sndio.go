@@ -11,7 +11,7 @@ type SNDIOBackend struct {
 //	qemu-system-* -audiodev sndio,id=id
 func NewSNDIOBackend(id string) *SNDIOBackend {
 	return &SNDIOBackend{
-		NewBackend("sndio", id),
+		New("sndio", id),
 	}
 }
 
@@ -27,7 +27,7 @@ func (b *SNDIOBackend) SetDevice(direction Direction, device string) *SNDIOBacke
 // SetLatency sets the desired latency in microseconds.
 //
 //	qemu-system-* -audiodev sndio,in|out.latency=usecs
-func (b *SNDIOBackend) SetLatency(direction Direction, usecs int) *SNDIOBackend {
-	b.properties = append(b.properties, newDirectionProperty("latency", direction, usecs))
+func (b *SNDIOBackend) SetLatency(direction Direction, latency int) *SNDIOBackend {
+	b.properties = append(b.properties, newDirectionProperty("latency", direction, latency))
 	return b
 }

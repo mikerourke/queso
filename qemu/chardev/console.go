@@ -12,6 +12,6 @@ type ConsoleBackend struct {
 //	qemu-system-* -chardev console,id=id
 func NewConsoleBackend(id string) *ConsoleBackend {
 	return &ConsoleBackend{
-		NewBackend("console", id),
+		New("console", id),
 	}
 }
