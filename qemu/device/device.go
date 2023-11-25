@@ -21,7 +21,6 @@ func New(deviceType string) *Device {
 	}
 }
 
-// Option returns the option representation of the device.
 func (d *Device) option() *queso.Option {
 	return queso.NewOption("device", d.Type, d.properties...)
 }

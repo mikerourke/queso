@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/mikerourke/queso/qemu"
+	"github.com/mikerourke/queso/qemu/device"
 )
 
 /*
@@ -38,6 +39,12 @@ func main() {
 	fmt.Println(q.Version())
 
 	fmt.Println(q.Args())
+
+	dev := device.New("yo")
+	fmt.Println(dev.Type)
+
+	ip := device.NewIPMIBMCExternal("a", "b")
+	ip.SetProperty("a", "b")
 
 	return
 

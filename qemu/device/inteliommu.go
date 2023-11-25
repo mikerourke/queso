@@ -2,10 +2,14 @@ package device
 
 import "github.com/mikerourke/queso"
 
+// IntelIOMMU represents an Intel Input-Output Memory Management Unit (IOMMU).
+// See https://terenceli.github.io/技术/2019/08/04/iommu-introduction for information
+// about IOMMU.
 type IntelIOMMU struct {
 	*Device
 }
 
+// NewIntelIOMMU returns a new instance of [IntelIOMMU].
 func NewIntelIOMMU() *IntelIOMMU {
 	return &IntelIOMMU{New("intel-iommu")}
 }
@@ -32,15 +36,19 @@ func (i *IntelIOMMU) SetAddressWidthBits(bits AddressWidthBits) *IntelIOMMU {
 	return i
 }
 
-// TODO: Find out what interrupt remapping is.
-
 // InterruptRemapping represents the options available that can be set with the
 // [IntelIOMMU.SetInterruptRemapping] method.
 type InterruptRemapping string
 
 const (
-	InterruptRemappingOn   InterruptRemapping = "on"
-	InterruptRemappingOff  InterruptRemapping = "off"
+	// InterruptRemappingOn indicates interrupt remapping is enabled.
+	InterruptRemappingOn InterruptRemapping = "on"
+
+	// InterruptRemappingOff indicates interrupt remapping is disabled.
+	InterruptRemappingOff InterruptRemapping = "off"
+
+	// InterruptRemappingAuto indicates interrupt remapping is enabled or
+	// disabled automatically.
 	InterruptRemappingAuto InterruptRemapping = "auto"
 )
 

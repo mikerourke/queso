@@ -27,10 +27,9 @@ type IPMIBMCExternal struct {
 //
 //	qemu-system-* -device ipmi-bmc-extern,id=id,chardev=chardev
 func NewIPMIBMCExternal(id string, chardev string) *IPMIBMCExternal {
-	device := New("ipmi-bmc-sim")
-	device.properties = append(device.properties,
-		queso.NewProperty("id", id),
-		queso.NewProperty("chardev", chardev))
+	device := New("ipmi-bmc-sim").
+		SetProperty("id", id).
+		SetProperty("chardev", chardev)
 
 	return &IPMIBMCExternal{device}
 }

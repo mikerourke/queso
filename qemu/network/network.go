@@ -28,7 +28,7 @@ const (
 // as with the corresponding NetworkDevice. The guest NIC model can be set with
 // the WithModel property. The hardware MAC address can be set with the
 // WithMACAddress property.
-func NIC(backendType BackendType, properties ...*Property) *queso.Option {
+func NIC2(backendType BackendType, properties ...*Property) *queso.Option {
 	props := make([]*queso.Property, 0)
 
 	for _, property := range properties {
@@ -39,7 +39,7 @@ func NIC(backendType BackendType, properties ...*Property) *queso.Option {
 
 // Backend returns a network backend with the specified type and arbitrary
 // properties.
-func Backend(backendType string, properties ...*Property) *queso.Option {
+func Backend2(backendType string, properties ...*Property) *queso.Option {
 	props := make([]*queso.Property, 0)
 
 	for _, property := range properties {
@@ -52,12 +52,12 @@ func Backend(backendType string, properties ...*Property) *queso.Option {
 // UserBackend configures a user mode host network backend which requires no
 // administrator privilege to run. The id parameter represents a symbolic name
 // for use in monitor commands.
-func UserBackend(id string, properties ...*Property) *queso.Option {
+func UserBackend2(id string, properties ...*Property) *queso.Option {
 	return newNetworkBackend(BackendTypeUser, "id", id, properties...)
 }
 
 // TAPBackend configures a host TAP network backend.
-func TAPBackend(id string, properties ...*Property) *queso.Option {
+func TAPBackend2(id string, properties ...*Property) *queso.Option {
 	return newNetworkBackend(BackendTypeTAP, "id", id, properties...)
 }
 
@@ -67,7 +67,7 @@ func TAPBackend(id string, properties ...*Property) *queso.Option {
 // Use the network helper WithHelper to configure the TAP interface and attach
 // it to the bridge. The default network helper executable is
 // `/path/to/qemu-bridge-helper` and the default bridge device is "br0".
-func Bridge(id string, properties ...*Property) *queso.Option {
+func Bridge2(id string, properties ...*Property) *queso.Option {
 	return newNetworkBackend(BackendTypeBridge, "id", id, properties...)
 }
 
@@ -85,7 +85,7 @@ func SocketBackend(id string, properties ...*Property) *queso.Option {
 // kernel (from version 3.3 onwards).
 //
 // This transport allows a VM to communicate to another VM, router or firewall directly.
-func L2TPv3Backend(
+func L2TPv3Backend2(
 	id string,
 	sourceAddr string,
 	destAddr string,
@@ -105,7 +105,7 @@ func L2TPv3Backend(
 
 // VDEBackend configures a VDE backend. This option is only available if QEMU has
 // been compiled with VDE support enabled.
-func VDEBackend(id string, properties ...*Property) *queso.Option {
+func VDEBackend2(id string, properties ...*Property) *queso.Option {
 	return newNetworkBackend(BackendTypeVDE, "id", id, properties...)
 }
 
@@ -113,7 +113,7 @@ func VDEBackend(id string, properties ...*Property) *queso.Option {
 // The chardev should be a Unix domain socket backed one. The vhost-user
 // uses a specifically defined protocol to pass vhost ioctl replacement messages
 // to an application on the other end of the socket.
-func VHostUserBackend(chardev string, properties ...*Property) *queso.Option {
+func VHostUserBackend2(chardev string, properties ...*Property) *queso.Option {
 	return newNetworkBackend(BackendTypeVHostUser, "chardev", chardev, properties...)
 }
 
@@ -122,7 +122,7 @@ func VHostUserBackend(chardev string, properties ...*Property) *queso.Option {
 // vDPA device is a device that uses a data path which complies with the virtio
 // specifications with a vendor specific control path. vDPA devices can be both
 // physically located on the hardware or emulated by software.
-func VHostVDPABackend(vhostdev string) *queso.Option {
+func VHostVDPABackend2(vhostdev string) *queso.Option {
 	return queso.NewOption("netdev", "vhost-vdpa",
 		queso.NewProperty("vhostdev", vhostdev))
 }
@@ -134,7 +134,7 @@ func VHostVDPABackend(vhostdev string) *queso.Option {
 // and with other shared mode interfaces on the same subnet. If no DHCP settings, subnet
 // mask and IPv6 prefix specified, the interface can communicate with any of other
 // interfaces in shared mode.
-func VMNetSharedBackend(id string) *queso.Option {
+func VMNetSharedBackend2(id string) *queso.Option {
 	return newNetworkBackend(BackendTypeVMNetShared, "id", id)
 }
 
@@ -165,7 +165,7 @@ func newNetworkBackend(
 // hub instead of a single network device. Alternatively, you can also connect
 // the hub port to another network device with ID netdev. Specify an
 // empty string for the netdev parameter to use the emulated hub.
-func HubPort(id string, hubID string, netdev string) *queso.Option {
+func HubPort2(id string, hubID string, netdev string) *queso.Option {
 	props := []*queso.Property{
 		queso.NewProperty("id", id),
 		queso.NewProperty("hubid", hubID),
