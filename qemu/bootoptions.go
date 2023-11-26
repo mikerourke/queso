@@ -21,7 +21,9 @@ func NewBootOptions() *BootOptions {
 	}
 }
 
-func (bo *BootOptions) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (bo *BootOptions) Option() *queso.Option {
 	if len(bo.properties) == 0 {
 		panic("at least one property must be specified for BootOptions")
 	}

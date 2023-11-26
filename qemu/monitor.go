@@ -8,21 +8,24 @@ import "github.com/mikerourke/queso"
 type MonitorMode string
 
 const (
-	// MonitorModeHMP indicates that the Human Monitor Protocol should be used.
-	MonitorModeHMP MonitorMode = "readline"
+	// MonitorHMP indicates that the Human Monitor Protocol should be used.
+	MonitorHMP MonitorMode = "readline"
 
-	// MonitorModeQMP indicates that the QEMU Monitor Protocol should be used.
-	MonitorModeQMP MonitorMode = "control"
+	// MonitorQMP indicates that the QEMU Monitor Protocol should be used.
+	MonitorQMP MonitorMode = "control"
 )
 
 // Monitor is used to set up a monitor connected to a character device.
 type Monitor struct {
+	// Name is the name of the character device to monitor.
 	Name       string
 	properties []*queso.Property
 }
 
-// NewMonitor returns a new instance of a Monitor, which can be used to monitor a
-// character device.
+// NewMonitor returns a new instance of a [Monitor], which can be used to monitor
+// a character device. name is the name of the character device to monitor.
+//
+//	qemu-system-* -mon <name>
 func NewMonitor(name string) *Monitor {
 	return &Monitor{
 		Name:       name,
@@ -30,45 +33,46 @@ func NewMonitor(name string) *Monitor {
 	}
 }
 
-func (m *Monitor) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (m *Monitor) Option() *queso.Option {
 	table := queso.PropertiesTable(m.properties)
 
 	mode := table["mode"]
 	pretty := table["pretty"]
-	if mode == string(MonitorModeHMP) {
+	if mode == string(MonitorHMP) {
 		if pretty == "on" {
 			panic("you can only enable pretty when mode is QMP")
 		}
 	}
 
-	return queso.NewOption("mon", "", m.properties...)
+	return queso.NewOption("mon", m.Name, m.properties...)
 }
 
-// SetCharDevName sets the character device with the specified name to which
-// the monitor is connected.
-func (m *Monitor) SetCharDevName(name string) *Monitor {
-	m.properties = append(m.properties, queso.NewProperty("chardev", name))
-	return m
-}
-
-// SetMode sets the monitor mode to use. QEMU supports two monitors: the
-// Human Monitor Protocol (HMP), and the QEMU Monitor Protocol (QMP).
-func (m *Monitor) SetMode(mode MonitorMode) *Monitor {
+// SetMonitorMode sets the monitor mode to use. QEMU supports two monitors: the
+// Human Monitor Protocol ([MonitorHMP]), and the QEMU Monitor Protocol ([MonitorQMP]).
+//
+//	qemu-system-* -mon <name>,mode=mode
+func (m *Monitor) SetMonitorMode(mode MonitorMode) *Monitor {
 	m.properties = append(m.properties, queso.NewProperty("mode", mode))
 	return m
 }
 
 // TogglePretty sets the pretty option to "on". This option is only valid when
-// MonitorMode = MonitorModeQMP, turning on JSON pretty printing to ease human
+// MonitorMode = MonitorQMP, turning on JSON pretty printing to ease human
 // reading and debugging.
+//
+//	qemu-system-* -mon <name>,pretty=on|off
 func (m *Monitor) TogglePretty(enabled bool) *Monitor {
 	m.properties = append(m.properties, queso.NewProperty("pretty", enabled))
 	return m
 }
 
-// MonitorRedirect redirects the monitor to host device "device" (same devices as
-// the serial port). The default device is vc in graphical mode and stdio in
+// WithMonitorRedirect redirects the monitor to host device "device" (same devices
+// as the serial port). The default device is "vc" in graphical mode and "stdio" in
 // non-graphical mode. Use "none" for "device" to disable the default monitor.
-func MonitorRedirect(device string) *queso.Option {
+//
+//	qemu-system-* -monitor <device>
+func WithMonitorRedirect(device string) *queso.Option {
 	return queso.NewOption("monitor", device)
 }

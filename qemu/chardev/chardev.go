@@ -26,7 +26,9 @@ func New(backendType string, id string) *Backend {
 	}
 }
 
-func (b *Backend) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (b *Backend) Option() *queso.Option {
 	properties := append(b.properties, queso.NewProperty("id", b.ID))
 
 	return queso.NewOption("chardev", b.Type, properties...)

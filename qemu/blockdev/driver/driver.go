@@ -5,42 +5,27 @@ import "github.com/mikerourke/queso"
 
 // Driver defines a new block driver node.
 type Driver struct {
-	flag       string
-	properties []*queso.Property
+	*queso.Entity
 }
 
 // New returns a new instance of [Driver]. name is the name of the driver type.
 //
 //	qemu-system-* -blockdev driver=name
 func New(name string) *Driver {
-	var flag string
-	properties := make([]*queso.Property, 0)
+	var entity *queso.Entity
 
 	// For a Drive, the name gets set to an empty string. In that case, we
 	// don't want to add a "driver" property with that name. Drives are defined
 	// with the -drive flag, rather than -blockdev, so we specify the flag
 	// to ensure QEMU is called correctly.
 	if name == "" {
-		flag = "drive"
+		entity = queso.NewEntity("drive", "")
 	} else {
-		flag = "blockdev"
-		properties = append(properties, queso.NewProperty("driver", name))
+		entity = queso.NewEntity("blockdev", "")
+		entity.SetProperty("driver", name)
 	}
 
-	return &Driver{
-		flag:       flag,
-		properties: properties,
-	}
-}
-
-func (d *Driver) option() *queso.Option {
-	return queso.NewOption(d.flag, "", d.properties...)
-}
-
-// SetProperty allows setting arbitrary properties on a [Driver].
-func (d *Driver) SetProperty(key string, value interface{}) *Driver {
-	d.properties = append(d.properties, queso.NewProperty(key, value))
-	return d
+	return &Driver{entity}
 }
 
 // DetectZeroesStatus represents the status passed in to the [Driver.SetDetectZeroes]
@@ -66,7 +51,7 @@ const (
 //
 //	qemu-system-* -blockdev driver=<name>,detect-zeroes=detect-zeroes
 func (d *Driver) SetDetectZeroes(status DetectZeroesStatus) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("detect-zeroes", status))
+	d.SetProperty("detect-zeroes", status)
 	return d
 }
 
@@ -80,7 +65,7 @@ func (d *Driver) SetDetectZeroes(status DetectZeroesStatus) *Driver {
 //
 //	qemu-system-* -blockdev driver=<name>,node-name=name
 func (d *Driver) SetNodeName(name string) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("node-name", name))
+	d.SetProperty("node-name", name)
 	return d
 }
 
@@ -91,7 +76,7 @@ func (d *Driver) SetNodeName(name string) *Driver {
 //
 //	qemu-system-* -blockdev driver=<name>,auto-read-only=on|off
 func (d *Driver) ToggleAutoReadOnly(enabled bool) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("auto-read-only", enabled))
+	d.SetProperty("auto-read-only", enabled)
 	return d
 }
 
@@ -101,7 +86,7 @@ func (d *Driver) ToggleAutoReadOnly(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=<name>,cache.direct=on|off
 func (d *Driver) ToggleDirectCache(enabled bool) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("cache.direct", enabled))
+	d.SetProperty("cache.direct", enabled)
 	return d
 }
 
@@ -111,7 +96,7 @@ func (d *Driver) ToggleDirectCache(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=<name>,discard=on|off
 func (d *Driver) ToggleDiscard(enabled bool) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("discard", enabled))
+	d.SetProperty("discard", enabled)
 	return d
 }
 
@@ -126,7 +111,7 @@ func (d *Driver) ToggleDiscard(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=<name>,force-share=on|off
 func (d *Driver) ToggleForceShare(enabled bool) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("force-share", enabled))
+	d.SetProperty("force-share", enabled)
 	return d
 }
 
@@ -138,7 +123,7 @@ func (d *Driver) ToggleForceShare(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=<name>,cache.no-flush=on|off
 func (d *Driver) ToggleNoCacheFlushing(enabled bool) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("cache.no-flush", enabled))
+	d.SetProperty("cache.no-flush", enabled)
 	return d
 }
 
@@ -150,6 +135,6 @@ func (d *Driver) ToggleNoCacheFlushing(enabled bool) *Driver {
 //
 //	qemu-system-* -blockdev driver=<name>,read-only=on|off
 func (d *Driver) ToggleReadOnly(enabled bool) *Driver {
-	d.properties = append(d.properties, queso.NewProperty("read-only", enabled))
+	d.SetProperty("read-only", enabled)
 	return d
 }

@@ -1,7 +1,5 @@
 package audiodev
 
-import "github.com/mikerourke/queso"
-
 // PulseAudioBackend represents an audio backend using PulseAudio.
 // This backend is available on most systems.
 type PulseAudioBackend struct {
@@ -22,7 +20,7 @@ func NewPulseAudioBackend(id string) *PulseAudioBackend {
 //
 //	qemu-system-* -audiodev pa,in|out.latency=usecs
 func (b *PulseAudioBackend) SetLatency(direction Direction, latency int) *PulseAudioBackend {
-	b.properties = append(b.properties, newDirectionProperty("latency", direction, latency))
+	b.SetDirectionProperty(direction, "latency", latency)
 	return b
 }
 
@@ -30,14 +28,14 @@ func (b *PulseAudioBackend) SetLatency(direction Direction, latency int) *PulseA
 //
 //	qemu-system-* -audiodev pa,server=server
 func (b *PulseAudioBackend) SetServer(server string) *PulseAudioBackend {
-	b.properties = append(b.properties, queso.NewProperty("server", server))
+	b.SetProperty("server", server)
 	return b
 }
 
 // SetSink specified the source/sink to use for recording/playback.
 //
 //	qemu-system-* -audiodev pa,in|out.name=sink
-func (b *PulseAudioBackend) SetSink(direction Direction, name string) *PulseAudioBackend {
-	b.properties = append(b.properties, newDirectionProperty("name", direction, name))
+func (b *PulseAudioBackend) SetSink(direction Direction, sink string) *PulseAudioBackend {
+	b.SetDirectionProperty(direction, "name", sink)
 	return b
 }

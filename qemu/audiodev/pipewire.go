@@ -19,15 +19,15 @@ func NewPipeWireBackend(id string) *PipeWireBackend {
 //
 //	qemu-system-* -audiodev pipewire,in|out.latency=usecs
 func (b *PipeWireBackend) SetLatency(direction Direction, latency int) *PipeWireBackend {
-	b.properties = append(b.properties, newDirectionProperty("latency", direction, latency))
+	b.SetDirectionProperty(direction, "latency", latency)
 	return b
 }
 
 // SetSink specified the source/sink to use for recording/playback.
 //
 //	qemu-system-* -audiodev pipewire,in|out.name=sink
-func (b *PipeWireBackend) SetSink(direction Direction, name string) *PipeWireBackend {
-	b.properties = append(b.properties, newDirectionProperty("name", direction, name))
+func (b *PipeWireBackend) SetSink(direction Direction, sink string) *PipeWireBackend {
+	b.SetDirectionProperty(direction, "name", sink)
 	return b
 }
 
@@ -35,6 +35,6 @@ func (b *PipeWireBackend) SetSink(direction Direction, name string) *PipeWireBac
 //
 //	qemu-system-* -audiodev pipewire,in|out.stream=name
 func (b *PipeWireBackend) SetStreamName(direction Direction, name string) *PipeWireBackend {
-	b.properties = append(b.properties, newDirectionProperty("stream", direction, name))
+	b.SetDirectionProperty(direction, "stream", name)
 	return b
 }

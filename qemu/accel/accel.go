@@ -54,8 +54,8 @@ func WithAccelerator(accelType Type) *queso.Option {
 
 // Accelerator represents any of the available hardware accelerators.
 type Accelerator struct {
-	Type       string
-	properties []*queso.Property
+	*queso.Entity
+	Type string
 }
 
 // New returns a new [Accelerator] instance with the specified accelerator type.
@@ -64,19 +64,9 @@ type Accelerator struct {
 //	qemu-system-* -accel type
 func New(accelType string) *Accelerator {
 	return &Accelerator{
-		Type:       accelType,
-		properties: make([]*queso.Property, 0),
+		Entity: queso.NewEntity("accel", accelType),
+		Type:   accelType,
 	}
-}
-
-func (a *Accelerator) option() *queso.Option {
-	return queso.NewOption("accel", string(a.Type), a.properties...)
-}
-
-// SetProperty is used to add arbitrary properties to the [Accelerator].
-func (a *Accelerator) SetProperty(key string, value interface{}) *Accelerator {
-	a.properties = append(a.properties, queso.NewProperty(key, value))
-	return a
 }
 
 // NotifyOnVMExitOption represents the options for notifying when the VM exits.
@@ -111,6 +101,6 @@ func (a *Accelerator) SetNotifyOnVMExit(option NotifyOnVMExitOption, window int)
 		value = string(option)
 	}
 
-	a.properties = append(a.properties, queso.NewProperty("notify-vmexit", value))
+	a.SetProperty("notify-vmexit", value)
 	return a
 }

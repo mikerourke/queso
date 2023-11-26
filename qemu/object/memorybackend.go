@@ -26,7 +26,9 @@ func NewMemoryBackend(backendType string, id string) *MemoryBackend {
 	}
 }
 
-func (b *MemoryBackend) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (b *MemoryBackend) Option() *queso.Option {
 	return queso.NewOption("object", b.Type, b.properties...)
 }
 

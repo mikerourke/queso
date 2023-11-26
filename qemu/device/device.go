@@ -21,7 +21,9 @@ func New(deviceType string) *Device {
 	}
 }
 
-func (d *Device) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (d *Device) Option() *queso.Option {
 	return queso.NewOption("device", d.Type, d.properties...)
 }
 

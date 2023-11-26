@@ -20,7 +20,9 @@ func New(backendType string) *Backend {
 	}
 }
 
-func (b *Backend) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (b *Backend) Option() *queso.Option {
 	return queso.NewOption("tpmdev", b.Type, b.properties...)
 }
 

@@ -19,7 +19,9 @@ func NewSandbox(filter bool) *Sandbox {
 	}
 }
 
-func (s *Sandbox) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (s *Sandbox) Option() *queso.Option {
 	return queso.NewOption("sandbox",
 		queso.BoolPropertyToStatus(s.Filter), s.properties...)
 }

@@ -26,7 +26,9 @@ func NewSMP(cpuCount int) *SMP {
 	}
 }
 
-func (s *SMP) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (s *SMP) Option() *queso.Option {
 	return queso.NewOption("smp", strconv.Itoa(s.CPUCount), s.properties...)
 }
 

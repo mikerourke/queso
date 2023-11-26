@@ -42,7 +42,9 @@ func (q *QEMU) With(options ...*queso.Option) *QEMU {
 
 // Usable represents an item that can be passed to the Use method.
 type Usable interface {
-	option() *queso.Option
+	// Option allows you to return a single [queso.Option] from a Usable
+	// instance.
+	Option() *queso.Option
 }
 
 // Use adds items as args to the QEMU command. It differs from the With method
@@ -50,7 +52,7 @@ type Usable interface {
 // opposed to just using options).
 func (q *QEMU) Use(usables ...Usable) *QEMU {
 	for _, usable := range usables {
-		usableArgs := usable.option().Args()
+		usableArgs := usable.Option().Args()
 		q.args = append(q.args, usableArgs...)
 	}
 

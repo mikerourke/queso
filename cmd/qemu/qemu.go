@@ -5,7 +5,11 @@ import (
 	"log"
 
 	"github.com/mikerourke/queso/qemu"
+	"github.com/mikerourke/queso/qemu/accel"
+	"github.com/mikerourke/queso/qemu/blockdev/fsdev"
 	"github.com/mikerourke/queso/qemu/device"
+	"github.com/mikerourke/queso/qemu/netdev"
+	"github.com/mikerourke/queso/qemu/nic"
 )
 
 /*
@@ -36,15 +40,27 @@ func main() {
 
 	q := qemu.New("qemu-system-x86_64")
 
-	fmt.Println(q.Version())
-
-	fmt.Println(q.Args())
-
-	dev := device.New("yo")
-	fmt.Println(dev.Type)
-
 	ip := device.NewIPMIBMCExternal("a", "b")
 	ip.SetProperty("a", "b")
+	q.Use(ip)
+
+	be := nic.NewAFXDPNIC()
+	be.SetProgramAttachMode(netdev.ProgramAttachNative)
+	q.Use(be)
+
+	ac := accel.New("test")
+	ac.SetProperty("a", "b")
+	q.Use(ac)
+
+	synth := fsdev.NewSyntheticFileSystemDevice("test").SetProperty("a", "b")
+	q.Use(synth)
+
+	net := nic.NewAFXDPNIC().
+		SetModelName("e1000").
+		SetMACAddress("52:54:98:76:54:32")
+	q.Use(net)
+
+	fmt.Println(q.Args())
 
 	return
 
@@ -52,7 +68,7 @@ func main() {
 		qemu.WithKeyboardLayout(qemu.LanguageEnglishUS),
 		qemu.AddFileDescriptor(1, 2, "s"),
 		qemu.AddFileDescriptor(1, 2, "s"),
-		qemu.MonitorRedirect("none"),
+		qemu.WithMonitorRedirect("none"),
 		qemu.MemorySize("3G"),
 
 		// Network Settings

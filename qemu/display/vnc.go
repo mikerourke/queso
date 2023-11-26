@@ -75,7 +75,9 @@ func NewVNCUnixDisplay(path string) *VNCDisplay {
 	}
 }
 
-func (d *VNCDisplay) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (d *VNCDisplay) Option() *queso.Option {
 	return queso.NewOption("vnc", d.displayValue, d.properties...)
 }
 

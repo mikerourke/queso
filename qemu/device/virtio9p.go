@@ -47,7 +47,9 @@ func NewVirtio9P(variant Virtio9PVariant, deviceID string, mountTag string) *Vir
 	}
 }
 
-func (d *Virtio9P) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (d *Virtio9P) Option() *queso.Option {
 	d.properties = append(d.properties,
 		queso.NewProperty("fsdev", d.DeviceID),
 		queso.NewProperty("mount_tag", d.MountTag))

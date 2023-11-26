@@ -1,7 +1,5 @@
 package audiodev
 
-import "github.com/mikerourke/queso"
-
 // OSSBackend represents an audio backend using OSS. This backend is available
 // on most Unix-like systems.
 type OSSBackend struct {
@@ -21,7 +19,7 @@ func NewOSSBackend(id string) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,buffer-count=count
 func (b *OSSBackend) SetBufferCount(direction Direction, count string) *OSSBackend {
-	b.properties = append(b.properties, newDirectionProperty("buffer-count", direction, count))
+	b.SetDirectionProperty(direction, "buffer-count", count)
 	return b
 }
 
@@ -30,7 +28,7 @@ func (b *OSSBackend) SetBufferCount(direction Direction, count string) *OSSBacke
 //
 //	qemu-system-* -audiodev oss,in|out.dev=device
 func (b *OSSBackend) SetDevice(direction Direction, device string) *OSSBackend {
-	b.properties = append(b.properties, newDirectionProperty("dev", direction, device))
+	b.SetDirectionProperty(direction, "dev", device)
 	return b
 }
 
@@ -41,7 +39,7 @@ func (b *OSSBackend) SetDevice(direction Direction, device string) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,dsp-policy=policy
 func (b *OSSBackend) SetDSPPolicy(policy int) *OSSBackend {
-	b.properties = append(b.properties, queso.NewProperty("dsp-policy", policy))
+	b.SetProperty("dsp-policy", policy)
 	return b
 }
 
@@ -50,7 +48,7 @@ func (b *OSSBackend) SetDSPPolicy(policy int) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,exclusive=on|off
 func (b *OSSBackend) ToggleExclusive(enabled bool) *OSSBackend {
-	b.properties = append(b.properties, queso.NewProperty("exclusive", enabled))
+	b.SetProperty("exclusive", enabled)
 	return b
 }
 
@@ -59,7 +57,7 @@ func (b *OSSBackend) ToggleExclusive(enabled bool) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,try-mmap=on|off
 func (b *OSSBackend) ToggleTryMMAP(enabled bool) *OSSBackend {
-	b.properties = append(b.properties, queso.NewProperty("try-mmap", enabled))
+	b.SetProperty("try-mmap", enabled)
 	return b
 }
 
@@ -68,6 +66,6 @@ func (b *OSSBackend) ToggleTryMMAP(enabled bool) *OSSBackend {
 //
 //	qemu-system-* -audiodev oss,in|out.try-poll=on|off
 func (b *OSSBackend) ToggleTryPoll(direction Direction, enabled bool) *OSSBackend {
-	b.properties = append(b.properties, newDirectionProperty("try-poll", direction, enabled))
+	b.SetDirectionProperty(direction, "try-poll", enabled)
 	return b
 }

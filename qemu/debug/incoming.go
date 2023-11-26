@@ -23,7 +23,9 @@ func NewIncomingMigration(incomingType string) *IncomingMigration {
 	}
 }
 
-func (i *IncomingMigration) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (i *IncomingMigration) Option() *queso.Option {
 	return queso.NewOption("incoming", i.Type, i.properties...)
 }
 

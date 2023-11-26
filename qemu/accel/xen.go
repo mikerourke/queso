@@ -1,7 +1,5 @@
 package accel
 
-import "github.com/mikerourke/queso"
-
 // XenAccelerator represents an accelerator using Xen.
 type XenAccelerator struct {
 	*Accelerator
@@ -21,6 +19,6 @@ func NewXenAccelerator() *XenAccelerator {
 //
 //	qemu-system-* -accel xen,igd-passthru=on|off
 func (a *XenAccelerator) ToggleIGDPassThru(enabled bool) *XenAccelerator {
-	a.properties = append(a.properties, queso.NewProperty("igd-passthru", enabled))
+	a.SetProperty("igd-passthru", enabled)
 	return a
 }

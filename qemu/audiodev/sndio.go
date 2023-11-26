@@ -20,7 +20,7 @@ func NewSNDIOBackend(id string) *SNDIOBackend {
 //
 //	qemu-system-* -audiodev sndio,in|out.dev=device
 func (b *SNDIOBackend) SetDevice(direction Direction, device string) *SNDIOBackend {
-	b.properties = append(b.properties, newDirectionProperty("dev", direction, device))
+	b.SetDirectionProperty(direction, "dev", device)
 	return b
 }
 
@@ -28,6 +28,6 @@ func (b *SNDIOBackend) SetDevice(direction Direction, device string) *SNDIOBacke
 //
 //	qemu-system-* -audiodev sndio,in|out.latency=usecs
 func (b *SNDIOBackend) SetLatency(direction Direction, latency int) *SNDIOBackend {
-	b.properties = append(b.properties, newDirectionProperty("latency", direction, latency))
+	b.SetDirectionProperty(direction, "latency", latency)
 	return b
 }

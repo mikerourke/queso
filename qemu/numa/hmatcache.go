@@ -35,7 +35,9 @@ func NewHMATCache(node *Node, size string, level int) *HMATCache {
 	}
 }
 
-func (h *HMATCache) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (h *HMATCache) Option() *queso.Option {
 	return queso.NewOption("numa", "hmat-cache", h.properties...)
 }
 

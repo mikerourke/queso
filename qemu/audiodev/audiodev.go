@@ -23,9 +23,7 @@ const (
 // Backend represents a generic audio device backend. If possible, try to
 // use specified backends (e.g. [ALSABackend]).
 type Backend struct {
-	// DriverName is the name of the audio device driver.
-	DriverName string
-	properties []*queso.Property
+	*queso.Entity
 }
 
 // New returns a new instance of a generic audio [Backend]. driverName
@@ -35,20 +33,13 @@ type Backend struct {
 //	qemu-system-* -audiodev <driverName>,id=id
 func New(driverName string, id string) *Backend {
 	return &Backend{
-		DriverName: driverName,
-		properties: []*queso.Property{
-			queso.NewProperty("id", id),
-		},
+		queso.NewEntity("audiodev", driverName).SetProperty("id", id),
 	}
 }
 
-func (b *Backend) option() *queso.Option {
-	return queso.NewOption("audiodev", b.DriverName, b.properties...)
-}
-
-// SetProperty is used to add arbitrary properties to the [Backend].
-func (b *Backend) SetProperty(key string, value interface{}) *Backend {
-	b.properties = append(b.properties, queso.NewProperty(key, value))
+// SetDirectionProperty sets a specific direction property (i.e. [Input] or [Output]).
+func (b *Backend) SetDirectionProperty(direction Direction, key string, value interface{}) *Backend {
+	b.SetProperty(fmt.Sprintf("%s.%s", direction, key), value)
 	return b
 }
 
@@ -56,7 +47,7 @@ func (b *Backend) SetProperty(key string, value interface{}) *Backend {
 //
 //	qemu-system-* -audiodev <name>,in|out.buffer-length=usecs
 func (b *Backend) SetBufferLength(direction Direction, length int) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("buffer-length", direction, length))
+	b.SetDirectionProperty(direction, "buffer-length", length)
 	return b
 }
 
@@ -65,7 +56,7 @@ func (b *Backend) SetBufferLength(direction Direction, length int) *Backend {
 //
 //	qemu-system-* -audiodev <name>,in|out.channels=channels
 func (b *Backend) SetChannels(direction Direction, count int) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("channels", direction, count))
+	b.SetDirectionProperty(direction, "channels", count)
 	return b
 }
 
@@ -74,7 +65,7 @@ func (b *Backend) SetChannels(direction Direction, count int) *Backend {
 //
 //	qemu-system-* -audiodev <name>,in|out.frequency=frequency
 func (b *Backend) SetFrequency(direction Direction, frequency string) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("frequency", direction, frequency))
+	b.SetDirectionProperty(direction, "frequency", frequency)
 	return b
 }
 
@@ -111,7 +102,7 @@ const (
 //
 //	qemu-system-* -audiodev <name>,in|out.format=format
 func (b *Backend) SetSampleFormat(direction Direction, format SampleFormat) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("format", direction, format))
+	b.SetDirectionProperty(direction, "format", format)
 	return b
 }
 
@@ -120,7 +111,7 @@ func (b *Backend) SetSampleFormat(direction Direction, format SampleFormat) *Bac
 //
 //	qemu-system-* -audiodev <name>,timer-period=period
 func (b *Backend) SetTimerPeriod(period int) *Backend {
-	b.properties = append(b.properties, queso.NewProperty("timer-period", period))
+	b.SetProperty("timer-period", period)
 	return b
 }
 
@@ -128,7 +119,7 @@ func (b *Backend) SetTimerPeriod(period int) *Backend {
 //
 //	qemu-system-* -audiodev <name>,in|out.voices=voices
 func (b *Backend) SetVoices(direction Direction, count int) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("voices", direction, count))
+	b.SetDirectionProperty(direction, "voices", count)
 	return b
 }
 
@@ -139,7 +130,7 @@ func (b *Backend) SetVoices(direction Direction, count int) *Backend {
 //
 //	qemu-system-* -audiodev <name>,in|out.fixed-settings=on|off
 func (b *Backend) ToggleFixedSettings(direction Direction, enabled bool) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("fixed-settings", direction, enabled))
+	b.SetDirectionProperty(direction, "fixed-settings", enabled)
 	return b
 }
 
@@ -154,11 +145,6 @@ func (b *Backend) ToggleFixedSettings(direction Direction, enabled bool) *Backen
 // audio. This property is enabled by default.
 //
 //	qemu-system-* -audiodev <name>,in|out.mixing-engine=on|off
-func (b *Backend) ToggleMixingEngine(direction Direction, enabled bool) *Backend {
-	b.properties = append(b.properties, newDirectionProperty("mixing-engine", direction, enabled))
-	return b
-}
-
-func newDirectionProperty(key string, direction Direction, value interface{}) *queso.Property {
-	return queso.NewProperty(fmt.Sprintf("%s.%s", direction, key), value)
+func (b *Backend) ToggleMixingEngine(direction Direction, enabled bool) {
+	b.SetDirectionProperty(direction, "mixing-engine", enabled)
 }

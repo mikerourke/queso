@@ -73,6 +73,8 @@ type nodeDistance struct {
 	properties []*queso.Property
 }
 
-func (nd *nodeDistance) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (nd *nodeDistance) Option() *queso.Option {
 	return queso.NewOption("numa", "dist", nd.properties...)
 }

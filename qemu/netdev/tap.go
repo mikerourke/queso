@@ -1,27 +1,27 @@
 package netdev
 
-import "github.com/mikerourke/queso"
-
 // TAPBackend represents a host TAP network backend.
 type TAPBackend struct {
 	*Backend
 }
 
-// NewTAPBackend returns a new instance of [TAPBackend]. id is the unique identifier
-// for the backend.
+// NewTAPBackend returns a new instance of [TAPBackend]. id is a unique
+// identifier for the backend.
 //
 //	qemu-system-* -netdev tap,id=id
 func NewTAPBackend(id string) *TAPBackend {
-	return &TAPBackend{
-		New("tap").SetProperty("id", id),
-	}
+	backend := New("tap")
+
+	backend.SetProperty("id", id)
+
+	return &TAPBackend{backend}
 }
 
 // SetBridge specifies the bridge device.
 //
 //	qemu-system-* -netdev tap,br=bridge
 func (b *TAPBackend) SetBridge(bridge string) *TAPBackend {
-	b.properties = append(b.properties, queso.NewProperty("br", bridge))
+	b.SetProperty("br", bridge)
 	return b
 }
 
@@ -30,7 +30,7 @@ func (b *TAPBackend) SetBridge(bridge string) *TAPBackend {
 //
 //	qemu-system-* -netdev tap,downscript=file
 func (b *TAPBackend) SetDownScript(file string) *TAPBackend {
-	b.properties = append(b.properties, queso.NewProperty("downscript", file))
+	b.SetProperty("downscript", file)
 	return b
 }
 
@@ -38,7 +38,7 @@ func (b *TAPBackend) SetDownScript(file string) *TAPBackend {
 //
 //	qemu-system-* -netdev tap,fd=fd
 func (b *TAPBackend) SetFileDescriptor(fd int) *TAPBackend {
-	b.properties = append(b.properties, queso.NewProperty("fd", fd))
+	b.SetProperty("fd", fd)
 	return b
 }
 
@@ -47,7 +47,7 @@ func (b *TAPBackend) SetFileDescriptor(fd int) *TAPBackend {
 //
 //	qemu-system-* -netdev tap,helper=helper
 func (b *TAPBackend) SetHelper(helper string) *TAPBackend {
-	b.properties = append(b.properties, queso.NewProperty("helper", helper))
+	b.SetProperty("helper", helper)
 	return b
 }
 
@@ -55,7 +55,7 @@ func (b *TAPBackend) SetHelper(helper string) *TAPBackend {
 //
 //	qemu-system-* -netdev tap,ifname=name
 func (b *TAPBackend) SetInterfaceName(name string) *TAPBackend {
-	b.properties = append(b.properties, queso.NewProperty("ifname", name))
+	b.SetProperty("ifname", name)
 	return b
 }
 
@@ -64,6 +64,6 @@ func (b *TAPBackend) SetInterfaceName(name string) *TAPBackend {
 //
 //	qemu-system-* -netdev tap,script=file
 func (b *TAPBackend) SetUpScript(file string) *TAPBackend {
-	b.properties = append(b.properties, queso.NewProperty("script", file))
+	b.SetProperty("script", file)
 	return b
 }

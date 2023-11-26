@@ -7,16 +7,8 @@ import "github.com/mikerourke/queso"
 //
 // Deprecated: Use [VirtualLocalFileSystemDevice] instead.
 type VirtualProxyFileSystemDevice struct {
-	// MountTag is the tag name to be used by the guest to mount this export point.
-	MountTag string
-
-	// SocketTarget is the path or file descriptor of the socket.
-	SocketTarget string
-
-	// SocketInterfaceType is the type of socket interface to use (either path
-	// or file descriptor).
-	SocketInterfaceType SocketInterfaceType
-	properties          []*queso.Property
+	*queso.Entity
+	socketInterfaceType SocketInterfaceType
 }
 
 // NewVirtualProxyFileSystemDevice returns a new instance of [VirtualProxyFileSystemDevice].
@@ -34,24 +26,11 @@ func NewVirtualProxyFileSystemDevice(
 	socketInterfaceType SocketInterfaceType,
 ) *VirtualProxyFileSystemDevice {
 	return &VirtualProxyFileSystemDevice{
-		MountTag:            mountTag,
-		SocketTarget:        socketTarget,
-		SocketInterfaceType: socketInterfaceType,
-		properties:          make([]*queso.Property, 0),
+		queso.NewEntity("virtfs", "proxy").
+			SetProperty("mount_tag", mountTag).
+			SetProperty(string(socketInterfaceType), socketTarget),
+		socketInterfaceType,
 	}
-}
-
-func (d *VirtualProxyFileSystemDevice) option() *queso.Option {
-	properties := append(d.properties,
-		queso.NewProperty("mount_tag", d.MountTag),
-		queso.NewProperty(string(d.SocketInterfaceType), d.SocketTarget))
-	return queso.NewOption("virtfs", "proxy", properties...)
-}
-
-// SetProperty is used to add arbitrary properties to the [VirtualProxyFileSystemDevice].
-func (d *VirtualProxyFileSystemDevice) SetProperty(key string, value interface{}) *VirtualProxyFileSystemDevice {
-	d.properties = append(d.properties, queso.NewProperty(key, value))
-	return d
 }
 
 // EnableWriteOut means that host page cache will be used to read and write data but
@@ -60,9 +39,8 @@ func (d *VirtualProxyFileSystemDevice) SetProperty(key string, value interface{}
 //
 //	qemu-system-* -virtfs proxy,writeout=writeout
 func (d *VirtualProxyFileSystemDevice) EnableWriteOut() *VirtualProxyFileSystemDevice {
-	d.properties = append(d.properties,
-		// The only supported value is "immediate".
-		queso.NewProperty("writeout", "immediate"))
+	// The only supported value is "immediate".
+	d.SetProperty("writeout", "immediate")
 	return d
 }
 
@@ -70,7 +48,7 @@ func (d *VirtualProxyFileSystemDevice) EnableWriteOut() *VirtualProxyFileSystemD
 //
 //	qemu-system-* -virtfs proxy,mount_tag=tag
 func (d *VirtualProxyFileSystemDevice) SetMountTag(tag string) *VirtualProxyFileSystemDevice {
-	d.MountTag = tag
+	d.UpsertProperty("mount_tag", tag)
 	return d
 }
 
@@ -80,7 +58,7 @@ func (d *VirtualProxyFileSystemDevice) SetMountTag(tag string) *VirtualProxyFile
 //	qemu-system-* -virtfs proxy,socket=target
 //	qemu-system-* -virtfs proxy,sock_fd=target
 func (d *VirtualProxyFileSystemDevice) SetSocketTarget(target string) *VirtualProxyFileSystemDevice {
-	d.SocketTarget = target
+	d.UpsertProperty(string(d.socketInterfaceType), target)
 	return d
 }
 
@@ -89,6 +67,6 @@ func (d *VirtualProxyFileSystemDevice) SetSocketTarget(target string) *VirtualPr
 //
 //	qemu-system-* -virtfs proxy,readonly=on|off
 func (d *VirtualProxyFileSystemDevice) ToggleReadOnly(enabled bool) *VirtualProxyFileSystemDevice {
-	d.properties = append(d.properties, queso.NewProperty("readonly", enabled))
+	d.SetProperty("readonly", enabled)
 	return d
 }

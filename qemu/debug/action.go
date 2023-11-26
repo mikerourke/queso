@@ -27,6 +27,8 @@ func NewAction(event string, action string) *Action {
 	}
 }
 
-func (a *Action) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (a *Action) Option() *queso.Option {
 	return queso.NewOption("action", "", queso.NewProperty(a.Event, a.Action))
 }

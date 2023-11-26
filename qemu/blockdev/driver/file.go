@@ -1,7 +1,5 @@
 package driver
 
-import "github.com/mikerourke/queso"
-
 // FileDriver is the protocol-level block driver for accessing regular files.
 type FileDriver struct {
 	*Driver
@@ -35,7 +33,7 @@ const (
 //
 //	qemu-system-* -blockdev driver=file,aio=backend
 func (d *FileDriver) SetAIOBackend(backend string) *FileDriver {
-	d.properties = append(d.properties, queso.NewProperty("aio", backend))
+	d.SetProperty("aio", backend)
 	return d
 }
 
@@ -43,7 +41,7 @@ func (d *FileDriver) SetAIOBackend(backend string) *FileDriver {
 //
 //	qemu-system-* -blockdev driver=file,filename=name
 func (d *FileDriver) SetFileName(name string) *FileDriver {
-	d.properties = append(d.properties, queso.NewProperty("filename", name))
+	d.SetProperty("filename", name)
 	return d
 }
 
@@ -70,6 +68,6 @@ const (
 //
 //	qemu-system-* -blockdev driver=file,locking=on|off|auto
 func (d *FileDriver) SetOFDLockingStatus(status OFDLockingStatus) *FileDriver {
-	d.properties = append(d.properties, queso.NewProperty("locking", string(status)))
+	d.SetProperty("locking", string(status))
 	return d
 }

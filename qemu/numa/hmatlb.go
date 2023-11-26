@@ -30,7 +30,9 @@ func NewHMATLB(initiator *Node, target *Node, hierarchy string, dataType HMATLBD
 	}
 }
 
-func (h *HMATLB) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (h *HMATLB) Option() *queso.Option {
 	return queso.NewOption("numa", "hmat-lb", h.properties...)
 }
 

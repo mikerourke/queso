@@ -1,7 +1,5 @@
 package audiodev
 
-import "github.com/mikerourke/queso"
-
 // DirectSoundBackend represents an audio backend using Microsoft’s DirectSound.
 // This backend is only available on Windows and only supports playback.
 type DirectSoundBackend struct {
@@ -22,6 +20,6 @@ func NewDirectSoundBackend(id string) *DirectSoundBackend {
 //
 //	qemu-system-* -audiodev dsound,latency=usecs
 func (b *DirectSoundBackend) SetLatency(latency int) *DirectSoundBackend {
-	b.properties = append(b.properties, queso.NewProperty("latency", latency))
+	b.SetProperty("latency", latency)
 	return b
 }

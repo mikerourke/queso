@@ -1,10 +1,6 @@
 package netdev
 
-import (
-	"fmt"
-
-	"github.com/mikerourke/queso"
-)
+import "fmt"
 
 // TCPSocketBackend can be used to connect the guest’s network to another QEMU
 // virtual machine using a TCP socket connection.
@@ -12,17 +8,23 @@ type TCPSocketBackend struct {
 	*Backend
 }
 
+// NewTCPSocketBackend returns a new instance of [TCPSocketBackend]. id is a
+// unique identifier for the backend.
+//
+//	qemu-system-* -netdev socket,id=id
 func NewTCPSocketBackend(id string) *TCPSocketBackend {
-	return &TCPSocketBackend{
-		New("socket").SetProperty("id", id),
-	}
+	backend := New("socket")
+
+	backend.SetProperty("id", id)
+
+	return &TCPSocketBackend{backend}
 }
 
 // SetFileDescriptor specifies the handle of an already opened host TCP socket.
 //
 //	qemu-system-* -netdev socket,fd=fd
 func (b *TCPSocketBackend) SetFileDescriptor(fd int) *TCPSocketBackend {
-	b.properties = append(b.properties, queso.NewProperty("fd", fd))
+	b.SetProperty("fd", fd)
 	return b
 }
 
@@ -31,8 +33,7 @@ func (b *TCPSocketBackend) SetFileDescriptor(fd int) *TCPSocketBackend {
 //
 //	qemu-system-* -netdev socket,listen=[host]:port
 func (b *TCPSocketBackend) SetListeningAddress(port int, host string) *TCPSocketBackend {
-	b.properties = append(b.properties,
-		queso.NewProperty("listen", fmt.Sprintf("%s:%d", host, port)))
+	b.SetProperty("listen", fmt.Sprintf("%s:%d", host, port))
 	return b
 }
 
@@ -42,17 +43,23 @@ type UDPSocketBackend struct {
 	*Backend
 }
 
+// NewUDPSocketBackend returns a new instance of [UDPSocketBackend]. id is a
+// unique identifier for the backend.
+//
+//	qemu-system-* -netdev socket,id=id
 func NewUDPSocketBackend(id string) *UDPSocketBackend {
-	return &UDPSocketBackend{
-		New("socket").SetProperty("id", id),
-	}
+	backend := New("socket")
+
+	backend.SetProperty("id", id)
+
+	return &UDPSocketBackend{backend}
 }
 
 // SetFileDescriptor specifies the handle of an already opened host TCP socket.
 //
 //	qemu-system-* -netdev socket,fd=fd
 func (b *UDPSocketBackend) SetFileDescriptor(fd int) *UDPSocketBackend {
-	b.properties = append(b.properties, queso.NewProperty("fd", fd))
+	b.SetProperty("fd", fd)
 	return b
 }
 
@@ -61,7 +68,7 @@ func (b *UDPSocketBackend) SetFileDescriptor(fd int) *UDPSocketBackend {
 //
 //	qemu-system-* -netdev socket,localaddr=addr
 func (b *UDPSocketBackend) SetLocalAddress(addr string) *UDPSocketBackend {
-	b.properties = append(b.properties, queso.NewProperty("localaddr", addr))
+	b.SetProperty("localaddr", addr)
 	return b
 }
 
@@ -82,7 +89,6 @@ func (b *UDPSocketBackend) SetLocalAddress(addr string) *UDPSocketBackend {
 //  3. Use [UDPSocketBackend.SetFileDescriptor] with a value of "h" to specify an
 //     already opened UDP multicast socket.
 func (b *UDPSocketBackend) SetMulticast(addr string, port int) *UDPSocketBackend {
-	b.properties = append(b.properties,
-		queso.NewProperty("mcast", fmt.Sprintf("%s:%d", addr, port)))
+	b.SetProperty("mcast", fmt.Sprintf("%s:%d", addr, port))
 	return b
 }

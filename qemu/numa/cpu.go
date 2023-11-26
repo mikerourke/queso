@@ -14,7 +14,9 @@ func NewCPU(node *Node) *CPU {
 	}
 }
 
-func (cpu *CPU) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (cpu *CPU) Option() *queso.Option {
 	return queso.NewOption("numa", "cpu", cpu.properties...)
 }
 

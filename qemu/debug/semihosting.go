@@ -58,7 +58,9 @@ func NewSemiHostingConfig() *SemiHostingConfig {
 	}
 }
 
-func (c *SemiHostingConfig) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (c *SemiHostingConfig) Option() *queso.Option {
 	return queso.NewOption("semihosting-config", "", c.properties...)
 }
 
@@ -68,16 +70,17 @@ func (c *SemiHostingConfig) SetProperty(key string, value interface{}) *SemiHost
 	return c
 }
 
-// SetChardev send the output to a chardev backend output for [SemiHostingTargetNative]
-// or [SemiHostingTargetAuto] output when not in [SemiHostingTargetGDB].
+// SetCharacterDeviceOutput send the output to a character device backend output
+// for [SemiHostingTargetNative] or [SemiHostingTargetAuto] output when not
+// in [SemiHostingTargetGDB].
 //
 //	qemu-system-* -semihosting-config chardev=chardev
-func (c *SemiHostingConfig) SetChardev(chardev string) *SemiHostingConfig {
+func (c *SemiHostingConfig) SetCharacterDeviceOutput(chardev string) *SemiHostingConfig {
 	c.properties = append(c.properties, queso.NewProperty("chardev", chardev))
 	return c
 }
 
-// SetTarget sefines where the semihosting calls will be addressed, to QEMU
+// SetTarget defines where the semihosting calls will be addressed, to QEMU
 // ([SemiHostingTargetNative]) or to GDB ([SemiHostingTargetGDB]). The default
 // is [SemiHostingTargetAuto], which means [SemiHostingTargetGDB] during debug
 // sessions and [SemiHostingTargetNative] otherwise.

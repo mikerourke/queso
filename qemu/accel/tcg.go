@@ -1,7 +1,5 @@
 package accel
 
-import "github.com/mikerourke/queso"
-
 // TCGAccelerator represents an accelerator using the Tiny Code Generator, which
 // is the core binary translation engine for QEMU. See https://wiki.qemu.org/Features/TCG
 // for more details.
@@ -37,7 +35,7 @@ const (
 //
 //	qemu-system-* -accel tcg,thread=single|multi
 func (a *TCGAccelerator) SetThreads(option ThreadingOption) *TCGAccelerator {
-	a.properties = append(a.properties, queso.NewProperty("thread", option))
+	a.SetProperty("thread", option)
 	return a
 }
 
@@ -46,7 +44,7 @@ func (a *TCGAccelerator) SetThreads(option ThreadingOption) *TCGAccelerator {
 //
 //	qemu-system-* -accel tcg,tb-size=mb
 func (a *TCGAccelerator) SetTranslationBlockCacheSize(mb int) *TCGAccelerator {
-	a.properties = append(a.properties, queso.NewProperty("tb-size", mb))
+	a.SetProperty("tb-size", mb)
 	return a
 }
 
@@ -57,7 +55,7 @@ func (a *TCGAccelerator) SetTranslationBlockCacheSize(mb int) *TCGAccelerator {
 //
 //	qemu-system-* -accel tcg,one-insn-per-tb=on|off
 func (a *TCGAccelerator) ToggleOneInstructionPerTranslation(enabled bool) *TCGAccelerator {
-	a.properties = append(a.properties, queso.NewProperty("one-insn-per-tb", enabled))
+	a.SetProperty("one-insn-per-tb", enabled)
 	return a
 }
 
@@ -68,6 +66,6 @@ func (a *TCGAccelerator) ToggleOneInstructionPerTranslation(enabled bool) *TCGAc
 //
 //	qemu-system-* -accel tcg,split-wx=on|off
 func (a *TCGAccelerator) ToggleSplitWX(enabled bool) *TCGAccelerator {
-	a.properties = append(a.properties, queso.NewProperty("split-wx", enabled))
+	a.SetProperty("split-wx", enabled)
 	return a
 }

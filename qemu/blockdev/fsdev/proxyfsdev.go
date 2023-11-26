@@ -7,16 +7,8 @@ import "github.com/mikerourke/queso"
 //
 // Deprecated: Use [LocalFileSystemDevice] instead.
 type ProxyFileSystemDevice struct {
-	// ID is the unique identifier for the device.
-	ID string
-
-	// SocketTarget is the path or file descriptor of the socket.
-	SocketTarget string
-
-	// SocketInterfaceType is the type of socket interface to use (either path
-	// or file descriptor).
+	*queso.Entity
 	SocketInterfaceType SocketInterfaceType
-	properties          []*queso.Property
 }
 
 // NewProxyFileSystemDevice returns a new instance of [ProxyFileSystemDevice].
@@ -34,24 +26,11 @@ func NewProxyFileSystemDevice(
 	socketInterfaceType SocketInterfaceType,
 ) *ProxyFileSystemDevice {
 	return &ProxyFileSystemDevice{
-		ID:                  id,
-		SocketTarget:        socketTarget,
-		SocketInterfaceType: socketInterfaceType,
-		properties:          make([]*queso.Property, 0),
+		queso.NewEntity("fsdev", "proxy").
+			SetProperty("id", id).
+			SetProperty(string(socketInterfaceType), socketTarget),
+		socketInterfaceType,
 	}
-}
-
-func (d *ProxyFileSystemDevice) option() *queso.Option {
-	properties := append(d.properties,
-		queso.NewProperty("id", d.ID),
-		queso.NewProperty(string(d.SocketInterfaceType), d.SocketTarget))
-	return queso.NewOption("fsdev", "proxy", properties...)
-}
-
-// SetProperty is used to add arbitrary properties to the [ProxyFileSystemDevice].
-func (d *ProxyFileSystemDevice) SetProperty(key string, value interface{}) *ProxyFileSystemDevice {
-	d.properties = append(d.properties, queso.NewProperty(key, value))
-	return d
 }
 
 // EnableWriteOut means that host page cache will be used to read and write data but
@@ -60,9 +39,8 @@ func (d *ProxyFileSystemDevice) SetProperty(key string, value interface{}) *Prox
 //
 //	qemu-system-* -fsdev proxy,writeout=writeout
 func (d *ProxyFileSystemDevice) EnableWriteOut() *ProxyFileSystemDevice {
-	d.properties = append(d.properties,
-		// The only supported value is "immediate".
-		queso.NewProperty("writeout", "immediate"))
+	// The only supported value is "immediate".
+	d.SetProperty("writeout", "immediate")
 	return d
 }
 
@@ -70,7 +48,7 @@ func (d *ProxyFileSystemDevice) EnableWriteOut() *ProxyFileSystemDevice {
 //
 //	qemu-system-* -fsdev proxy,id=id
 func (d *ProxyFileSystemDevice) SetID(id string) *ProxyFileSystemDevice {
-	d.ID = id
+	d.UpsertProperty("id", id)
 	return d
 }
 
@@ -80,7 +58,7 @@ func (d *ProxyFileSystemDevice) SetID(id string) *ProxyFileSystemDevice {
 //	qemu-system-* -fsdev proxy,socket=target
 //	qemu-system-* -fsdev proxy,sock_fd=target
 func (d *ProxyFileSystemDevice) SetSocketTarget(target string) *ProxyFileSystemDevice {
-	d.SocketTarget = target
+	d.UpsertProperty(string(d.SocketInterfaceType), target)
 	return d
 }
 
@@ -89,6 +67,6 @@ func (d *ProxyFileSystemDevice) SetSocketTarget(target string) *ProxyFileSystemD
 //
 //	qemu-system-* -fsdev proxy,readonly=on|off
 func (d *ProxyFileSystemDevice) ToggleReadOnly(enabled bool) *ProxyFileSystemDevice {
-	d.properties = append(d.properties, queso.NewProperty("readonly", enabled))
+	d.SetProperty("readonly", enabled)
 	return d
 }

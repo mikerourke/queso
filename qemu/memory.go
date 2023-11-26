@@ -18,7 +18,9 @@ func NewMemory(size string) *Memory {
 	}
 }
 
-func (m *Memory) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (m *Memory) Option() *queso.Option {
 	return queso.NewOption("m", "", m.properties...)
 }
 

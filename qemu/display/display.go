@@ -24,7 +24,9 @@ func New(displayType string) *Display {
 	}
 }
 
-func (d *Display) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (d *Display) Option() *queso.Option {
 	return queso.NewOption("display", d.Type, d.properties...)
 }
 

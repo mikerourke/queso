@@ -17,7 +17,9 @@ func NewPlugin(file string) *Plugin {
 	}
 }
 
-func (p *Plugin) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (p *Plugin) Option() *queso.Option {
 	properties := append(p.properties, queso.NewProperty("file", p.File))
 	return queso.NewOption("plugin", "", properties...)
 }

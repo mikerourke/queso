@@ -19,6 +19,6 @@ func NewSDLBackend(id string) *SDLBackend {
 //
 //	qemu-system-* -audiodev sdl,buffer-count=count
 func (b *SDLBackend) SetBufferCount(direction Direction, count string) *SDLBackend {
-	b.properties = append(b.properties, newDirectionProperty("buffer-count", direction, count))
+	b.SetDirectionProperty(direction, "buffer-count", count)
 	return b
 }

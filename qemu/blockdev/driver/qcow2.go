@@ -1,7 +1,5 @@
 package driver
 
-import "github.com/mikerourke/queso"
-
 // QCOW2Driver is the image format block driver for raw images. It is usually stacked
 // on top of a protocol level block driver such as [FileDriver].
 type QCOW2Driver struct {
@@ -23,7 +21,7 @@ func NewQCOW2Driver() *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,backing=name
 func (d *QCOW2Driver) SetBackingFile(name string) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("backing", name))
+	d.SetProperty("backing", name)
 	return d
 }
 
@@ -33,7 +31,7 @@ func (d *QCOW2Driver) SetBackingFile(name string) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,cache-clean-interval=seconds
 func (d *QCOW2Driver) SetCacheCleanInterval(interval int) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("cache-clean-interval", interval))
+	d.SetProperty("cache-clean-interval", interval)
 	return d
 }
 
@@ -42,7 +40,7 @@ func (d *QCOW2Driver) SetCacheCleanInterval(interval int) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,file=name
 func (d *QCOW2Driver) SetFile(name string) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("file", name))
+	d.SetProperty("file", name)
 	return d
 }
 
@@ -55,7 +53,7 @@ func (d *QCOW2Driver) SetFile(name string) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,l2-cache-size=bytes
 func (d *QCOW2Driver) SetL2CacheSize(bytes int) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("l2-cache-size", bytes))
+	d.SetProperty("l2-cache-size", bytes)
 	return d
 }
 
@@ -85,7 +83,7 @@ const (
 //
 //	qemu-system-* -blockdev driver=qcow2,overlap-check=check
 func (d *QCOW2Driver) SetOverlapCheck(check OverlapCheck) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("overlap-check", check))
+	d.SetProperty("overlap-check", check)
 	return d
 }
 
@@ -95,7 +93,7 @@ func (d *QCOW2Driver) SetOverlapCheck(check OverlapCheck) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,refcount-cache-size=bytes
 func (d *QCOW2Driver) SetRefcountCacheSize(bytes int) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("refcount-cache-size", bytes))
+	d.SetProperty("refcount-cache-size", bytes)
 	return d
 }
 
@@ -105,7 +103,7 @@ func (d *QCOW2Driver) SetRefcountCacheSize(bytes int) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,cache-size=bytes
 func (d *QCOW2Driver) SetTotalCacheSize(bytes int) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("cache-size", bytes))
+	d.SetProperty("cache-size", bytes)
 	return d
 }
 
@@ -125,7 +123,7 @@ func (d *QCOW2Driver) SetTotalCacheSize(bytes int) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,discard-no-unref=on|off
 func (d *QCOW2Driver) ToggleDiscardNoUnref(enabled bool) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("discard-no-unref", enabled))
+	d.SetProperty("discard-no-unref", enabled)
 	return d
 }
 
@@ -134,7 +132,7 @@ func (d *QCOW2Driver) ToggleDiscardNoUnref(enabled bool) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,lazy-refcounts=on|off
 func (d *QCOW2Driver) ToggleLazyRefcounts(enabled bool) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("lazy-refcounts", enabled))
+	d.SetProperty("lazy-refcounts", enabled)
 	return d
 }
 
@@ -143,7 +141,7 @@ func (d *QCOW2Driver) ToggleLazyRefcounts(enabled bool) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,pass-discard-other=on|off
 func (d *QCOW2Driver) TogglePassDiscardOther(enabled bool) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("pass-discard-other", enabled))
+	d.SetProperty("pass-discard-other", enabled)
 	return d
 }
 
@@ -153,7 +151,7 @@ func (d *QCOW2Driver) TogglePassDiscardOther(enabled bool) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,pass-discard-request=on|off
 func (d *QCOW2Driver) TogglePassDiscardRequests(enabled bool) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("pass-discard-request", enabled))
+	d.SetProperty("pass-discard-request", enabled)
 	return d
 }
 
@@ -163,6 +161,6 @@ func (d *QCOW2Driver) TogglePassDiscardRequests(enabled bool) *QCOW2Driver {
 //
 //	qemu-system-* -blockdev driver=qcow2,pass-discard-snapshot=on|off
 func (d *QCOW2Driver) TogglePassDiscardSnapshots(enabled bool) *QCOW2Driver {
-	d.properties = append(d.properties, queso.NewProperty("pass-discard-snapshot", enabled))
+	d.SetProperty("pass-discard-snapshot", enabled)
 	return d
 }

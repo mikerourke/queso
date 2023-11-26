@@ -1,7 +1,5 @@
 package netdev
 
-import "github.com/mikerourke/queso"
-
 // BridgeBackend connects a host TAP network interface to a host bridge device.
 type BridgeBackend struct {
 	*Backend
@@ -12,16 +10,18 @@ type BridgeBackend struct {
 //
 //	qemu-system-* -netdev bridge,id=id
 func NewBridgeBackend(id string) *BridgeBackend {
-	return &BridgeBackend{
-		New("bridge").SetProperty("id", id),
-	}
+	backend := New("bridge")
+
+	backend.SetProperty("id", id)
+
+	return &BridgeBackend{backend}
 }
 
 // SetBridge specifies the bridge device.
 //
 //	qemu-system-* -netdev bridge,br=bridge
 func (b *BridgeBackend) SetBridge(bridge string) *BridgeBackend {
-	b.properties = append(b.properties, queso.NewProperty("br", bridge))
+	b.SetProperty("br", bridge)
 	return b
 }
 
@@ -30,6 +30,6 @@ func (b *BridgeBackend) SetBridge(bridge string) *BridgeBackend {
 //
 //	qemu-system-* -netdev bridge,helper=helper
 func (b *BridgeBackend) SetHelper(helper string) *BridgeBackend {
-	b.properties = append(b.properties, queso.NewProperty("helper", helper))
+	b.SetProperty("helper", helper)
 	return b
 }

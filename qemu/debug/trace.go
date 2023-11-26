@@ -17,7 +17,9 @@ func NewTrace() *Trace {
 	}
 }
 
-func (t *Trace) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (t *Trace) Option() *queso.Option {
 	return queso.NewOption("trace", "", t.properties...)
 }
 

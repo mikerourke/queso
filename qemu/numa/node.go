@@ -19,7 +19,9 @@ func NewNode(id int) *Node {
 	}
 }
 
-func (n *Node) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (n *Node) Option() *queso.Option {
 	return queso.NewOption("numa", "node", n.properties...)
 }
 

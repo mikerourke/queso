@@ -19,6 +19,6 @@ func NewCoreAudioBackend(id string) *CoreAudioBackend {
 //
 //	qemu-system-* -audiodev coreaudio,buffer-count=count
 func (b *CoreAudioBackend) SetBufferCount(direction Direction, count string) *CoreAudioBackend {
-	b.properties = append(b.properties, newDirectionProperty("buffer-count", direction, count))
+	b.SetDirectionProperty(direction, "buffer-count", count)
 	return b
 }

@@ -54,7 +54,9 @@ func NewMachine() *Machine {
 	}
 }
 
-func (m *Machine) option() *queso.Option {
+// Option returns the invoked option that gets converted to an argument when
+// passed to QEMU.
+func (m *Machine) Option() *queso.Option {
 	return queso.NewOption("machine", m.Name, m.properties...)
 }
 
