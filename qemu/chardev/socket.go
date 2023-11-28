@@ -76,8 +76,7 @@ func (b *SocketBackend) ToggleTelnetEscapeSequences(enabled bool) *SocketBackend
 	return b
 }
 
-// ToggleWebSocketProtocol specifies whether the socket uses WebSocket protocol for
-// communication.
+// ToggleWebSocketProtocol specifies whether the socket uses WebSocket protocol for communication.
 //
 //	qemu-system-* -chardev socket,websocket=on|off
 func (b *SocketBackend) ToggleWebSocketProtocol(enabled bool) *SocketBackend {

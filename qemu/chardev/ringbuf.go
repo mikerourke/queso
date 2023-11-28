@@ -17,8 +17,7 @@ func NewRingBufferBackend(id string) *RingBufferBackend {
 	}
 }
 
-// SetSize sets the size of the ring buffer. It must be a power of two and defaults
-// to 64K if not specified.
+// SetSize sets the size of the ring buffer. It must be a power of two and defaults to 64K if not specified.
 //
 //	qemu-system-* -chardev ringbuf,size=size
 func (b *RingBufferBackend) SetSize(size string) *RingBufferBackend {

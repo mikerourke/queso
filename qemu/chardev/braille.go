@@ -11,7 +11,5 @@ type BrailleBackend struct {
 //
 //	qemu-system-* -chardev braille,id=id
 func NewBrailleBackend(id string) *BrailleBackend {
-	return &BrailleBackend{
-		New("braille", id),
-	}
+	return &BrailleBackend{New("braille", id)}
 }

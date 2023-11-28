@@ -1,7 +1,5 @@
 package audiodev
 
-import "github.com/mikerourke/queso"
-
 // ALSABackend represents an audio backend using ALSA. This backend is only
 // available on Linux.
 type ALSABackend struct {
@@ -22,15 +20,15 @@ func NewALSABackend(id string) *ALSABackend {
 //
 //	qemu-system-* -audiodev alsa,in|out.dev=device
 func (b *ALSABackend) SetDevice(direction Direction, device string) *ALSABackend {
-	b.properties = append(b.properties, newDirectionProperty("dev", direction, device))
+	b.SetDirectionProperty(direction, "dev", device)
 	return b
 }
 
 // SetPeriodLength sets the period length in microseconds.
 //
-//	qemu-system-* -audiodev alsa,in|out.period-length=usecs
+//	qemu-system-* -audiodev alsa,in|out.period-length=length
 func (b *ALSABackend) SetPeriodLength(direction Direction, length int) *ALSABackend {
-	b.properties = append(b.properties, newDirectionProperty("period-length", direction, length))
+	b.SetDirectionProperty(direction, "period-length", length)
 	return b
 }
 
@@ -38,7 +36,7 @@ func (b *ALSABackend) SetPeriodLength(direction Direction, length int) *ALSABack
 //
 //	qemu-system-* -audiodev alsa,threshold=threshold
 func (b *ALSABackend) SetThreshold(threshold int) *ALSABackend {
-	b.properties = append(b.properties, queso.NewProperty("threshold", threshold))
+	b.SetProperty("threshold", threshold)
 	return b
 }
 
@@ -47,6 +45,6 @@ func (b *ALSABackend) SetThreshold(threshold int) *ALSABackend {
 //
 //	qemu-system-* -audiodev alsa,in|out.try-poll=on|off
 func (b *ALSABackend) ToggleTryPoll(direction Direction, enabled bool) *ALSABackend {
-	b.properties = append(b.properties, newDirectionProperty("try-poll", direction, enabled))
+	b.SetDirectionProperty(direction, "try-poll", enabled)
 	return b
 }
